@@ -32,7 +32,7 @@ export default function HomePage() {
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Find collaborators, book studio time, and grow your music network. 
-            Join the community that's revolutionizing music creation.
+            Join the community that&apos;s revolutionizing music creation.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>

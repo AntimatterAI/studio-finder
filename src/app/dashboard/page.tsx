@@ -102,7 +102,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-sm">Mary Johnson</p>
-                    <p className="text-gray-600 text-sm">Studio is available next Tuesday if you're free!</p>
+                    <p className="text-gray-600 text-sm">Studio is available next Tuesday if you&apos;re free!</p>
                   </div>
                   <span className="text-xs text-gray-500">5h ago</span>
                 </div>
