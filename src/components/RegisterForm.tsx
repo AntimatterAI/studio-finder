@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabase'
-import { AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { AlertCircle, Eye, EyeOff, Check, X, Mail, Lock, Key, CheckCircle, Loader2 } from 'lucide-react'
 
 export function RegisterForm() {
   const router = useRouter()
@@ -20,6 +20,8 @@ export function RegisterForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
+  const [isValidatingCode, setIsValidatingCode] = useState(false)
+  const [codeValidated, setCodeValidated] = useState(false)
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -27,7 +29,43 @@ export function RegisterForm() {
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }))
     }
+    
+    // Real-time validation for invite code
+    if (field === 'inviteCode' && value.length >= 6) {
+      validateInviteCodeReal(value)
+    }
   }
+
+  const validateInviteCodeReal = async (code: string) => {
+    if (code.length < 6) return
+    setIsValidatingCode(true)
+    try {
+      const isValid = await validateInviteCode(code)
+      setCodeValidated(isValid)
+      if (!isValid) {
+        setErrors(prev => ({ ...prev, inviteCode: 'Invalid invite code' }))
+      }
+    } catch (error) {
+      console.error('Code validation error:', error)
+    } finally {
+      setIsValidatingCode(false)
+    }
+  }
+
+  const getPasswordStrength = (password: string) => {
+    let score = 0
+    if (password.length >= 8) score++
+    if (/[A-Z]/.test(password)) score++
+    if (/[a-z]/.test(password)) score++
+    if (/\d/.test(password)) score++
+    if (/[^A-Za-z\d]/.test(password)) score++
+    
+    if (score < 2) return { strength: 'weak', color: 'bg-red-500', text: 'Weak' }
+    if (score < 4) return { strength: 'medium', color: 'bg-yellow-500', text: 'Medium' }
+    return { strength: 'strong', color: 'bg-green-500', text: 'Strong' }
+  }
+
+  const passwordStrength = getPasswordStrength(formData.password)
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -40,8 +78,8 @@ export function RegisterForm() {
 
     if (!formData.password) {
       newErrors.password = 'Password is required'
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters'
     }
 
     if (!formData.confirmPassword) {
@@ -52,6 +90,8 @@ export function RegisterForm() {
 
     if (!formData.inviteCode) {
       newErrors.inviteCode = 'Invite code is required'
+    } else if (!codeValidated) {
+      newErrors.inviteCode = 'Please enter a valid invite code'
     }
 
     setErrors(newErrors)
@@ -88,14 +128,6 @@ export function RegisterForm() {
     setIsLoading(true)
 
     try {
-      // First, validate the invite code
-      const isValidInvite = await validateInviteCode(formData.inviteCode)
-      if (!isValidInvite) {
-        setErrors({ inviteCode: 'Invalid or expired invite code' })
-        setIsLoading(false)
-        return
-      }
-
       // Sign up the user
       const { data, error } = await supabase.auth.signUp({
         email: formData.email,
@@ -132,77 +164,144 @@ export function RegisterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {errors.general && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-          <AlertCircle className="w-4 h-4" />
-          {errors.general}
+        <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 animate-slide-up">
+          <AlertCircle className="w-5 h-5 flex-shrink-0" />
+          <span className="text-body-sm">{errors.general}</span>
         </div>
       )}
 
-      <div className="space-y-2">
-        <Label htmlFor="inviteCode">Invite Code</Label>
-        <Input
-          id="inviteCode"
-          type="text"
-          placeholder="Enter your invite code"
-          value={formData.inviteCode}
-          onChange={(e) => handleInputChange('inviteCode', e.target.value)}
-          className={errors.inviteCode ? 'border-red-500' : ''}
-          required
-        />
+      {/* Invite Code Field */}
+      <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+        <Label htmlFor="inviteCode" className="text-body-sm font-medium text-slate-700 flex items-center gap-2">
+          <Key className="w-4 h-4" />
+          Invite Code
+        </Label>
+        <div className="relative">
+          <Input
+            id="inviteCode"
+            type="text"
+            placeholder="Enter your invite code"
+            value={formData.inviteCode}
+            onChange={(e) => handleInputChange('inviteCode', e.target.value)}
+            className={`focus-visible h-12 pr-12 text-body-md transition-all duration-200 ${
+              errors.inviteCode 
+                ? 'border-red-300 focus:border-red-400' 
+                : codeValidated 
+                ? 'border-green-300 focus:border-green-400' 
+                : 'border-purple-200 focus:border-purple-400'
+            }`}
+            required
+          />
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            {isValidatingCode ? (
+              <Loader2 className="w-5 h-5 animate-spin text-purple-500" />
+            ) : codeValidated ? (
+              <CheckCircle className="w-5 h-5 text-green-500" />
+            ) : formData.inviteCode && !codeValidated ? (
+              <X className="w-5 h-5 text-red-500" />
+            ) : null}
+          </div>
+        </div>
         {errors.inviteCode && (
-          <p className="text-red-500 text-sm">{errors.inviteCode}</p>
+          <p className="text-red-500 text-body-xs flex items-center gap-1">
+            <AlertCircle className="w-3 h-3" />
+            {errors.inviteCode}
+          </p>
         )}
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+      {/* Email Field */}
+      <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <Label htmlFor="email" className="text-body-sm font-medium text-slate-700 flex items-center gap-2">
+          <Mail className="w-4 h-4" />
+          Email Address
+        </Label>
         <Input
           id="email"
           type="email"
-          placeholder="Enter your email"
+          placeholder="your@email.com"
           value={formData.email}
           onChange={(e) => handleInputChange('email', e.target.value)}
-          className={errors.email ? 'border-red-500' : ''}
+          className={`focus-visible h-12 text-body-md transition-colors ${
+            errors.email ? 'border-red-300 focus:border-red-400' : 'border-purple-200 focus:border-purple-400'
+          }`}
           required
         />
         {errors.email && (
-          <p className="text-red-500 text-sm">{errors.email}</p>
+          <p className="text-red-500 text-body-xs flex items-center gap-1">
+            <AlertCircle className="w-3 h-3" />
+            {errors.email}
+          </p>
         )}
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+      {/* Password Field */}
+      <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+        <Label htmlFor="password" className="text-body-sm font-medium text-slate-700 flex items-center gap-2">
+          <Lock className="w-4 h-4" />
+          Password
+        </Label>
         <div className="relative">
           <Input
             id="password"
             type={showPassword ? 'text' : 'password'}
-            placeholder="Create a password"
+            placeholder="Create a strong password"
             value={formData.password}
             onChange={(e) => handleInputChange('password', e.target.value)}
-            className={errors.password ? 'border-red-500' : ''}
+            className={`focus-visible h-12 pr-12 text-body-md transition-colors ${
+              errors.password ? 'border-red-300 focus:border-red-400' : 'border-purple-200 focus:border-purple-400'
+            }`}
             required
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors focus-visible"
           >
             {showPassword ? (
-              <EyeOff className="w-4 h-4" />
+              <EyeOff className="w-5 h-5" />
             ) : (
-              <Eye className="w-4 h-4" />
+              <Eye className="w-5 h-5" />
             )}
           </button>
         </div>
+        
+        {/* Password Strength Indicator */}
+        {formData.password && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+                <div 
+                  className={`h-full ${passwordStrength.color} transition-all duration-300`}
+                  style={{ width: `${(passwordStrength.strength === 'weak' ? 33 : passwordStrength.strength === 'medium' ? 66 : 100)}%` }}
+                />
+              </div>
+              <span className={`text-body-xs font-medium ${
+                passwordStrength.strength === 'weak' ? 'text-red-500' : 
+                passwordStrength.strength === 'medium' ? 'text-yellow-500' : 'text-green-500'
+              }`}>
+                {passwordStrength.text}
+              </span>
+            </div>
+          </div>
+        )}
+        
         {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password}</p>
+          <p className="text-red-500 text-body-xs flex items-center gap-1">
+            <AlertCircle className="w-3 h-3" />
+            {errors.password}
+          </p>
         )}
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="confirmPassword">Confirm Password</Label>
+      {/* Confirm Password Field */}
+      <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+        <Label htmlFor="confirmPassword" className="text-body-sm font-medium text-slate-700 flex items-center gap-2">
+          <Check className="w-4 h-4" />
+          Confirm Password
+        </Label>
         <div className="relative">
           <Input
             id="confirmPassword"
@@ -210,29 +309,66 @@ export function RegisterForm() {
             placeholder="Confirm your password"
             value={formData.confirmPassword}
             onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-            className={errors.confirmPassword ? 'border-red-500' : ''}
+            className={`focus-visible h-12 pr-12 text-body-md transition-colors ${
+              errors.confirmPassword ? 'border-red-300 focus:border-red-400' : 
+              formData.confirmPassword && formData.password === formData.confirmPassword ? 'border-green-300 focus:border-green-400' :
+              'border-purple-200 focus:border-purple-400'
+            }`}
             required
           />
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors focus-visible"
           >
             {showConfirmPassword ? (
-              <EyeOff className="w-4 h-4" />
+              <EyeOff className="w-5 h-5" />
             ) : (
-              <Eye className="w-4 h-4" />
+              <Eye className="w-5 h-5" />
             )}
           </button>
         </div>
+        {formData.confirmPassword && formData.password === formData.confirmPassword && (
+          <p className="text-green-500 text-body-xs flex items-center gap-1">
+            <CheckCircle className="w-3 h-3" />
+            Passwords match
+          </p>
+        )}
         {errors.confirmPassword && (
-          <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
+          <p className="text-red-500 text-body-xs flex items-center gap-1">
+            <AlertCircle className="w-3 h-3" />
+            {errors.confirmPassword}
+          </p>
         )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? 'Creating Account...' : 'Create Account'}
+      {/* Submit Button */}
+      <Button 
+        type="submit" 
+        className={`w-full h-12 gradient-accent hover-lift focus-visible shadow-lg animate-slide-up group ${isLoading ? 'loading' : ''}`}
+        style={{ animationDelay: '0.5s' }}
+        disabled={isLoading || !codeValidated}
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+            Creating Account...
+          </>
+        ) : (
+          <>
+            Create Account
+            <CheckCircle className="ml-2 w-5 h-5 group-hover:scale-110 transition-transform" />
+          </>
+        )}
       </Button>
+
+      {/* Terms */}
+      <p className="text-body-xs text-slate-500 text-center leading-relaxed animate-slide-up" style={{ animationDelay: '0.6s' }}>
+        By creating an account, you agree to our{' '}
+        <a href="/terms" className="text-purple-600 hover:text-purple-700 underline">Terms of Service</a>
+        {' '}and{' '}
+        <a href="/privacy" className="text-purple-600 hover:text-purple-700 underline">Privacy Policy</a>
+      </p>
     </form>
   )
 } 
