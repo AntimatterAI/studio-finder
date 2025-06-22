@@ -2,11 +2,19 @@ import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AnimatedMusicBackground } from '@/components/AnimatedMusicBackground'
 import { Music, Users, Star, ArrowRight, Sparkles, Zap, Heart, Play, Headphones, Mic2 } from 'lucide-react'
+// import type { Metadata } from 'next'
+
+// export const metadata: Metadata = {
+//   title: 'Home - Music Collaboration Platform',
+//   description: 'Connect with artists and producers, book studio time, and grow your music network. Join Studio Finder today.',
+// }
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50/30 relative">
+      <AnimatedMusicBackground />
       {/* Navigation */}
       <nav className="glass fixed top-0 left-0 right-0 z-50 border-b border-white/20">
         <div className="container mx-auto px-4 py-4">
@@ -18,6 +26,9 @@ export default function HomePage() {
               <h1 className="text-heading-md font-display text-gradient-primary">Studio Finder</h1>
             </div>
             <div className="flex items-center gap-3 animate-slide-in-right">
+              <Button variant="outline" size="sm" className="hover-lift focus-visible" asChild>
+                <Link href="/features">Features</Link>
+              </Button>
               <Button variant="outline" size="sm" className="hover-lift focus-visible" asChild>
                 <Link href="/login">Sign In</Link>
               </Button>
@@ -196,10 +207,10 @@ export default function HomePage() {
               Join Studio Finder today and take your music to the next level with the right collaborators, 
               professional studios, and industry connections.
             </p>
-            <Button size="lg" variant="secondary" className="hover-lift focus-visible shadow-2xl group bg-white text-purple-600 hover:bg-white/90" asChild>
-              <Link href="/register">
+            <Button size="lg" variant="secondary" className="hover-lift focus-visible shadow-2xl group bg-white text-purple-600 hover:bg-white/90 border-none" asChild>
+              <Link href="/register" className="flex items-center text-purple-600 hover:text-purple-700 no-underline">
                 <Heart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                Get Your Invite Code & Sign Up
+                <span>Get Your Invite Code & Sign Up</span>
                 <Sparkles className="ml-2 w-5 h-5 group-hover:rotate-12 transition-transform" />
               </Link>
             </Button>
@@ -218,6 +229,9 @@ export default function HomePage() {
               <span className="text-heading-sm font-display">Studio Finder</span>
             </div>
             <div className="flex items-center gap-8 animate-slide-in-right">
+              <Link href="/features" className="text-slate-400 hover:text-white transition-colors hover-lift text-body-md">
+                Features
+              </Link>
               <Link href="/login" className="text-slate-400 hover:text-white transition-colors hover-lift text-body-md">
                 Sign In
               </Link>
@@ -229,10 +243,9 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-          <div className="border-t border-slate-800 pt-8 text-center">
-            <p className="text-body-sm text-slate-400">
-              © 2024 Studio Finder. Built with ❤️ for musicians worldwide. 
-              <span className="text-purple-400">Next.js</span> • <span className="text-purple-400">Supabase</span>
+          <div className="border-t border-purple-900/30 pt-8 text-center">
+            <p className="text-body-sm text-purple-300/60">
+              Connecting artists worldwide through music
             </p>
           </div>
         </div>

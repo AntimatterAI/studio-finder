@@ -2,6 +2,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Music, Users, MessageSquare, Settings, Search, TrendingUp, Calendar, Star, Bell, Plus, Play, Headphones, Mic2 } from 'lucide-react'
 import Link from 'next/link'
+// import type { Metadata } from 'next'
+
+// export const metadata: Metadata = {
+//   title: 'Dashboard',
+//   description: 'Your Studio Finder dashboard - manage your music collaborations, projects, and connections.',
+// }
 
 export default function DashboardPage() {
   return (

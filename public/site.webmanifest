@@ -1,0 +1,22 @@
+{
+  "name": "Studio Finder - Music Collaboration Platform",
+  "short_name": "Studio Finder",
+  "description": "Find collaborators, book studio time, and grow your music network.",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#9333ea",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "categories": ["music", "entertainment", "productivity"],
+  "lang": "en-US",
+  "scope": "/",
+  "id": "studio-finder-app"
+} 
