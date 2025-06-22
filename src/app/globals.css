@@ -10,104 +10,109 @@
     --font-display: 'Manrope', system-ui, -apple-system, sans-serif;
     
     /* Border Radius */
-    --radius: 12px;
+    --radius: 16px;
     
-    /* Enhanced Music Brand Colors */
-    --background: 220 13% 9%; /* Deep music studio dark */
-    --foreground: 210 40% 98%; /* Clean white text */
-    --card: 224 71% 4%; /* Rich dark cards */
-    --card-foreground: 210 40% 98%;
-    --popover: 224 71% 4%;
-    --popover-foreground: 210 40% 98%;
+    /* Enhanced Music Brand Colors - Fresh & Vibrant */
+    --background: 222 84% 5%; /* Ultra deep dark base */
+    --foreground: 180 100% 97%; /* Clean cyan-tinted white */
+    --card: 224 71% 6%; /* Rich dark cards with slight warmth */
+    --card-foreground: 180 100% 97%;
+    --popover: 224 71% 6%;
+    --popover-foreground: 180 100% 97%;
     
-    /* Primary Brand - Electric Purple */
-    --primary: 262 83% 64%; /* Brighter purple for music vibe */
-    --primary-foreground: 210 40% 98%;
+    /* Primary Brand - Vibrant Cyan */
+    --primary: 192 88% 55%; /* Electric cyan for energy */
+    --primary-foreground: 222 84% 5%;
     
-    /* Secondary - Neon Cyan */
-    --secondary: 215 28% 17%; /* Dark secondary background */
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary - Warm Orange */
+    --secondary: 32 95% 58%; /* Vibrant orange for contrast */
+    --secondary-foreground: 222 84% 5%;
     
-    /* Accent - Electric Pink */
-    --accent: 328 86% 54%; /* Hot pink for energy */
-    --accent-foreground: 210 40% 98%;
+    /* Accent - Electric Emerald */
+    --accent: 160 84% 52%; /* Fresh emerald green */
+    --accent-foreground: 222 84% 5%;
     
     /* Muted */
-    --muted: 215 28% 17%;
-    --muted-foreground: 217 10% 65%;
+    --muted: 215 20% 15%;
+    --muted-foreground: 217 15% 70%;
     
     /* Status Colors */
-    --success: 142 71% 45%;
-    --warning: 47 96% 53%;
-    --info: 192 100% 43%;
-    --destructive: 0 73% 64%;
+    --success: 160 84% 52%;
+    --warning: 32 95% 58%;
+    --info: 192 88% 55%;
+    --destructive: 0 84% 65%;
     
     /* Borders */
-    --border: 215 28% 17%;
-    --input: 215 28% 17%;
-    --ring: 262 83% 64%;
+    --border: 215 20% 15%;
+    --input: 215 20% 15%;
+    --ring: 192 88% 55%;
     
     /* Enhanced Brand Gradient Colors */
-    --purple-50: 139 69 255;
-    --purple-100: 124 58 237;
-    --purple-500: 109 40 217;
-    --purple-600: 139 69 255;
-    --purple-700: 109 40 217;
+    --cyan-50: 103 232 249;
+    --cyan-100: 34 211 238;
+    --cyan-500: 6 182 212;
+    --cyan-600: 8 145 178;
+    --cyan-700: 14 116 144;
     
-    --indigo-50: 67 56 202;
-    --indigo-100: 99 102 241;
-    --indigo-500: 99 102 241;
-    --indigo-600: 79 70 229;
+    --emerald-50: 52 211 153;
+    --emerald-100: 34 197 94;
+    --emerald-500: 16 185 129;
+    --emerald-600: 5 150 105;
     
-    --pink-50: 255 20 147;
-    --pink-100: 236 72 153;
-    --pink-500: 236 72 153;
+    --orange-50: 251 146 60;
+    --orange-100: 249 115 22;
+    --orange-500: 234 88 12;
+    
+    --violet-50: 167 139 250;
+    --violet-100: 139 92 246;
+    --violet-500: 124 58 237;
     
     /* Sidebar */
-    --sidebar: 15 15 25;
-    --sidebar-foreground: 248 250 252;
-    --sidebar-primary: 139 69 255;
-    --sidebar-primary-foreground: 255 255 255;
-    --sidebar-accent: 30 30 46;
-    --sidebar-accent-foreground: 168 190 207;
-    --sidebar-border: 45 45 65;
-    --sidebar-ring: 139 69 255;
+    --sidebar: 222 84 5;
+    --sidebar-foreground: 180 100 97;
+    --sidebar-primary: 192 88 55;
+    --sidebar-primary-foreground: 222 84 5;
+    --sidebar-accent: 215 20 15;
+    --sidebar-accent-foreground: 217 15 70;
+    --sidebar-border: 215 20 20;
+    --sidebar-ring: 192 88 55;
     
     /* Chart Colors */
-    --chart-1: 139 69 255;
-    --chart-2: 0 184 217;
-    --chart-3: 34 197 94;
-    --chart-4: 255 193 7;
-    --chart-5: 255 71 87;
+    --chart-1: 192 88 55;
+    --chart-2: 160 84 52;
+    --chart-3: 32 95 58;
+    --chart-4: 167 139 250;
+    --chart-5: 124 58 237;
     
     /* Enhanced Gradients for Music Theme */
-    --gradient-primary: linear-gradient(135deg, rgb(139 69 255) 0%, rgb(67 56 202) 100%);
-    --gradient-secondary: linear-gradient(135deg, rgb(99 102 241) 0%, rgb(139 69 255) 100%);
-    --gradient-accent: linear-gradient(135deg, rgb(255 20 147) 0%, rgb(139 69 255) 100%);
-    --gradient-neon: linear-gradient(135deg, rgb(0 184 217) 0%, rgb(255 20 147) 100%);
-    --gradient-electric: linear-gradient(135deg, rgb(139 69 255) 0%, rgb(255 20 147) 50%, rgb(0 184 217) 100%);
-    --gradient-studio: linear-gradient(135deg, rgb(15 15 25) 0%, rgb(30 30 46) 100%);
-  }
+    --gradient-primary: linear-gradient(135deg, rgb(103 232 249) 0%, rgb(6 182 212) 100%);
+    --gradient-secondary: linear-gradient(135deg, rgb(251 146 60) 0%, rgb(234 88 12) 100%);
+    --gradient-accent: linear-gradient(135deg, rgb(52 211 153) 0%, rgb(16 185 129) 100%);
+    --gradient-neon: linear-gradient(135deg, rgb(103 232 249) 0%, rgb(52 211 153) 50%, rgb(251 146 60) 100%);
+    --gradient-electric: linear-gradient(135deg, rgb(6 182 212) 0%, rgb(16 185 129) 25%, rgb(251 146 60) 50%, rgb(167 139 250) 100%);
+    --gradient-studio: linear-gradient(135deg, rgb(8 8 16) 0%, rgb(15 15 25) 100%);
+    --gradient-hero: linear-gradient(135deg, rgb(8 8 16) 0%, rgb(15 15 25) 30%, rgb(23 23 40) 70%, rgb(30 41 59) 100%);
+}
 
-  .dark {
-    --background: 220 13% 9%;
-    --foreground: 210 40% 98%;
-    --card: 224 71% 4%;
-    --card-foreground: 210 40% 98%;
-    --popover: 224 71% 4%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 262 83% 64%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 215 28% 17%;
-    --muted-foreground: 217 10% 65%;
-    --accent: 328 86% 54%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 73% 64%;
-    --border: 215 28% 17%;
-    --input: 215 28% 17%;
-    --ring: 262 83% 64%;
+.dark {
+    --background: 222 84% 5%;
+    --foreground: 180 100% 97%;
+    --card: 224 71% 6%;
+    --card-foreground: 180 100% 97%;
+    --popover: 224 71% 6%;
+    --popover-foreground: 180 100% 97%;
+    --primary: 192 88% 55%;
+    --primary-foreground: 222 84% 5%;
+    --secondary: 32 95% 58%;
+    --secondary-foreground: 222 84% 5%;
+    --muted: 215 20% 15%;
+    --muted-foreground: 217 15% 70%;
+    --accent: 160 84% 52%;
+    --accent-foreground: 222 84% 5%;
+    --destructive: 0 84% 65%;
+    --border: 215 20% 15%;
+    --input: 215 20% 15%;
+    --ring: 192 88% 55%;
   }
 
   * {
@@ -122,7 +127,7 @@
   
   body {
     font-feature-settings: 'rlig' 1, 'calt' 1;
-    background: linear-gradient(135deg, rgb(8 8 16) 0%, rgb(15 15 25) 50%, rgb(23 23 40) 100%);
+    background: var(--gradient-hero);
   }
 }
 
@@ -189,6 +194,9 @@
   .gradient-studio { 
     background: var(--gradient-studio); 
   }
+  .gradient-hero { 
+    background: var(--gradient-hero); 
+  }
   
   .text-gradient-primary {
     background: var(--gradient-primary);
@@ -211,40 +219,54 @@
     background-clip: text;
   }
   
+  .text-gradient-electric {
+    background: var(--gradient-electric);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
   /* Enhanced Glassmorphism */
   .glass {
     backdrop-filter: blur(20px) saturate(180%);
-    background-color: rgba(15, 15, 25, 0.8);
-    border: 1px solid rgba(139, 69, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(139, 69, 255, 0.1);
+    background-color: rgba(8, 8, 16, 0.85);
+    border: 1px solid rgba(103, 232, 249, 0.25);
+    box-shadow: 0 8px 32px rgba(103, 232, 249, 0.15);
   }
   
   .glass-neon {
     backdrop-filter: blur(20px) saturate(180%);
-    background-color: rgba(15, 15, 25, 0.9);
-    border: 1px solid rgba(255, 20, 147, 0.3);
-    box-shadow: 0 8px 32px rgba(255, 20, 147, 0.15);
+    background-color: rgba(8, 8, 16, 0.9);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    box-shadow: 0 8px 32px rgba(52, 211, 153, 0.2);
+  }
+  
+  .glass-warm {
+    backdrop-filter: blur(20px) saturate(180%);
+    background-color: rgba(8, 8, 16, 0.85);
+    border: 1px solid rgba(251, 146, 60, 0.25);
+    box-shadow: 0 8px 32px rgba(251, 146, 60, 0.15);
   }
   
   /* Enhanced Animations */
   .animate-fade-in {
-    animation: fadeIn 0.6s ease-out;
+    animation: fadeIn 0.8s ease-out;
   }
   
   .animate-slide-up {
-    animation: slideUp 0.8s ease-out;
+    animation: slideUp 1s ease-out;
   }
   
   .animate-slide-in-left {
-    animation: slideInLeft 0.8s ease-out;
+    animation: slideInLeft 1s ease-out;
   }
   
   .animate-slide-in-right {
-    animation: slideInRight 0.8s ease-out;
+    animation: slideInRight 1s ease-out;
   }
   
   .animate-scale-in {
-    animation: scaleIn 0.5s ease-out;
+    animation: scaleIn 0.6s ease-out;
   }
   
   .animate-float {
@@ -255,14 +277,18 @@
     animation: pulseNeon 2s ease-in-out infinite;
   }
   
+  .animate-glow {
+    animation: glow 3s ease-in-out infinite;
+  }
+  
   /* Enhanced Hover Effects */
   .hover-lift {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .hover-lift:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(139, 69, 255, 0.2);
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 25px 50px rgba(103, 232, 249, 0.25);
   }
   
   .hover-glow {
@@ -270,8 +296,8 @@
   }
   
   .hover-glow:hover {
-    box-shadow: 0 0 30px rgba(139, 69, 255, 0.5);
-    border-color: rgba(139, 69, 255, 0.8);
+    box-shadow: 0 0 40px rgba(103, 232, 249, 0.6);
+    border-color: rgba(103, 232, 249, 0.8);
   }
   
   .hover-neon {
@@ -279,68 +305,86 @@
   }
   
   .hover-neon:hover {
-    box-shadow: 0 0 30px rgba(255, 20, 147, 0.6);
-    border-color: rgba(255, 20, 147, 0.8);
+    box-shadow: 0 0 40px rgba(52, 211, 153, 0.7);
+    border-color: rgba(52, 211, 153, 0.9);
+  }
+  
+  .hover-warm {
+    transition: all 0.3s ease;
+  }
+  
+  .hover-warm:hover {
+    box-shadow: 0 0 40px rgba(251, 146, 60, 0.7);
+    border-color: rgba(251, 146, 60, 0.9);
   }
   
   /* Focus States */
   .focus-visible {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900;
   }
   
   /* Swipe UI Classes */
   .swipe-card {
-    @apply relative bg-slate-800 rounded-2xl p-6 shadow-2xl border border-slate-700;
-    backdrop-filter: blur(20px);
+    @apply relative rounded-3xl p-8 shadow-2xl border;
+    background: rgba(8, 8, 16, 0.85);
+    border: 1px solid rgba(103, 232, 249, 0.25);
+    backdrop-filter: blur(20px) saturate(180%);
     transform-style: preserve-3d;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .swipe-like {
-    transform: translateX(100px) rotate(15deg);
+    transform: translateX(120px) rotate(20deg);
     opacity: 0;
   }
   
   .swipe-dislike {
-    transform: translateX(-100px) rotate(-15deg);
+    transform: translateX(-120px) rotate(-20deg);
     opacity: 0;
   }
   
   /* Chat Bubbles */
   .chat-bubble-sent {
-    @apply rounded-2xl rounded-br-md p-3 max-w-[80%] ml-auto text-white;
+    @apply rounded-3xl rounded-br-lg p-4 max-w-[80%] ml-auto text-slate-900 font-medium;
     background: var(--gradient-primary);
+    box-shadow: 0 4px 20px rgba(103, 232, 249, 0.3);
   }
   
   .chat-bubble-received {
-    @apply bg-slate-800 text-white rounded-2xl rounded-bl-md p-3 max-w-[80%] border border-slate-700;
-    backdrop-filter: blur(10px);
+    @apply rounded-3xl rounded-bl-lg p-4 max-w-[80%] border;
+    background: rgba(8, 8, 16, 0.85);
+    border: 1px solid rgba(103, 232, 249, 0.25);
+    backdrop-filter: blur(20px) saturate(180%);
+    color: rgb(180 250 255);
   }
   
   /* Profile Editor Styles */
   .profile-section {
     backdrop-filter: blur(20px) saturate(180%);
-    background-color: rgba(15, 15, 25, 0.8);
-    border: 1px solid rgba(139, 69, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(139, 69, 255, 0.1);
-    @apply p-6 rounded-2xl space-y-4;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: rgba(8, 8, 16, 0.85);
+    border: 1px solid rgba(103, 232, 249, 0.25);
+    box-shadow: 0 8px 32px rgba(103, 232, 249, 0.15);
+    @apply p-8 rounded-3xl space-y-6;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .profile-section:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(139, 69, 255, 0.2);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(103, 232, 249, 0.25);
   }
   
   .skill-tag {
-    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all;
-    background: linear-gradient(135deg, rgba(139, 69, 255, 0.1) 0%, rgba(255, 20, 147, 0.1) 100%);
-    border: 1px solid rgba(139, 69, 255, 0.2);
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all;
+    background: linear-gradient(135deg, rgba(103, 232, 249, 0.15) 0%, rgba(52, 211, 153, 0.15) 100%);
+    border: 1px solid rgba(103, 232, 249, 0.3);
+    color: rgb(103 232 249);
   }
   
   .skill-tag:hover {
-    background: linear-gradient(135deg, rgba(139, 69, 255, 0.2) 0%, rgba(255, 20, 147, 0.2) 100%);
-    border-color: rgba(139, 69, 255, 0.4);
+    background: linear-gradient(135deg, rgba(103, 232, 249, 0.25) 0%, rgba(52, 211, 153, 0.25) 100%);
+    border-color: rgba(103, 232, 249, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(103, 232, 249, 0.2);
   }
 }
 
@@ -387,41 +431,50 @@
 
 /* Enhanced Keyframes */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(40px); }
+  from { opacity: 0; transform: translateY(50px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-40px); }
+  from { opacity: 0; transform: translateX(-50px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(40px); }
+  from { opacity: 0; transform: translateX(50px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.9); }
+  from { opacity: 0; transform: scale(0.8); }
   to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
 }
 
 @keyframes pulseNeon {
   0%, 100% { 
-    box-shadow: 0 0 20px rgba(139, 69, 255, 0.4);
+    box-shadow: 0 0 30px rgba(103, 232, 249, 0.4);
   }
   50% { 
-    box-shadow: 0 0 40px rgba(139, 69, 255, 0.8);
+    box-shadow: 0 0 60px rgba(103, 232, 249, 0.8);
+  }
+}
+
+@keyframes glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(103, 232, 249, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(52, 211, 153, 0.6);
   }
 }
 
@@ -442,38 +495,38 @@
 }
 
 @keyframes equalizer-1 {
-  0%, 100% { height: 20px; }
-  25% { height: 35px; }
-  50% { height: 15px; }
-  75% { height: 28px; }
+  0%, 100% { height: 24px; opacity: 0.6; }
+  25% { height: 42px; opacity: 0.9; }
+  50% { height: 18px; opacity: 0.7; }
+  75% { height: 36px; opacity: 0.8; }
 }
 
 @keyframes equalizer-2 {
-  0%, 100% { height: 30px; }
-  25% { height: 18px; }
-  50% { height: 40px; }
-  75% { height: 22px; }
+  0%, 100% { height: 36px; opacity: 0.7; }
+  25% { height: 22px; opacity: 0.6; }
+  50% { height: 48px; opacity: 1; }
+  75% { height: 28px; opacity: 0.8; }
 }
 
 @keyframes equalizer-3 {
-  0%, 100% { height: 15px; }
-  25% { height: 32px; }
-  50% { height: 25px; }
-  75% { height: 12px; }
+  0%, 100% { height: 16px; opacity: 0.5; }
+  25% { height: 38px; opacity: 0.9; }
+  50% { height: 30px; opacity: 0.8; }
+  75% { height: 14px; opacity: 0.6; }
 }
 
 @keyframes equalizer-4 {
-  0%, 100% { height: 25px; }
-  25% { height: 15px; }
-  50% { height: 35px; }
-  75% { height: 20px; }
+  0%, 100% { height: 30px; opacity: 0.8; }
+  25% { height: 18px; opacity: 0.6; }
+  50% { height: 42px; opacity: 0.9; }
+  75% { height: 24px; opacity: 0.7; }
 }
 
 @keyframes equalizer-5 {
-  0%, 100% { height: 18px; }
-  25% { height: 28px; }
-  50% { height: 14px; }
-  75% { height: 30px; }
+  0%, 100% { height: 20px; opacity: 0.6; }
+  25% { height: 34px; opacity: 0.8; }
+  50% { height: 16px; opacity: 0.7; }
+  75% { height: 36px; opacity: 0.9; }
 }
 
 /* Responsive Design */
