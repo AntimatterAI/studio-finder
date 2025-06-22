@@ -1,7 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { AnimatedMusicBackground } from '@/components/AnimatedMusicBackground'
 import { Music, Users, Star, ArrowRight, Sparkles, Zap, Heart, Play, Headphones, Mic2 } from 'lucide-react'
 // import type { Metadata } from 'next'
@@ -176,7 +175,7 @@ export default function HomePage() {
           <div className="mb-20 animate-fade-in-up">
             <h3 className="text-display-lg font-display mb-8 text-gradient-luxury">Trusted by Industry Leaders</h3>
             <p className="text-body-lg max-w-4xl mx-auto leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-              Join the community where tomorrow's hits are created today
+              Join the community where tomorrow&apos;s hits are created today
             </p>
           </div>
           
@@ -186,7 +185,7 @@ export default function HomePage() {
               { name: 'Sony Records', delay: '0.1s' },
               { name: 'Warner Bros', delay: '0.2s' },
               { name: 'Atlantic Records', delay: '0.3s' }
-            ].map((label, index) => (
+            ].map((label) => (
               <div 
                 key={label.name} 
                 className="text-heading-md font-display animate-slide-in-elegant hover-glow-elegant transition-all duration-300 cursor-pointer text-blue-200/80 hover:text-blue-200" 
@@ -235,7 +234,7 @@ export default function HomePage() {
               <span className="text-heading-lg font-display text-gradient-primary">Studio Finder</span>
             </div>
             <div className="flex items-center gap-12 animate-slide-in-elegant" style={{ animationDelay: '0.2s' }}>
-              {['Features', 'Sign In', 'Register', 'Dashboard'].map((item, index) => (
+              {['Features', 'Sign In', 'Register', 'Dashboard'].map((item) => (
                 <Link 
                   key={item}
                   href={`/${item.toLowerCase().replace(' ', '')}`} 
