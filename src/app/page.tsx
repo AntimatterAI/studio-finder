@@ -13,7 +13,7 @@ import { Music, Users, Star, ArrowRight, Sparkles, Zap, Heart, Play, Headphones,
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50/30 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-purple-900/20 relative">
       <AnimatedMusicBackground />
       {/* Navigation */}
       <nav className="glass fixed top-0 left-0 right-0 z-50 border-b border-white/20">
@@ -45,19 +45,19 @@ export default function HomePage() {
         <div className="container mx-auto text-center">
           <div className="max-w-5xl mx-auto animate-fade-in">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-body-sm font-medium mb-8 animate-slide-up hover-scale">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-900/30 text-purple-300 border border-purple-500/30 backdrop-blur-sm rounded-full text-body-sm font-medium mb-8 animate-slide-up hover-scale">
               <Sparkles className="w-4 h-4" />
               Join the future of music collaboration
             </div>
             
             {/* Main Headline */}
-            <h2 className="text-display-2xl font-display mb-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-              Connect with{' '}
+            <h2 className="text-display-2xl font-display mb-6 animate-slide-up text-white" style={{ animationDelay: '0.1s' }}>
+              <span className="text-white">Connect with</span>{' '}
               <span className="text-gradient-primary relative">
                 Artists
                 <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-30"></div>
               </span>
-              {' '}&{' '}
+              {' '}<span className="text-white">&</span>{' '}
               <span className="text-gradient-accent relative">
                 Producers
                 <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full opacity-30"></div>
@@ -65,7 +65,7 @@ export default function HomePage() {
             </h2>
             
             {/* Subtitle */}
-            <p className="text-body-lg text-slate-600 mb-10 max-w-3xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            <p className="text-body-lg text-slate-300 mb-10 max-w-3xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
               Find collaborators, book studio time, and grow your music network. 
               Join the community that&apos;s revolutionizing music creation with AI-powered matching.
             </p>
@@ -91,15 +91,15 @@ export default function HomePage() {
             <div className="grid grid-cols-3 gap-8 max-w-lg mx-auto animate-slide-up" style={{ animationDelay: '0.4s' }}>
               <div className="text-center">
                 <div className="text-heading-lg font-display text-gradient-primary">10K+</div>
-                <div className="text-body-sm text-slate-500">Active Artists</div>
+                <div className="text-body-sm text-slate-400">Active Artists</div>
               </div>
               <div className="text-center">
                 <div className="text-heading-lg font-display text-gradient-accent">50K+</div>
-                <div className="text-body-sm text-slate-500">Collaborations</div>
+                <div className="text-body-sm text-slate-400">Collaborations</div>
               </div>
               <div className="text-center">
                 <div className="text-heading-lg font-display text-gradient-primary">500+</div>
-                <div className="text-body-sm text-slate-500">Studios</div>
+                <div className="text-body-sm text-slate-400">Studios</div>
               </div>
             </div>
           </div>
