@@ -111,7 +111,7 @@
   }
 
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   
   html {
@@ -121,7 +121,6 @@
   }
   
   body {
-    @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: 'rlig' 1, 'calt' 1;
     background: linear-gradient(135deg, rgb(8 8 16) 0%, rgb(15 15 25) 50%, rgb(23 23 40) 100%);
   }
