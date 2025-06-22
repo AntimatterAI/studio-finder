@@ -13,39 +13,39 @@
     --radius: 12px;
     
     /* Enhanced Music Brand Colors */
-    --background: 8 8 16; /* Deep music studio dark */
-    --foreground: 248 250 252; /* Clean white text */
-    --card: 15 15 25; /* Rich dark cards */
-    --card-foreground: 248 250 252;
-    --popover: 15 15 25;
-    --popover-foreground: 248 250 252;
+    --background: 220 13% 9%; /* Deep music studio dark */
+    --foreground: 210 40% 98%; /* Clean white text */
+    --card: 224 71% 4%; /* Rich dark cards */
+    --card-foreground: 210 40% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 40% 98%;
     
     /* Primary Brand - Electric Purple */
-    --primary: 139 69 255; /* Brighter purple for music vibe */
-    --primary-foreground: 255 255 255;
+    --primary: 262 83% 64%; /* Brighter purple for music vibe */
+    --primary-foreground: 210 40% 98%;
     
     /* Secondary - Neon Cyan */
-    --secondary: 23 23 40; /* Dark secondary background */
-    --secondary-foreground: 168 190 207; /* Soft blue-gray text */
+    --secondary: 215 28% 17%; /* Dark secondary background */
+    --secondary-foreground: 210 40% 98%;
     
     /* Accent - Electric Pink */
-    --accent: 255 20 147; /* Hot pink for energy */
-    --accent-foreground: 255 255 255;
+    --accent: 328 86% 54%; /* Hot pink for energy */
+    --accent-foreground: 210 40% 98%;
     
     /* Muted */
-    --muted: 30 30 46; /* Slightly lighter dark */
-    --muted-foreground: 148 163 184; /* Subtle text */
+    --muted: 215 28% 17%;
+    --muted-foreground: 217 10% 65%;
     
     /* Status Colors */
-    --success: 34 197 94; /* Keep success green */
-    --warning: 255 193 7; /* Bright yellow warning */
-    --info: 0 184 217; /* Cyan info */
-    --destructive: 255 71 87; /* Bright red */
+    --success: 142 71% 45%;
+    --warning: 47 96% 53%;
+    --info: 192 100% 43%;
+    --destructive: 0 73% 64%;
     
     /* Borders */
-    --border: 45 45 65; /* Subtle dark borders */
-    --input: 45 45 65;
-    --ring: 139 69 255; /* Electric purple focus */
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 262 83% 64%;
     
     /* Enhanced Brand Gradient Colors */
     --purple-50: 139 69 255;
@@ -90,24 +90,24 @@
   }
 
   .dark {
-    --background: 8 8 16;
-    --foreground: 248 250 252;
-    --card: 15 15 25;
-    --card-foreground: 248 250 252;
-    --popover: 15 15 25;
-    --popover-foreground: 248 250 252;
-    --primary: 139 69 255;
-    --primary-foreground: 255 255 255;
-    --secondary: 30 30 46;
-    --secondary-foreground: 168 190 207;
-    --muted: 30 30 46;
-    --muted-foreground: 148 163 184;
-    --accent: 255 20 147;
-    --accent-foreground: 255 255 255;
-    --destructive: 255 71 87;
-    --border: 45 45 65;
-    --input: 45 45 65;
-    --ring: 139 69 255;
+    --background: 220 13% 9%;
+    --foreground: 210 40% 98%;
+    --card: 224 71% 4%;
+    --card-foreground: 210 40% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 262 83% 64%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 217 10% 65%;
+    --accent: 328 86% 54%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 73% 64%;
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 262 83% 64%;
   }
 
   * {
