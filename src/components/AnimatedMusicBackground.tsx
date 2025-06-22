@@ -4,81 +4,91 @@ import React from 'react'
 
 export function AnimatedMusicBackground() {
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-40">
-      {/* Record Player Dials - Made much more vibrant */}
-      <div className="absolute top-20 left-10 w-16 h-16 border-2 border-cyan-400/60 rounded-full animate-spin-slow shadow-lg shadow-cyan-400/20">
-        <div className="absolute inset-3 border-2 border-cyan-300/40 rounded-full">
-          <div className="absolute inset-2 bg-gradient-to-br from-cyan-400/30 to-cyan-600/20 rounded-full flex items-center justify-center">
-            <div className="w-2 h-2 bg-cyan-300/80 rounded-full animate-pulse"></div>
+    <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-30">
+      {/* Premium Record Player Dials */}
+      <div className="absolute top-24 left-12 w-20 h-20 border-2 border-blue-400/40 rounded-full animate-record-spin shadow-2xl shadow-blue-400/20">
+        <div className="absolute inset-4 border border-blue-300/30 rounded-full">
+          <div className="absolute inset-3 bg-gradient-to-br from-blue-400/20 to-blue-600/10 rounded-full flex items-center justify-center">
+            <div className="w-3 h-3 bg-blue-300/70 rounded-full animate-glow-pulse"></div>
           </div>
         </div>
       </div>
       
-      <div className="absolute top-40 right-20 w-12 h-12 border-2 border-emerald-400/60 rounded-full animate-spin-reverse shadow-lg shadow-emerald-400/20">
-        <div className="absolute inset-2 border border-emerald-300/40 rounded-full">
-          <div className="absolute inset-1 bg-gradient-to-br from-emerald-400/30 to-emerald-600/20 rounded-full flex items-center justify-center">
-            <div className="w-1.5 h-1.5 bg-emerald-300/80 rounded-full animate-pulse"></div>
+      <div className="absolute top-48 right-24 w-16 h-16 border-2 border-teal-400/40 rounded-full animate-record-spin-reverse shadow-2xl shadow-teal-400/20">
+        <div className="absolute inset-3 border border-teal-300/30 rounded-full">
+          <div className="absolute inset-2 bg-gradient-to-br from-teal-400/20 to-teal-600/10 rounded-full flex items-center justify-center">
+            <div className="w-2 h-2 bg-teal-300/70 rounded-full animate-glow-pulse"></div>
           </div>
         </div>
       </div>
       
-      <div className="absolute bottom-32 left-1/4 w-20 h-20 border-2 border-orange-400/60 rounded-full animate-spin-slow shadow-lg shadow-orange-400/20">
-        <div className="absolute inset-3 border-2 border-orange-300/40 rounded-full">
-          <div className="absolute inset-3 bg-gradient-to-br from-orange-400/30 to-orange-600/20 rounded-full flex items-center justify-center">
-            <div className="w-3 h-3 bg-orange-300/80 rounded-full animate-pulse"></div>
+      <div className="absolute bottom-40 left-1/4 w-24 h-24 border-2 border-yellow-400/40 rounded-full animate-record-spin shadow-2xl shadow-yellow-400/20">
+        <div className="absolute inset-4 border border-yellow-300/30 rounded-full">
+          <div className="absolute inset-4 bg-gradient-to-br from-yellow-400/20 to-yellow-600/10 rounded-full flex items-center justify-center">
+            <div className="w-4 h-4 bg-yellow-300/70 rounded-full animate-glow-pulse"></div>
           </div>
         </div>
       </div>
       
-      <div className="absolute bottom-20 right-1/3 w-14 h-14 border-2 border-violet-400/60 rounded-full animate-spin-reverse shadow-lg shadow-violet-400/20">
-        <div className="absolute inset-3 border border-violet-300/40 rounded-full">
-          <div className="absolute inset-2 bg-gradient-to-br from-violet-400/30 to-violet-600/20 rounded-full flex items-center justify-center">
-            <div className="w-2 h-2 bg-violet-300/80 rounded-full animate-pulse"></div>
+      <div className="absolute bottom-24 right-1/3 w-18 h-18 border-2 border-purple-400/40 rounded-full animate-record-spin-reverse shadow-2xl shadow-purple-400/20">
+        <div className="absolute inset-3 border border-purple-300/30 rounded-full">
+          <div className="absolute inset-2 bg-gradient-to-br from-purple-400/20 to-purple-600/10 rounded-full flex items-center justify-center">
+            <div className="w-2.5 h-2.5 bg-purple-300/70 rounded-full animate-glow-pulse"></div>
           </div>
         </div>
       </div>
 
-      {/* Music Notes - Made larger and more colorful */}
-      <div className="absolute top-32 left-1/3 text-cyan-400/70 text-3xl animate-float drop-shadow-lg">♪</div>
-      <div className="absolute top-48 right-1/4 text-emerald-400/70 text-2xl animate-float-delayed drop-shadow-lg">♫</div>
-      <div className="absolute bottom-48 left-1/5 text-orange-400/70 text-2xl animate-float drop-shadow-lg">♪</div>
-      <div className="absolute bottom-36 right-1/5 text-violet-400/70 text-xl animate-float-delayed drop-shadow-lg">♫</div>
-      <div className="absolute top-1/2 left-16 text-cyan-400/70 text-lg animate-float drop-shadow-lg">♪</div>
-      <div className="absolute top-1/3 right-12 text-emerald-400/70 text-lg animate-float-delayed drop-shadow-lg">♫</div>
+      {/* Elegant Floating Music Notes */}
+      <div className="absolute top-36 left-1/3 text-blue-400/60 text-4xl animate-float-gentle drop-shadow-lg">♪</div>
+      <div className="absolute top-56 right-1/4 text-teal-400/60 text-3xl animate-float-gentle drop-shadow-lg" style={{ animationDelay: '2s' }}>♫</div>
+      <div className="absolute bottom-56 left-1/5 text-yellow-400/60 text-3xl animate-float-gentle drop-shadow-lg" style={{ animationDelay: '4s' }}>♪</div>
+      <div className="absolute bottom-44 right-1/5 text-purple-400/60 text-2xl animate-float-gentle drop-shadow-lg" style={{ animationDelay: '6s' }}>♫</div>
+      <div className="absolute top-1/2 left-20 text-blue-400/60 text-xl animate-float-gentle drop-shadow-lg" style={{ animationDelay: '1s' }}>♪</div>
+      <div className="absolute top-1/3 right-16 text-teal-400/60 text-xl animate-float-gentle drop-shadow-lg" style={{ animationDelay: '3s' }}>♫</div>
       
-      {/* Equalizer Bars - Made taller and more colorful */}
-      <div className="absolute top-60 left-1/2 flex items-end gap-1">
-        <div className="w-1.5 bg-gradient-to-t from-cyan-500/40 to-cyan-300/60 animate-equalizer-1 rounded-t-sm shadow-sm shadow-cyan-400/40" style={{ height: '24px' }}></div>
-        <div className="w-1.5 bg-gradient-to-t from-emerald-500/40 to-emerald-300/60 animate-equalizer-2 rounded-t-sm shadow-sm shadow-emerald-400/40" style={{ height: '36px' }}></div>
-        <div className="w-1.5 bg-gradient-to-t from-orange-500/40 to-orange-300/60 animate-equalizer-3 rounded-t-sm shadow-sm shadow-orange-400/40" style={{ height: '16px' }}></div>
-        <div className="w-1.5 bg-gradient-to-t from-violet-500/40 to-violet-300/60 animate-equalizer-4 rounded-t-sm shadow-sm shadow-violet-400/40" style={{ height: '30px' }}></div>
-        <div className="w-1.5 bg-gradient-to-t from-cyan-500/40 to-cyan-300/60 animate-equalizer-5 rounded-t-sm shadow-sm shadow-cyan-400/40" style={{ height: '20px' }}></div>
+      {/* Premium Equalizer Bars */}
+      <div className="absolute top-64 left-1/2 flex items-end gap-1.5">
+        <div className="w-2 bg-gradient-to-t from-blue-500/50 to-blue-300/70 animate-equalizer-premium-1 rounded-t-md shadow-lg shadow-blue-400/30" style={{ height: '32px' }}></div>
+        <div className="w-2 bg-gradient-to-t from-teal-500/50 to-teal-300/70 animate-equalizer-premium-2 rounded-t-md shadow-lg shadow-teal-400/30" style={{ height: '48px' }}></div>
+        <div className="w-2 bg-gradient-to-t from-yellow-500/50 to-yellow-300/70 animate-equalizer-premium-3 rounded-t-md shadow-lg shadow-yellow-400/30" style={{ height: '24px' }}></div>
+        <div className="w-2 bg-gradient-to-t from-purple-500/50 to-purple-300/70 animate-equalizer-premium-4 rounded-t-md shadow-lg shadow-purple-400/30" style={{ height: '40px' }}></div>
+        <div className="w-2 bg-gradient-to-t from-blue-500/50 to-blue-300/70 animate-equalizer-premium-5 rounded-t-md shadow-lg shadow-blue-400/30" style={{ height: '28px' }}></div>
+        <div className="w-2 bg-gradient-to-t from-teal-500/50 to-teal-300/70 animate-equalizer-premium-1 rounded-t-md shadow-lg shadow-teal-400/30" style={{ height: '36px' }}></div>
       </div>
       
-      <div className="absolute bottom-60 right-1/2 flex items-end gap-1">
-        <div className="w-1.5 bg-gradient-to-t from-emerald-500/40 to-emerald-300/60 animate-equalizer-2 rounded-t-sm shadow-sm shadow-emerald-400/40" style={{ height: '28px' }}></div>
-        <div className="w-1.5 bg-gradient-to-t from-orange-500/40 to-orange-300/60 animate-equalizer-4 rounded-t-sm shadow-sm shadow-orange-400/40" style={{ height: '18px' }}></div>
-        <div className="w-1.5 bg-gradient-to-t from-violet-500/40 to-violet-300/60 animate-equalizer-1 rounded-t-sm shadow-sm shadow-violet-400/40" style={{ height: '32px' }}></div>
-        <div className="w-1.5 bg-gradient-to-t from-cyan-500/40 to-cyan-300/60 animate-equalizer-5 rounded-t-sm shadow-sm shadow-cyan-400/40" style={{ height: '14px' }}></div>
+      <div className="absolute bottom-64 right-1/2 flex items-end gap-1.5">
+        <div className="w-2 bg-gradient-to-t from-teal-500/50 to-teal-300/70 animate-equalizer-premium-3 rounded-t-md shadow-lg shadow-teal-400/30" style={{ height: '36px' }}></div>
+        <div className="w-2 bg-gradient-to-t from-yellow-500/50 to-yellow-300/70 animate-equalizer-premium-5 rounded-t-md shadow-lg shadow-yellow-400/30" style={{ height: '24px' }}></div>
+        <div className="w-2 bg-gradient-to-t from-purple-500/50 to-purple-300/70 animate-equalizer-premium-2 rounded-t-md shadow-lg shadow-purple-400/30" style={{ height: '44px' }}></div>
+        <div className="w-2 bg-gradient-to-t from-blue-500/50 to-blue-300/70 animate-equalizer-premium-4 rounded-t-md shadow-lg shadow-blue-400/30" style={{ height: '20px' }}></div>
+        <div className="w-2 bg-gradient-to-t from-teal-500/50 to-teal-300/70 animate-equalizer-premium-1 rounded-t-md shadow-lg shadow-teal-400/30" style={{ height: '32px' }}></div>
       </div>
 
-      {/* Sound Waves - Enhanced with colors */}
-      <div className="absolute top-1/4 right-8 w-8 h-8">
-        <div className="absolute inset-0 border-2 border-cyan-400/30 rounded-full animate-ping"></div>
-        <div className="absolute inset-2 border-2 border-cyan-400/50 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
-        <div className="absolute inset-4 border border-cyan-400/70 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+      {/* Sophisticated Sound Waves */}
+      <div className="absolute top-1/4 right-12 w-10 h-10">
+        <div className="absolute inset-0 border-2 border-blue-400/20 rounded-full animate-ping"></div>
+        <div className="absolute inset-2 border-2 border-blue-400/30 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute inset-4 border border-blue-400/40 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute inset-6 border border-blue-400/50 rounded-full animate-ping" style={{ animationDelay: '1.5s' }}></div>
       </div>
       
-      <div className="absolute bottom-1/4 left-8 w-6 h-6">
-        <div className="absolute inset-0 border-2 border-emerald-400/30 rounded-full animate-ping"></div>
-        <div className="absolute inset-1 border-2 border-emerald-400/50 rounded-full animate-ping" style={{ animationDelay: '0.3s' }}></div>
-        <div className="absolute inset-2 border border-emerald-400/70 rounded-full animate-ping" style={{ animationDelay: '0.6s' }}></div>
+      <div className="absolute bottom-1/4 left-12 w-8 h-8">
+        <div className="absolute inset-0 border-2 border-teal-400/20 rounded-full animate-ping"></div>
+        <div className="absolute inset-1 border-2 border-teal-400/30 rounded-full animate-ping" style={{ animationDelay: '0.3s' }}></div>
+        <div className="absolute inset-2 border border-teal-400/40 rounded-full animate-ping" style={{ animationDelay: '0.6s' }}></div>
+        <div className="absolute inset-3 border border-teal-400/50 rounded-full animate-ping" style={{ animationDelay: '0.9s' }}></div>
       </div>
 
-      {/* Additional floating geometric shapes */}
-      <div className="absolute top-1/3 left-1/2 w-4 h-4 bg-gradient-to-br from-orange-400/30 to-orange-600/20 rotate-45 animate-float-delayed shadow-lg"></div>
-      <div className="absolute bottom-1/3 right-1/4 w-6 h-6 bg-gradient-to-br from-violet-400/30 to-violet-600/20 rounded-full animate-float shadow-lg"></div>
-      <div className="absolute top-2/3 left-1/5 w-3 h-8 bg-gradient-to-t from-cyan-400/30 to-cyan-600/20 rounded-full animate-float-delayed shadow-lg"></div>
+      {/* Luxury Floating Geometric Elements */}
+      <div className="absolute top-1/3 left-1/2 w-6 h-6 bg-gradient-to-br from-yellow-400/20 to-yellow-600/10 rotate-45 animate-float-gentle shadow-xl shadow-yellow-400/20" style={{ animationDelay: '1s' }}></div>
+      <div className="absolute bottom-1/3 right-1/4 w-8 h-8 bg-gradient-to-br from-purple-400/20 to-purple-600/10 rounded-full animate-float-gentle shadow-xl shadow-purple-400/20" style={{ animationDelay: '3s' }}></div>
+      <div className="absolute top-2/3 left-1/5 w-4 h-12 bg-gradient-to-t from-blue-400/20 to-blue-600/10 rounded-full animate-float-gentle shadow-xl shadow-blue-400/20" style={{ animationDelay: '5s' }}></div>
+      
+      {/* Premium Ambient Particles */}
+      <div className="absolute top-20 right-1/3 w-1 h-1 bg-blue-300/50 rounded-full animate-float-gentle" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute top-1/2 left-1/4 w-1.5 h-1.5 bg-teal-300/50 rounded-full animate-float-gentle" style={{ animationDelay: '4s' }}></div>
+      <div className="absolute bottom-1/3 left-1/3 w-1 h-1 bg-yellow-300/50 rounded-full animate-float-gentle" style={{ animationDelay: '6s' }}></div>
+      <div className="absolute bottom-20 right-1/5 w-1.5 h-1.5 bg-purple-300/50 rounded-full animate-float-gentle" style={{ animationDelay: '8s' }}></div>
     </div>
   )
 } 
