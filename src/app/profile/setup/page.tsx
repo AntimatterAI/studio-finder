@@ -1,18 +1,22 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Music, Mic, Plus, X, Instagram, Youtube, ArrowLeft, Check, Upload, Star, Sparkles } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { Music, Mic, Plus, X, Instagram, Youtube, ArrowLeft, Check, Upload, Star, Sparkles, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
 export default function ProfileSetupPage() {
+  const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [role, setRole] = useState<'artist' | 'producer' | null>(null)
   const [skills, setSkills] = useState<string[]>([])
   const [newSkill, setNewSkill] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
   const [formData, setFormData] = useState({
     displayName: '',
     bio: '',
@@ -72,6 +76,60 @@ export default function ProfileSetupPage() {
       case 3: return "Showcase your musical abilities"
       case 4: return "Connect your social profiles"
       default: return ""
+    }
+  }
+
+  const saveProfile = async () => {
+    if (!role || !formData.displayName.trim()) {
+      alert('Please complete required fields (role and display name)')
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      // Get current user
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      
+      if (userError || !user) {
+        alert('Authentication error. Please log in again.')
+        router.push('/login')
+        return
+      }
+
+      // Prepare profile data
+      const profileData = {
+        id: user.id,
+        role,
+        display_name: formData.displayName,
+        skills: skills.length > 0 ? skills : null,
+        socials: {
+          bio: formData.bio || null,
+          location: formData.location || null,
+          experience: formData.experience || null,
+          ...socialLinks
+        },
+        profile_complete: true,
+        updated_at: new Date().toISOString()
+      }
+
+      // Upsert profile data
+      const { error } = await supabase
+        .from('profiles')
+        .upsert(profileData)
+
+      if (error) {
+        console.error('Error saving profile:', error)
+        alert('Failed to save profile. Please try again.')
+        return
+      }
+
+      // Success - redirect to dashboard
+      router.push('/dashboard')
+    } catch (error) {
+      console.error('Error saving profile:', error)
+      alert('An unexpected error occurred. Please try again.')
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -462,13 +520,21 @@ export default function ProfileSetupPage() {
               ) : (
                 <Button
                   type="button"
+                  onClick={saveProfile}
+                  disabled={isSaving || !formData.displayName.trim()}
                   className="gradient-accent hover-lift focus-visible shadow-lg"
-                  asChild
                 >
-                  <Link href="/dashboard">
-                    Complete Profile
-                    <Star className="w-4 h-4 ml-2" />
-                  </Link>
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Saving Profile...
+                    </>
+                  ) : (
+                    <>
+                      Complete Profile
+                      <Star className="w-4 h-4 ml-2" />
+                    </>
+                  )}
                 </Button>
               )}
               
