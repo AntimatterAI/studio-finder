@@ -2,39 +2,34 @@ import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { AnimatedMusicBackground } from '@/components/AnimatedMusicBackground'
-import { Music, Users, Star, ArrowRight, Sparkles, Zap, Heart, Play, Headphones, Mic2, Crown, Infinity } from 'lucide-react'
+import { Music, Users, Star, ArrowRight, Sparkles, Zap, Heart, Play, Headphones, Mic2, Award, TrendingUp } from 'lucide-react'
 
 export default function HomePage() {
-
   return (
-    <div className="min-h-screen gradient-hero relative overflow-hidden particle-system">
+    <div className="min-h-screen gradient-hero relative overflow-hidden">
       <AnimatedMusicBackground />
       
-      {/* Advanced Background Effects */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-20 w-80 h-80 gradient-aurora rounded-full blur-3xl animate-aurora"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 gradient-cosmic rounded-full blur-3xl animate-cosmic-float"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[32rem] h-[32rem] gradient-luxury rounded-full blur-3xl animate-morphing opacity-30"></div>
-      </div>
+      {/* Subtle Background Elements */}
+      <div className="particles"></div>
       
-      {/* Premium Navigation */}
-      <nav className="glass-aurora fixed top-0 left-0 right-0 z-50 border-b border-blue-400/20">
+      {/* Professional Navigation */}
+      <nav className="glass fixed top-0 left-0 right-0 z-50 border-b border-white/10">
         <div className="container mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-5 animate-slide-in-elegant">
-              <div className="w-14 h-14 gradient-luxury rounded-3xl flex items-center justify-center shadow-2xl shadow-yellow-400/40 animate-glow-pulse">
-                <Music className="w-8 h-8 text-slate-900" />
+            <div className="flex items-center gap-5 animate-slide-up">
+              <div className="w-12 h-12 gradient-primary rounded-2xl flex items-center justify-center shadow-lg animate-pulse-slow">
+                <Music className="w-6 h-6 text-gray-900 font-bold" />
               </div>
-              <h1 className="text-heading-xl font-display text-gradient-aurora">Studio Finder</h1>
+              <h1 className="text-heading-xl font-display text-gradient-primary">Studio Finder</h1>
             </div>
-            <div className="flex items-center gap-6 animate-slide-in-elegant" style={{ animationDelay: '0.2s' }}>
-              <Button variant="outline" size="lg" className="hover-aurora focus-luxury border-blue-400/30 text-blue-300 hover:text-blue-200 font-medium" asChild>
+            <div className="flex items-center gap-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+              <Button variant="outline" size="lg" className="hover-glow focus-ring border-white/20 text-white hover:text-yellow-300 font-medium" asChild>
                 <Link href="/features">Features</Link>
               </Button>
-              <Button variant="outline" size="lg" className="hover-aurora focus-luxury border-blue-400/30 text-blue-300 hover:text-blue-200 font-medium" asChild>
+              <Button variant="outline" size="lg" className="hover-glow focus-ring border-white/20 text-white hover:text-yellow-300 font-medium" asChild>
                 <Link href="/login">Sign In</Link>
               </Button>
-              <Button size="lg" className="button-aurora text-slate-900 font-bold" asChild>
+              <Button size="lg" className="button-primary font-bold" asChild>
                 <Link href="/register">Get Started</Link>
               </Button>
             </div>
@@ -42,128 +37,119 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Hero Section - Ultra Premium */}
-      <section className="pt-48 pb-32 px-8 overflow-hidden">
+      {/* Hero Section - Clean & Professional */}
+      <section className="pt-32 pb-24 px-8">
         <div className="container mx-auto text-center">
-          <div className="max-w-7xl mx-auto animate-fade-in-up">
-            {/* Refined Badge */}
-            <div className="badge-aurora text-blue-200 mb-12 animate-fade-in-up hover-aurora group cursor-pointer micro-scale" style={{ animationDelay: '0.1s' }}>
-              <Crown className="w-5 h-5 group-hover:rotate-12 transition-all duration-300" />
-              <span className="font-medium">Redefining Music Collaboration</span>
-              <Infinity className="w-5 h-5 animate-aurora" />
+          <div className="max-w-6xl mx-auto animate-fade-in">
+            {/* Professional Badge */}
+            <div className="badge-elegant mb-8 animate-scale-in hover-scale cursor-pointer" style={{ animationDelay: '0.1s' }}>
+              <Award className="w-4 h-4" />
+              <span className="font-medium">Professional Music Collaboration</span>
             </div>
             
-            {/* Premium Headlines */}
-            <h2 className="text-display-2xl font-display mb-10 animate-fade-in-up text-white leading-[1.1]" style={{ animationDelay: '0.2s' }}>
-              <span className="text-white">Connect with</span>{' '}
-              <span className="text-gradient-aurora relative inline-block animate-shimmer">
-                Artists
-                <div className="absolute -bottom-4 left-0 right-0 h-1 bg-gradient-to-r from-blue-400/60 via-purple-400/60 to-transparent rounded-full animate-aurora"></div>
-              </span>
+            {/* Clean Headlines */}
+            <h2 className="text-display-2xl font-display mb-8 animate-slide-up text-white leading-tight" style={{ animationDelay: '0.2s' }}>
+              Connect with
+              <span className="text-gradient-primary"> Artists</span>
               <br className="hidden sm:block" />
-              <span className="text-white">& </span>
-              <span className="text-gradient-cosmic relative inline-block animate-shimmer" style={{ animationDelay: '0.5s' }}>
-                Producers
-                <div className="absolute -bottom-4 left-0 right-0 h-1 bg-gradient-to-r from-purple-400/60 via-pink-400/60 to-transparent rounded-full animate-cosmic-float"></div>
-              </span>
+              & <span className="text-gradient-warm">Producers</span>
             </h2>
             
-            {/* Elegant Subtitle */}
-            <p className="text-body-lg mb-16 max-w-5xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.3s', color: 'rgba(255, 255, 255, 0.9)' }}>
+            {/* Professional Subtitle */}
+            <p className="text-body-lg mb-12 max-w-4xl mx-auto leading-relaxed animate-slide-up text-white/90" style={{ animationDelay: '0.3s' }}>
               Discover your perfect creative partner through our AI-powered matching system. 
-              Book premium studios, collaborate with industry professionals, and elevate your music to extraordinary heights.
+              Book premium studios, collaborate with industry professionals, and elevate your music career.
             </p>
             
-            {/* Premium CTA Section */}
-            <div className="flex flex-col sm:flex-row gap-8 justify-center items-center mb-24 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-              <Button size="lg" className="button-aurora text-slate-900 font-bold text-lg px-12 py-5 hover-elevate group micro-bounce" asChild>
+            {/* Clean CTA Section */}
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+              <Button size="lg" className="button-primary text-lg px-10 py-4 hover-lift group" asChild>
                 <Link href="/register">
-                  <Play className="w-6 h-6 mr-4 group-hover:scale-110 transition-transform" />
+                  <Play className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" />
                   Start Your Journey
-                  <ArrowRight className="ml-4 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="hover-cosmic focus-luxury group glass-cosmic border-purple-400/30 text-purple-200 hover:text-purple-100 font-semibold text-lg px-12 py-5" asChild>
+              <Button size="lg" variant="outline" className="button-secondary text-lg px-10 py-4 hover-lift group" asChild>
                 <Link href="/login">
-                  <Headphones className="w-6 h-6 mr-4" />
+                  <Headphones className="w-5 h-5 mr-3" />
                   View Dashboard
                 </Link>
               </Button>
             </div>
             
-            {/* Luxury Stats */}
-            <div className="grid grid-cols-3 gap-16 max-w-4xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
-              <div className="stat-premium group hover-aurora">
-                <div className="text-heading-xl font-display text-gradient-aurora group-hover:scale-110 transition-transform mb-2 micro-glow">25K+</div>
-                <div className="text-body-md font-medium" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Active Creators</div>
+            {/* Professional Stats */}
+            <div className="grid grid-cols-3 gap-8 max-w-3xl mx-auto animate-slide-up" style={{ animationDelay: '0.5s' }}>
+              <div className="stat-card group hover-lift">
+                <div className="text-heading-xl font-display text-gradient-primary group-hover:scale-105 transition-transform mb-1">25K+</div>
+                <div className="text-body-md font-medium text-white/80">Active Creators</div>
               </div>
-              <div className="stat-premium group hover-cosmic">
-                <div className="text-heading-xl font-display text-gradient-cosmic group-hover:scale-110 transition-transform mb-2 micro-glow">150K+</div>
-                <div className="text-body-md font-medium" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Collaborations</div>
+              <div className="stat-card group hover-lift">
+                <div className="text-heading-xl font-display text-gradient-warm group-hover:scale-105 transition-transform mb-1">150K+</div>
+                <div className="text-body-md font-medium text-white/80">Collaborations</div>
               </div>
-              <div className="stat-premium group hover-aurora">
-                <div className="text-heading-xl font-display text-gradient-luxury group-hover:scale-110 transition-transform mb-2 micro-glow">800+</div>
-                <div className="text-body-md font-medium" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Premium Studios</div>
+              <div className="stat-card group hover-lift">
+                <div className="text-heading-xl font-display text-gradient-primary group-hover:scale-105 transition-transform mb-1">800+</div>
+                <div className="text-body-md font-medium text-white/80">Premium Studios</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section - World Class */}
-      <section className="py-32 px-8 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/30 to-transparent"></div>
+      {/* Features Section - Professional */}
+      <section className="py-24 px-8 relative">
         <div className="container mx-auto relative z-10">
-          <div className="text-center mb-24 animate-fade-in-up">
-            <h3 className="text-display-lg font-display mb-8 text-gradient-aurora animate-shimmer">
+          <div className="text-center mb-20 animate-fade-in">
+            <h3 className="text-display-lg font-display mb-6 text-gradient-primary">
               The Future of Music Creation
             </h3>
-            <p className="text-body-lg max-w-4xl mx-auto leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+            <p className="text-body-lg max-w-3xl mx-auto leading-relaxed text-white/90">
               Experience the most advanced platform for music collaboration, powered by cutting-edge AI and designed for the modern creator.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-8xl mx-auto">
-            <div className="card-aurora group animate-fade-in-up hover-aurora" style={{ animationDelay: '0.1s' }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="card-elegant group animate-slide-up hover-lift" style={{ animationDelay: '0.1s' }}>
               <div className="text-center">
-                <div className="w-24 h-24 gradient-aurora rounded-3xl flex items-center justify-center mx-auto mb-10 group-hover:scale-110 transition-all duration-500 animate-float-gentle shadow-2xl shadow-blue-400/40 micro-scale">
-                  <Users className="w-12 h-12 text-slate-900" />
+                <div className="w-16 h-16 gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300 animate-float shadow-xl">
+                  <Users className="w-8 h-8 text-gray-900" />
                 </div>
                 <h4 className="text-heading-md font-display text-white mb-4">AI-Powered Matching</h4>
-                <p className="text-body-md mb-6" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                <p className="text-body-md mb-4 text-white/80">
                   Our sophisticated algorithm analyzes your musical DNA to find perfect creative partners
                 </p>
-                <p className="text-body-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <p className="text-body-sm text-white/70">
                   Advanced compatibility scoring based on style, genre, workflow, and creative goals.
                 </p>
               </div>
             </div>
 
-            <div className="card-cosmic group animate-fade-in-up hover-cosmic" style={{ animationDelay: '0.2s' }}>
+            <div className="card-elegant group animate-slide-up hover-lift" style={{ animationDelay: '0.2s' }}>
               <div className="text-center">
-                <div className="w-24 h-24 gradient-cosmic rounded-3xl flex items-center justify-center mx-auto mb-10 group-hover:scale-110 transition-all duration-500 animate-cosmic-float shadow-2xl shadow-purple-400/40 micro-scale" style={{ animationDelay: '2s' }}>
-                  <Mic2 className="w-12 h-12 text-slate-900" />
+                <div className="w-16 h-16 gradient-warm rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300 animate-float shadow-xl" style={{ animationDelay: '2s' }}>
+                  <Mic2 className="w-8 h-8 text-gray-900" />
                 </div>
                 <h4 className="text-heading-md font-display text-white mb-4">Premium Studios</h4>
-                <p className="text-body-md mb-6" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                <p className="text-body-md mb-4 text-white/80">
                   Access to exclusive recording spaces with world-class equipment and acoustics
                 </p>
-                <p className="text-body-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <p className="text-body-sm text-white/70">
                   Vetted studios with professional engineers, flexible booking, and competitive rates.
                 </p>
               </div>
             </div>
 
-            <div className="card-aurora group animate-fade-in-up hover-aurora" style={{ animationDelay: '0.3s' }}>
+            <div className="card-elegant group animate-slide-up hover-lift" style={{ animationDelay: '0.3s' }}>
               <div className="text-center">
-                <div className="w-24 h-24 gradient-luxury rounded-3xl flex items-center justify-center mx-auto mb-10 group-hover:scale-110 transition-all duration-500 animate-morphing shadow-2xl shadow-yellow-400/40 micro-scale" style={{ animationDelay: '4s' }}>
-                  <Star className="w-12 h-12 text-slate-900" />
+                <div className="w-16 h-16 gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300 animate-float shadow-xl" style={{ animationDelay: '4s' }}>
+                  <TrendingUp className="w-8 h-8 text-gray-900" />
                 </div>
                 <h4 className="text-heading-md font-display text-white mb-4">Industry Network</h4>
-                <p className="text-body-md mb-6" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                <p className="text-body-md mb-4 text-white/80">
                   Connect with A&R scouts, producers, and industry professionals who can elevate your career
                 </p>
-                <p className="text-body-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <p className="text-body-sm text-white/70">
                   Exclusive access to industry events, collaboration opportunities, and career guidance.
                 </p>
               </div>
@@ -172,17 +158,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Social Proof - Elegant */}
-      <section className="py-32 px-8 glass-cosmic border-y border-purple-400/20 overflow-hidden">
+      {/* Social Proof - Clean */}
+      <section className="py-24 px-8 glass-card border-y border-white/10">
         <div className="container mx-auto text-center">
-          <div className="mb-20 animate-fade-in-up">
-            <h3 className="text-display-lg font-display mb-8 text-gradient-cosmic animate-shimmer">Trusted by Industry Leaders</h3>
-            <p className="text-body-lg max-w-4xl mx-auto leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+          <div className="mb-16 animate-fade-in">
+            <h3 className="text-display-lg font-display mb-6 text-gradient-warm">Trusted by Industry Leaders</h3>
+            <p className="text-body-lg max-w-3xl mx-auto leading-relaxed text-white/90">
               Join the community where tomorrow&apos;s hits are created today
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-16 items-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 items-center">
             {[
               { name: 'Universal Music', delay: '0s' },
               { name: 'Sony Records', delay: '0.1s' },
@@ -191,7 +177,7 @@ export default function HomePage() {
             ].map((label) => (
               <div 
                 key={label.name} 
-                className="text-heading-md font-display animate-slide-in-elegant hover-cosmic transition-all duration-300 cursor-pointer text-purple-200/80 hover:text-purple-100 micro-scale" 
+                className="text-heading-md font-display animate-slide-up hover-scale transition-all duration-300 cursor-pointer text-white/70 hover:text-yellow-300" 
                 style={{ animationDelay: label.delay }}
               >
                 {label.name}
@@ -201,57 +187,56 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section - Luxurious */}
-      <section className="py-32 px-8 gradient-aurora relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50"></div>
-        <div className="absolute inset-0 animate-aurora opacity-30"></div>
+      {/* CTA Section - Professional */}
+      <section className="py-24 px-8 gradient-primary relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent"></div>
         <div className="container mx-auto text-center relative z-10">
-          <div className="max-w-5xl mx-auto animate-fade-in-up">
-            <div className="badge-cosmic bg-slate-900/30 text-white mb-10 hover-cosmic micro-bounce">
-              <Zap className="w-5 h-5 animate-aurora" />
+          <div className="max-w-4xl mx-auto animate-fade-in">
+            <div className="badge-elegant bg-black/20 text-yellow-100 mb-8 hover-scale">
+              <Zap className="w-5 h-5" />
               <span className="font-semibold">Transform Your Music Career</span>
-              <Crown className="w-5 h-5 animate-cosmic-float" />
+              <Star className="w-5 h-5" />
             </div>
-            <h3 className="text-display-lg font-display mb-10 leading-tight text-slate-900 animate-shimmer">Ready to Create Something Extraordinary?</h3>
-            <p className="text-body-lg text-slate-800 mb-16 leading-relaxed max-w-4xl mx-auto">
+            <h3 className="text-display-lg font-display mb-8 leading-tight text-gray-900">Ready to Create Something Extraordinary?</h3>
+            <p className="text-body-lg text-gray-800 mb-12 leading-relaxed max-w-3xl mx-auto">
               Join Studio Finder today and step into the future of music collaboration. 
               Connect with the right people, access premium resources, and turn your creative vision into reality.
             </p>
-            <Button size="lg" className="button-cosmic shadow-2xl group font-bold text-xl px-16 py-6 micro-bounce" asChild>
-              <Link href="/register" className="flex items-center text-white hover:text-blue-100 no-underline">
-                <Heart className="w-7 h-7 mr-4 group-hover:scale-110 transition-transform animate-glow-pulse" />
+            <Button size="lg" className="button-secondary shadow-2xl group font-bold text-xl px-12 py-5 bg-black/90 hover:bg-black text-yellow-300 hover:text-yellow-200 border-yellow-400/30" asChild>
+              <Link href="/register" className="flex items-center no-underline">
+                <Heart className="w-6 h-6 mr-4 group-hover:scale-110 transition-transform" />
                 <span>Start Your Journey</span>
-                <Sparkles className="ml-4 w-7 h-7 group-hover:rotate-12 transition-transform animate-shimmer" />
+                <Sparkles className="ml-4 w-6 h-6 group-hover:rotate-12 transition-transform" />
               </Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Footer - Refined */}
-      <footer className="glass-aurora border-t border-blue-400/20 py-20">
+      {/* Footer - Clean */}
+      <footer className="glass border-t border-white/10 py-16">
         <div className="container mx-auto px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-16">
-            <div className="flex items-center gap-5 mb-10 md:mb-0 animate-slide-in-elegant">
-              <div className="w-12 h-12 gradient-luxury rounded-2xl flex items-center justify-center shadow-2xl shadow-yellow-400/40 animate-glow-pulse">
-                <Music className="w-7 h-7 text-slate-900" />
+          <div className="flex flex-col md:flex-row items-center justify-between mb-12">
+            <div className="flex items-center gap-4 mb-8 md:mb-0 animate-slide-up">
+              <div className="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center shadow-lg animate-pulse-slow">
+                <Music className="w-5 h-5 text-gray-900" />
               </div>
-              <span className="text-heading-lg font-display text-gradient-aurora">Studio Finder</span>
+              <span className="text-heading-lg font-display text-gradient-primary">Studio Finder</span>
             </div>
-            <div className="flex items-center gap-12 animate-slide-in-elegant" style={{ animationDelay: '0.2s' }}>
+            <div className="flex items-center gap-8 animate-slide-up" style={{ animationDelay: '0.1s' }}>
               {['Features', 'Sign In', 'Register', 'Dashboard'].map((item) => (
                 <Link 
                   key={item}
                   href={`/${item.toLowerCase().replace(' ', '')}`} 
-                  className="text-blue-200 hover:text-blue-100 transition-colors hover-aurora text-body-md font-medium micro-scale"
+                  className="text-white/80 hover:text-yellow-300 transition-colors hover-scale text-body-md font-medium"
                 >
                   {item}
                 </Link>
               ))}
             </div>
           </div>
-          <div className="border-t border-blue-400/20 pt-10 text-center">
-            <p className="text-body-md font-medium text-gradient-aurora animate-shimmer">
+          <div className="border-t border-white/10 pt-8 text-center">
+            <p className="text-body-md font-medium text-gradient-warm">
               Connecting visionaries worldwide through the power of music ✨
             </p>
           </div>
