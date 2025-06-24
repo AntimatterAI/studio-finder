@@ -20,8 +20,8 @@ export default function RootLayout({
               (function() {
                 try {
                   const theme = localStorage.getItem('theme');
-                  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  const isDark = theme === 'dark' || (!theme && systemDark);
+                  // Default to light mode unless explicitly set to dark
+                  const isDark = theme === 'dark';
                   document.documentElement.classList.toggle('dark', isDark);
                 } catch (e) {}
               })();

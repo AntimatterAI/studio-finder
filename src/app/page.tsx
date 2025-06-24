@@ -11,22 +11,15 @@ export default function HomePage() {
   const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
-    // Check system preference and localStorage
+    // Default to light mode unless explicitly set to dark
     const checkTheme = () => {
       const theme = localStorage.getItem('theme')
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      const isDarkMode = theme === 'dark' || (!theme && systemDark)
+      const isDarkMode = theme === 'dark'
       setIsDark(isDarkMode)
       document.documentElement.classList.toggle('dark', isDarkMode)
     }
     
     checkTheme()
-    
-    // Listen for system theme changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    mediaQuery.addEventListener('change', checkTheme)
-    
-    return () => mediaQuery.removeEventListener('change', checkTheme)
   }, [])
 
   const toggleTheme = () => {

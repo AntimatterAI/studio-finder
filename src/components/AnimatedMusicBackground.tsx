@@ -6,11 +6,10 @@ export default function AnimatedMusicBackground() {
   const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
-    // Check initial theme
+    // Default to light mode unless explicitly set to dark
     const checkTheme = () => {
       const theme = localStorage.getItem('theme')
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      const isDarkMode = theme === 'dark' || (!theme && systemDark)
+      const isDarkMode = theme === 'dark'
       setIsDark(isDarkMode)
     }
     
@@ -35,22 +34,22 @@ export default function AnimatedMusicBackground() {
       {/* Subtle Gradient Orbs */}
       <div className="absolute inset-0">
         {/* Large ambient orbs */}
-        <div className={`absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl animate-float opacity-20 ${
+        <div className={`absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl animate-float opacity-15 ${
           isDark 
             ? 'bg-gradient-to-r from-blue-600 to-purple-600' 
-            : 'bg-gradient-to-r from-blue-200 to-purple-200'
+            : 'bg-gradient-to-r from-blue-100 to-purple-100'
         }`} style={{ animationDelay: '0s', animationDuration: '8s' }} />
         
-        <div className={`absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl animate-float opacity-15 ${
+        <div className={`absolute bottom-20 right-20 w-80 h-80 rounded-full blur-3xl animate-float opacity-10 ${
           isDark 
             ? 'bg-gradient-to-r from-purple-600 to-pink-600' 
-            : 'bg-gradient-to-r from-purple-200 to-pink-200'
+            : 'bg-gradient-to-r from-purple-100 to-pink-100'
         }`} style={{ animationDelay: '2s', animationDuration: '10s' }} />
         
-        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full blur-3xl animate-float opacity-10 ${
+        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full blur-3xl animate-float opacity-8 ${
           isDark 
             ? 'bg-gradient-to-r from-cyan-600 to-blue-600' 
-            : 'bg-gradient-to-r from-cyan-200 to-blue-200'
+            : 'bg-gradient-to-r from-cyan-100 to-blue-100'
         }`} style={{ animationDelay: '4s', animationDuration: '12s' }} />
       </div>
 
@@ -60,8 +59,8 @@ export default function AnimatedMusicBackground() {
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
-            className={`absolute w-2 h-2 rounded-full animate-float opacity-30 ${
-              isDark ? 'bg-blue-400' : 'bg-blue-600'
+            className={`absolute w-2 h-2 rounded-full animate-float opacity-20 ${
+              isDark ? 'bg-blue-400' : 'bg-blue-500'
             }`}
             style={{
               left: `${10 + (i * 12)}%`,
@@ -76,8 +75,8 @@ export default function AnimatedMusicBackground() {
         {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={`large-${i}`}
-            className={`absolute w-1 h-1 rounded-full animate-float opacity-40 ${
-              isDark ? 'bg-purple-400' : 'bg-purple-600'
+            className={`absolute w-1 h-1 rounded-full animate-float opacity-25 ${
+              isDark ? 'bg-purple-400' : 'bg-purple-500'
             }`}
             style={{
               right: `${5 + (i * 15)}%`,
@@ -90,7 +89,7 @@ export default function AnimatedMusicBackground() {
       </div>
 
       {/* Subtle Grid Pattern */}
-      <div className={`absolute inset-0 opacity-5 ${
+      <div className={`absolute inset-0 opacity-3 ${
         isDark ? 'bg-grid-white/[0.02]' : 'bg-grid-black/[0.02]'
       }`} 
       style={{
@@ -101,8 +100,8 @@ export default function AnimatedMusicBackground() {
       {/* Theme-aware vignette */}
       <div className={`absolute inset-0 ${
         isDark 
-          ? 'bg-gradient-radial from-transparent via-transparent to-gray-900/50' 
-          : 'bg-gradient-radial from-transparent via-transparent to-gray-100/50'
+          ? 'bg-gradient-radial from-transparent via-transparent to-gray-900/30' 
+          : 'bg-gradient-radial from-transparent via-transparent to-gray-50/30'
       }`} />
     </div>
   )

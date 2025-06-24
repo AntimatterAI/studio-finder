@@ -51,11 +51,12 @@ export default function AdminPage() {
   const [isLoadingUsers, setIsLoadingUsers] = useState(false)
 
   useEffect(() => {
-    // Check system preference for dark mode
+    // Default to light mode unless explicitly set to dark
     if (typeof window !== 'undefined') {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      setIsDark(prefersDark)
-      document.documentElement.classList.toggle('dark', prefersDark)
+      const theme = localStorage.getItem('theme')
+      const isDarkMode = theme === 'dark'
+      setIsDark(isDarkMode)
+      document.documentElement.classList.toggle('dark', isDarkMode)
     }
     
     const checkAuthentication = () => {
