@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS public.invites (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     code TEXT UNIQUE NOT NULL,
+    code_type TEXT NOT NULL DEFAULT 'artist' CHECK (code_type IN ('artist', 'producer', 'studio', 'admin')),
     status TEXT NOT NULL CHECK (status IN ('approved', 'used')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -49,6 +50,7 @@ CREATE POLICY "Users can update their own profile" ON public.profiles
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_invites_code ON public.invites(code);
 CREATE INDEX IF NOT EXISTS idx_invites_status ON public.invites(status);
+CREATE INDEX IF NOT EXISTS idx_invites_code_type ON public.invites(code_type);
 CREATE INDEX IF NOT EXISTS idx_profiles_role ON public.profiles(role);
 CREATE INDEX IF NOT EXISTS idx_profiles_skills ON public.profiles USING GIN(skills);
 
@@ -72,10 +74,24 @@ CREATE TRIGGER handle_profiles_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION public.handle_updated_at();
 
--- Insert some sample invite codes for testing
-INSERT INTO public.invites (code, status) VALUES 
-    ('STUDIO2024', 'approved'),
-    ('MUSIC001', 'approved'),
-    ('ARTIST100', 'approved'),
-    ('PRODUCER50', 'approved')
+-- Update existing invites table if it already exists (migration)
+DO $$
+BEGIN
+    -- Add code_type column if it doesn't exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'invites' 
+        AND column_name = 'code_type'
+    ) THEN
+        ALTER TABLE public.invites ADD COLUMN code_type TEXT NOT NULL DEFAULT 'artist' CHECK (code_type IN ('artist', 'producer', 'studio', 'admin'));
+        CREATE INDEX IF NOT EXISTS idx_invites_code_type ON public.invites(code_type);
+    END IF;
+END $$;
+
+-- Insert some sample invite codes for testing with different types
+INSERT INTO public.invites (code, code_type, status) VALUES 
+    ('ART2024', 'artist', 'approved'),
+    ('PROD001', 'producer', 'approved'),
+    ('SPACE100', 'studio', 'approved'),
+    ('ADMIN001', 'admin', 'approved')
 ON CONFLICT (code) DO NOTHING; 
