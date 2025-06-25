@@ -462,6 +462,44 @@
   }
 }
 
+/* Wave Animations */
+@keyframes wave1 {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-200px); }
+}
+
+@keyframes wave2 {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-150px); }
+}
+
+@keyframes wave3 {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100px); }
+}
+
+@keyframes wave4 {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-75px); }
+}
+
+/* Wave Animation Classes */
+.animate-wave-1 {
+  animation: wave1 15s ease-in-out infinite;
+}
+
+.animate-wave-2 {
+  animation: wave2 12s ease-in-out infinite reverse;
+}
+
+.animate-wave-3 {
+  animation: wave3 18s ease-in-out infinite;
+}
+
+.animate-wave-4 {
+  animation: wave4 20s ease-in-out infinite reverse;
+}
+
 /* Responsive Design */
 @media (max-width: 640px) {
   .text-display-2xl { @apply text-4xl; }

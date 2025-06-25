@@ -88,14 +88,35 @@ export default function AnimatedMusicBackground() {
         ))}
       </div>
 
-      {/* Subtle Grid Pattern */}
-      <div className={`absolute inset-0 opacity-3 ${
-        isDark ? 'bg-grid-white/[0.02]' : 'bg-grid-black/[0.02]'
-      }`} 
-      style={{
-        backgroundImage: `linear-gradient(rgba(${isDark ? '255,255,255' : '0,0,0'},0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(${isDark ? '255,255,255' : '0,0,0'},0.02) 1px, transparent 1px)`,
-        backgroundSize: '50px 50px'
-      }} />
+      {/* Animated Music Waves */}
+      <div className="absolute inset-0 opacity-5">
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+          {/* Wave 1 - Low frequency */}
+          <path
+            d="M0,400 Q150,300 300,400 T600,400 T900,400 T1200,400 V800 H0 Z"
+            fill={isDark ? 'rgba(96, 165, 250, 0.03)' : 'rgba(59, 130, 246, 0.03)'}
+            className="animate-wave-1"
+          />
+          {/* Wave 2 - Medium frequency */}
+          <path
+            d="M0,450 Q100,350 200,450 T400,450 T600,450 T800,450 T1000,450 T1200,450 V800 H0 Z"
+            fill={isDark ? 'rgba(139, 92, 246, 0.025)' : 'rgba(147, 51, 234, 0.025)'}
+            className="animate-wave-2"
+          />
+          {/* Wave 3 - High frequency */}
+          <path
+            d="M0,350 Q75,280 150,350 T300,350 T450,350 T600,350 T750,350 T900,350 T1050,350 T1200,350 V800 H0 Z"
+            fill={isDark ? 'rgba(168, 85, 247, 0.02)' : 'rgba(139, 92, 246, 0.02)'}
+            className="animate-wave-3"
+          />
+          {/* Wave 4 - Very high frequency (subtle) */}
+          <path
+            d="M0,380 Q50,340 100,380 T200,380 T300,380 T400,380 T500,380 T600,380 T700,380 T800,380 T900,380 T1000,380 T1100,380 T1200,380 V800 H0 Z"
+            fill={isDark ? 'rgba(59, 130, 246, 0.015)' : 'rgba(96, 165, 250, 0.015)'}
+            className="animate-wave-4"
+          />
+        </svg>
+      </div>
 
       {/* Theme-aware vignette */}
       <div className={`absolute inset-0 ${
