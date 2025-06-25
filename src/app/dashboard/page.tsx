@@ -76,7 +76,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     checkAuth()
-  }, [router])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadUserProfile = async () => {
     try {

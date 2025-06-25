@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Shield, Eye, EyeOff, AlertCircle, Lock } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -23,16 +24,44 @@ export default function AdminLoginPage() {
     setIsLoading(true)
     setError('')
 
-    // Simple hardcoded authentication
-    if (formData.email === 'paul@antimatterai.com' && formData.password === 'Password123') {
-      // Set admin session
-      localStorage.setItem('admin_session', 'authenticated')
-      localStorage.setItem('admin_email', formData.email)
-      localStorage.setItem('admin_login_time', Date.now().toString())
-      
-      router.push('/admin')
-    } else {
-      setError('Invalid credentials')
+    try {
+      // First authenticate with Supabase Auth
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password
+      })
+
+      if (error) {
+        setError('Invalid email or password')
+        setIsLoading(false)
+        return
+      }
+
+      if (data.user) {
+        // Check if user is an admin
+        const { data: adminCheck, error: adminError } = await supabase
+          .from('admin_users')
+          .select('*')
+          .eq('email', formData.email)
+          .single()
+
+        if (adminError || !adminCheck) {
+          setError('Access denied. Admin privileges required.')
+          await supabase.auth.signOut()
+          setIsLoading(false)
+          return
+        }
+
+        // Set admin session
+        localStorage.setItem('admin_session', 'authenticated')
+        localStorage.setItem('admin_email', formData.email)
+        localStorage.setItem('admin_login_time', Date.now().toString())
+        
+        router.push('/admin')
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      setError('An error occurred during login')
     }
     
     setIsLoading(false)

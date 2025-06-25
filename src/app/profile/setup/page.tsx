@@ -7,13 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabase'
-import { Music, Mic, Plus, X, Instagram, Youtube, ArrowLeft, Check, Upload, Star, Sparkles, Loader2 } from 'lucide-react'
+import { Music, Mic, Plus, X, Instagram, Youtube, ArrowLeft, Check, Upload, Star, Sparkles, Loader2, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 
 export default function ProfileSetupPage() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
-  const [role, setRole] = useState<'artist' | 'producer' | null>(null)
+  const [role, setRole] = useState<'artist' | 'producer' | 'studio' | null>(null)
+  const [tierLevel, setTierLevel] = useState<1 | 2 | 3>(1)
   const [skills, setSkills] = useState<string[]>([])
   const [newSkill, setNewSkill] = useState('')
   const [isSaving, setIsSaving] = useState(false)
@@ -21,7 +22,8 @@ export default function ProfileSetupPage() {
     displayName: '',
     bio: '',
     location: '',
-    experience: ''
+    experience: '',
+    hourlyRate: ''
   })
   const [socialLinks, setSocialLinks] = useState({
     instagram: '',
@@ -29,6 +31,33 @@ export default function ProfileSetupPage() {
     spotify: '',
     youtube: ''
   })
+  const [rooms, setRooms] = useState<Array<{
+    name: string
+    capacity: number
+    hourlyRate: string
+    equipment: string[]
+  }>>([])
+  const [newRoom, setNewRoom] = useState({
+    name: '',
+    capacity: 1,
+    hourlyRate: '',
+    equipment: [] as string[]
+  })
+  const [newEquipment, setNewEquipment] = useState('')
+
+  // Load registration data on component mount
+  React.useEffect(() => {
+    const registrationData = localStorage.getItem('registration_data')
+    if (registrationData) {
+      try {
+        const data = JSON.parse(registrationData)
+        setRole(data.role)
+        setTierLevel(data.tier_level)
+      } catch (error) {
+        console.error('Error loading registration data:', error)
+      }
+    }
+  }, [])
 
   const totalSteps = 4
 
@@ -41,6 +70,43 @@ export default function ProfileSetupPage() {
 
   const removeSkill = (skillToRemove: string) => {
     setSkills(skills.filter(skill => skill !== skillToRemove))
+  }
+
+  const addRoom = () => {
+    if (newRoom.name.trim() && !rooms.find(r => r.name === newRoom.name.trim())) {
+      setRooms([...rooms, {
+        ...newRoom,
+        name: newRoom.name.trim(),
+        equipment: [...newRoom.equipment]
+      }])
+      setNewRoom({
+        name: '',
+        capacity: 1,
+        hourlyRate: '',
+        equipment: []
+      })
+    }
+  }
+
+  const removeRoom = (roomName: string) => {
+    setRooms(rooms.filter(room => room.name !== roomName))
+  }
+
+  const addEquipmentToRoom = () => {
+    if (newEquipment.trim() && !newRoom.equipment.includes(newEquipment.trim())) {
+      setNewRoom(prev => ({
+        ...prev,
+        equipment: [...prev.equipment, newEquipment.trim()]
+      }))
+      setNewEquipment('')
+    }
+  }
+
+  const removeEquipmentFromRoom = (equipment: string) => {
+    setNewRoom(prev => ({
+      ...prev,
+      equipment: prev.equipment.filter(e => e !== equipment)
+    }))
   }
 
   const handleInputChange = (field: string, value: string) => {
@@ -100,28 +166,44 @@ export default function ProfileSetupPage() {
       const profileData = {
         id: user.id,
         role,
+        tier_level: tierLevel, // Preserve tier level from registration
         display_name: formData.displayName,
-        skills: skills.length > 0 ? skills : null,
+        bio: formData.bio || null,
+        location: formData.location || null,
+        hourly_rate: formData.hourlyRate ? parseFloat(formData.hourlyRate) : null,
+        skills: role !== 'studio' && skills.length > 0 ? skills : null,
+        equipment: skills.length > 0 ? skills : null, // For all roles, equipment/skills stored in same field
+        rooms: role === 'studio' && rooms.length > 0 ? rooms.map(room => ({
+          name: room.name,
+          capacity: room.capacity,
+          hourly_rate: room.hourlyRate ? parseFloat(room.hourlyRate) : null,
+          equipment: room.equipment
+        })) : null,
         socials: {
-          bio: formData.bio || null,
-          location: formData.location || null,
           experience: formData.experience || null,
-          ...socialLinks
+          instagram: socialLinks.instagram || null,
+          soundcloud: socialLinks.soundcloud || null,
+          spotify: socialLinks.spotify || null,
+          youtube: socialLinks.youtube || null
         },
         profile_complete: true,
         updated_at: new Date().toISOString()
       }
 
-      // Upsert profile data
+      // Update profile data (don't upsert since it should already exist from registration)
       const { error } = await supabase
         .from('profiles')
-        .upsert(profileData)
+        .update(profileData)
+        .eq('id', user.id)
 
       if (error) {
         console.error('Error saving profile:', error)
         alert('Failed to save profile. Please try again.')
         return
       }
+
+      // Clear registration data from localStorage
+      localStorage.removeItem('registration_data')
 
       // Success - redirect to dashboard
       router.push('/dashboard')
@@ -157,9 +239,17 @@ export default function ProfileSetupPage() {
             </Link>
           </Button>
           
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-body-sm font-medium mb-6">
-            <Sparkles className="w-4 h-4" />
-            Complete your profile to get better matches
+          <div className="flex flex-col sm:flex-row gap-3 items-center justify-center mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-body-sm font-medium">
+              <Sparkles className="w-4 h-4" />
+              Complete your profile to get better matches
+            </div>
+            {role && tierLevel && (
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-body-sm font-medium">
+                <Check className="w-4 h-4" />
+                {role.charAt(0).toUpperCase() + role.slice(1)} • Tier {tierLevel}
+              </div>
+            )}
           </div>
           
           <h1 className="text-display-xl font-display text-gradient-primary mb-2">Complete Your Profile</h1>
@@ -191,63 +281,106 @@ export default function ProfileSetupPage() {
             {/* Step 1: Role Selection */}
             {currentStep === 1 && (
               <div className="space-y-6 animate-fade-in">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setRole('artist')}
-                    className={`p-6 border-2 rounded-2xl text-left transition-all duration-200 hover-lift group ${
-                      role === 'artist'
-                        ? 'border-purple-400 bg-purple-50 shadow-lg'
-                        : 'border-slate-200 hover:border-purple-300 bg-white/60'
-                    }`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 ${
-                        role === 'artist' ? 'gradient-primary' : 'bg-slate-100'
-                      }`}>
-                        <Mic className={`w-6 h-6 ${role === 'artist' ? 'text-white' : 'text-slate-600'}`} />
-                      </div>
+                {role ? (
+                  <div className="p-6 bg-green-50 border border-green-200 rounded-xl">
+                    <div className="flex items-center gap-3">
+                      <Check className="w-6 h-6 text-green-500" />
                       <div>
-                        <h3 className="text-body-lg font-semibold text-slate-800">Artist</h3>
-                        <p className="text-body-sm text-slate-600">Vocalist, songwriter, performer</p>
+                        <h3 className="text-body-lg font-semibold text-green-700">Role Set from Invite Code</h3>
+                        <p className="text-body-sm text-green-600">
+                          Your role was automatically set to <span className="font-medium capitalize">{role}</span> based on your invite code.
+                          You can continue with this setup or contact admin to change your role.
+                        </p>
                       </div>
                     </div>
-                    {role === 'artist' && (
-                      <div className="mt-4 flex items-center gap-2 text-purple-600">
-                        <Check className="w-4 h-4" />
-                        <span className="text-body-sm font-medium">Selected</span>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setRole('artist')}
+                      className={`p-6 border-2 rounded-2xl text-left transition-all duration-200 hover-lift group ${
+                        role === 'artist'
+                          ? 'border-purple-400 bg-purple-50 shadow-lg'
+                          : 'border-slate-200 hover:border-purple-300 bg-white/60'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center text-center gap-4">
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 ${
+                          role === 'artist' ? 'gradient-primary' : 'bg-slate-100'
+                        }`}>
+                          <Mic className={`w-6 h-6 ${role === 'artist' ? 'text-white' : 'text-slate-600'}`} />
+                        </div>
+                        <div>
+                          <h3 className="text-body-lg font-semibold text-slate-800">Artist</h3>
+                          <p className="text-body-sm text-slate-600">Vocalist, songwriter, performer</p>
+                        </div>
                       </div>
-                    )}
-                  </button>
-                  
-                  <button
-                    type="button"
-                    onClick={() => setRole('producer')}
-                    className={`p-6 border-2 rounded-2xl text-left transition-all duration-200 hover-lift group ${
-                      role === 'producer'
-                        ? 'border-purple-400 bg-purple-50 shadow-lg'
-                        : 'border-slate-200 hover:border-purple-300 bg-white/60'
-                    }`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 ${
-                        role === 'producer' ? 'gradient-primary' : 'bg-slate-100'
-                      }`}>
-                        <Music className={`w-6 h-6 ${role === 'producer' ? 'text-white' : 'text-slate-600'}`} />
+                      {role === 'artist' && (
+                        <div className="mt-4 flex items-center justify-center gap-2 text-purple-600">
+                          <Check className="w-4 h-4" />
+                          <span className="text-body-sm font-medium">Selected</span>
+                        </div>
+                      )}
+                    </button>
+                    
+                    <button
+                      type="button"
+                      onClick={() => setRole('producer')}
+                      className={`p-6 border-2 rounded-2xl text-left transition-all duration-200 hover-lift group ${
+                        role === 'producer'
+                          ? 'border-purple-400 bg-purple-50 shadow-lg'
+                          : 'border-slate-200 hover:border-purple-300 bg-white/60'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center text-center gap-4">
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 ${
+                          role === 'producer' ? 'gradient-primary' : 'bg-slate-100'
+                        }`}>
+                          <Music className={`w-6 h-6 ${role === 'producer' ? 'text-white' : 'text-slate-600'}`} />
+                        </div>
+                        <div>
+                          <h3 className="text-body-lg font-semibold text-slate-800">Producer</h3>
+                          <p className="text-body-sm text-slate-600">Beat maker, mixer, engineer</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-body-lg font-semibold text-slate-800">Producer</h3>
-                        <p className="text-body-sm text-slate-600">Beat maker, mixer, engineer</p>
+                      {role === 'producer' && (
+                        <div className="mt-4 flex items-center justify-center gap-2 text-purple-600">
+                          <Check className="w-4 h-4" />
+                          <span className="text-body-sm font-medium">Selected</span>
+                        </div>
+                      )}
+                    </button>
+                    
+                    <button
+                      type="button"
+                      onClick={() => setRole('studio')}
+                      className={`p-6 border-2 rounded-2xl text-left transition-all duration-200 hover-lift group ${
+                        role === 'studio'
+                          ? 'border-purple-400 bg-purple-50 shadow-lg'
+                          : 'border-slate-200 hover:border-purple-300 bg-white/60'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center text-center gap-4">
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 ${
+                          role === 'studio' ? 'gradient-primary' : 'bg-slate-100'
+                        }`}>
+                          <Star className={`w-6 h-6 ${role === 'studio' ? 'text-white' : 'text-slate-600'}`} />
+                        </div>
+                        <div>
+                          <h3 className="text-body-lg font-semibold text-slate-800">Studio</h3>
+                          <p className="text-body-sm text-slate-600">Recording space, venue, facility</p>
+                        </div>
                       </div>
-                    </div>
-                    {role === 'producer' && (
-                      <div className="mt-4 flex items-center gap-2 text-purple-600">
-                        <Check className="w-4 h-4" />
-                        <span className="text-body-sm font-medium">Selected</span>
-                      </div>
-                    )}
-                  </button>
-                </div>
+                      {role === 'studio' && (
+                        <div className="mt-4 flex items-center justify-center gap-2 text-purple-600">
+                          <Check className="w-4 h-4" />
+                          <span className="text-body-sm font-medium">Selected</span>
+                        </div>
+                      )}
+                    </button>
+                  </div>
+                )}
                 
                 {role && (
                   <div className="p-4 bg-green-50 border border-green-200 rounded-xl animate-slide-up">
@@ -281,24 +414,33 @@ export default function ProfileSetupPage() {
                   
                   <div>
                     <Label htmlFor="location" className="text-body-sm font-medium text-slate-700">
-                      Location
+                      Location *
                     </Label>
                     <Input
                       id="location"
-                      placeholder="City, Country"
+                      placeholder={role === 'studio' ? 'Full address (clients will visit)' : 'City, Country'}
                       value={formData.location}
                       onChange={(e) => handleInputChange('location', e.target.value)}
                       className="mt-2 h-12 focus:border-purple-400 transition-colors"
                     />
+                    {role === 'studio' && (
+                      <p className="text-body-xs text-slate-500 mt-1">
+                        Provide your full studio address as clients will need to visit
+                      </p>
+                    )}
                   </div>
                   
                   <div>
                     <Label htmlFor="bio" className="text-body-sm font-medium text-slate-700">
-                      Bio
+                      {role === 'studio' ? 'Studio Description' : 'Bio'}
                     </Label>
                     <textarea
                       id="bio"
-                      placeholder="Tell us about your musical journey..."
+                      placeholder={
+                        role === 'studio' 
+                          ? 'Describe your studio, atmosphere, and what makes it special...'
+                          : 'Tell us about your musical journey...'
+                      }
                       value={formData.bio}
                       onChange={(e) => handleInputChange('bio', e.target.value)}
                       className="mt-2 w-full h-24 px-3 py-2 text-body-md border border-slate-200 rounded-lg focus:border-purple-400 focus:outline-none transition-colors resize-none"
@@ -326,6 +468,30 @@ export default function ProfileSetupPage() {
                       <option value="professional">Professional (10+ years)</option>
                     </select>
                   </div>
+                  
+                  {(role === 'producer' || role === 'studio') && (
+                    <div>
+                      <Label htmlFor="hourlyRate" className="text-body-sm font-medium text-slate-700">
+                        {role === 'studio' ? 'Base Hourly Rate (USD)' : 'Hourly Rate (USD)'} {role === 'studio' ? '(Optional)' : ''}
+                      </Label>
+                      <Input
+                        id="hourlyRate"
+                        type="number"
+                        min="0"
+                        step="5"
+                        placeholder={role === 'studio' ? 'e.g., 150' : 'e.g., 75'}
+                        value={formData.hourlyRate}
+                        onChange={(e) => handleInputChange('hourlyRate', e.target.value)}
+                        className="mt-2 h-12 focus:border-purple-400 transition-colors"
+                      />
+                      <p className="text-body-xs text-slate-500 mt-1">
+                        {role === 'studio' 
+                          ? 'Base rate for your studio. Individual rooms can have different rates.'
+                          : 'Your rate for production services. This helps clients understand your pricing.'
+                        }
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -333,24 +499,88 @@ export default function ProfileSetupPage() {
             {/* Step 3: Skills & Experience */}
             {currentStep === 3 && (
               <div className="space-y-6 animate-fade-in">
+                {/* Skills for Artists & Producers */}
+                {role !== 'studio' && (
+                  <div>
+                    <Label className="text-body-md font-medium text-slate-700">Skills & Genres</Label>
+                    <p className="text-body-sm text-slate-500 mt-1 mb-4">Add up to 10 skills or genres you work with</p>
+                    
+                    <div className="flex gap-2 mb-4">
+                      <Input
+                        value={newSkill}
+                        onChange={(e) => setNewSkill(e.target.value)}
+                        placeholder="Add a skill or genre"
+                        onKeyPress={(e) => e.key === 'Enter' && addSkill()}
+                        className="flex-1 h-12 focus:border-purple-400 transition-colors"
+                        maxLength={20}
+                      />
+                      <Button 
+                        type="button" 
+                        onClick={addSkill} 
+                        className="gradient-primary hover-lift h-12 px-6"
+                        disabled={!newSkill.trim() || skills.length >= 10}
+                      >
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    
+                    {skills.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {skills.map((skill, index) => (
+                          <span
+                            key={skill}
+                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-body-sm font-medium animate-scale-in"
+                            style={{ animationDelay: `${index * 0.1}s` }}
+                          >
+                            {skill}
+                            <button
+                              type="button"
+                              onClick={() => removeSkill(skill)}
+                              className="hover:text-purple-900 transition-colors"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    
+                    <div className="text-body-xs text-slate-500">
+                      {skills.length}/10 skills added
+                    </div>
+                  </div>
+                )}
+
+                {/* Equipment for all roles */}
                 <div>
-                  <Label className="text-body-md font-medium text-slate-700">Skills & Genres</Label>
-                  <p className="text-body-sm text-slate-500 mt-1 mb-4">Add up to 10 skills or genres you work with</p>
+                  <Label className="text-body-md font-medium text-slate-700">
+                    {role === 'studio' ? 'General Equipment' : role === 'producer' ? 'Production Equipment' : 'Equipment'}
+                  </Label>
+                  <p className="text-body-sm text-slate-500 mt-1 mb-4">
+                    {role === 'studio' 
+                      ? 'List general studio equipment available to all rooms'
+                      : 'Equipment you own or have access to'
+                    }
+                  </p>
                   
                   <div className="flex gap-2 mb-4">
                     <Input
                       value={newSkill}
                       onChange={(e) => setNewSkill(e.target.value)}
-                      placeholder="Add a skill or genre"
+                      placeholder={
+                        role === 'studio' ? 'e.g., Pro Tools, SSL Console' :
+                        role === 'producer' ? 'e.g., Logic Pro, Yamaha HS8' :
+                        'e.g., Guitar, Microphone'
+                      }
                       onKeyPress={(e) => e.key === 'Enter' && addSkill()}
                       className="flex-1 h-12 focus:border-purple-400 transition-colors"
-                      maxLength={20}
+                      maxLength={30}
                     />
                     <Button 
                       type="button" 
                       onClick={addSkill} 
                       className="gradient-primary hover-lift h-12 px-6"
-                      disabled={!newSkill.trim() || skills.length >= 10}
+                      disabled={!newSkill.trim() || skills.length >= 15}
                     >
                       <Plus className="w-4 h-4" />
                     </Button>
@@ -358,17 +588,17 @@ export default function ProfileSetupPage() {
                   
                   {skills.length > 0 && (
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {skills.map((skill, index) => (
+                      {skills.map((item, index) => (
                         <span
-                          key={skill}
-                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-body-sm font-medium animate-scale-in"
+                          key={item}
+                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-body-sm font-medium animate-scale-in"
                           style={{ animationDelay: `${index * 0.1}s` }}
                         >
-                          {skill}
+                          {item}
                           <button
                             type="button"
-                            onClick={() => removeSkill(skill)}
-                            className="hover:text-purple-900 transition-colors"
+                            onClick={() => removeSkill(item)}
+                            className="hover:text-blue-900 transition-colors"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -378,39 +608,187 @@ export default function ProfileSetupPage() {
                   )}
                   
                   <div className="text-body-xs text-slate-500">
-                    {skills.length}/10 skills added
+                    {skills.length}/{role === 'studio' ? 15 : 10} items added
                   </div>
                 </div>
 
-                {/* Suggested Skills */}
-                <div>
-                  <Label className="text-body-sm font-medium text-slate-700">Popular Skills</Label>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {['Hip Hop', 'Pop', 'R&B', 'Electronic', 'Jazz', 'Rock', 'Indie', 'Classical'].map((suggestion) => (
-                      <button
-                        key={suggestion}
-                        type="button"
-                        onClick={() => {
-                          if (!skills.includes(suggestion) && skills.length < 10) {
-                            setSkills([...skills, suggestion])
-                          }
-                        }}
-                        disabled={skills.includes(suggestion) || skills.length >= 10}
-                        className="px-3 py-1.5 border border-purple-200 text-purple-600 rounded-full text-body-xs font-medium hover:bg-purple-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover-scale"
+                {/* Room Management for Studios */}
+                {role === 'studio' && (
+                  <div>
+                    <Label className="text-body-md font-medium text-slate-700">Studio Rooms</Label>
+                    <p className="text-body-sm text-slate-500 mt-1 mb-4">Set up your studio rooms with specific rates and equipment</p>
+                    
+                    {/* Add New Room */}
+                    <div className="p-4 border-2 border-dashed border-gray-200 rounded-xl space-y-4">
+                      <h4 className="font-medium">Add New Room</h4>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label>Room Name</Label>
+                          <Input
+                            value={newRoom.name}
+                            onChange={(e) => setNewRoom(prev => ({ ...prev, name: e.target.value }))}
+                            placeholder="e.g., Studio A, Booth 1"
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label>Capacity</Label>
+                          <Input
+                            type="number"
+                            min="1"
+                            max="20"
+                            value={newRoom.capacity}
+                            onChange={(e) => setNewRoom(prev => ({ ...prev, capacity: Number(e.target.value) }))}
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label>Hourly Rate (Optional)</Label>
+                          <Input
+                            type="number"
+                            min="0"
+                            step="5"
+                            value={newRoom.hourlyRate}
+                            onChange={(e) => setNewRoom(prev => ({ ...prev, hourlyRate: e.target.value }))}
+                            placeholder="Override base rate"
+                            className="mt-1"
+                          />
+                        </div>
+                      </div>
+                      
+                      {/* Room Equipment */}
+                      <div>
+                        <Label>Room-Specific Equipment</Label>
+                        <div className="flex gap-2 mt-2">
+                          <Input
+                            value={newEquipment}
+                            onChange={(e) => setNewEquipment(e.target.value)}
+                            placeholder="Add equipment to this room"
+                            onKeyPress={(e) => e.key === 'Enter' && addEquipmentToRoom()}
+                            className="flex-1"
+                          />
+                          <Button 
+                            type="button" 
+                            onClick={addEquipmentToRoom}
+                            variant="outline"
+                            disabled={!newEquipment.trim()}
+                          >
+                            <Plus className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        
+                        {newRoom.equipment.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {newRoom.equipment.map((item) => (
+                              <span
+                                key={item}
+                                className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-sm"
+                              >
+                                {item}
+                                <button
+                                  type="button"
+                                  onClick={() => removeEquipmentFromRoom(item)}
+                                  className="hover:text-red-600"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      
+                      <Button 
+                        type="button" 
+                        onClick={addRoom}
+                        disabled={!newRoom.name.trim()}
+                        className="w-full"
                       >
-                        + {suggestion}
-                      </button>
-                    ))}
+                        Add Room
+                      </Button>
+                    </div>
+                    
+                    {/* Existing Rooms */}
+                    {rooms.length > 0 && (
+                      <div className="space-y-3">
+                        <h4 className="font-medium">Your Rooms ({rooms.length})</h4>
+                        {rooms.map((room) => (
+                          <div key={room.name} className="p-4 border rounded-lg">
+                            <div className="flex items-center justify-between mb-2">
+                              <h5 className="font-medium">{room.name}</h5>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => removeRoom(room.name)}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                            <div className="grid grid-cols-3 gap-4 text-sm text-gray-600">
+                              <div>Capacity: {room.capacity} people</div>
+                              <div>Rate: ${room.hourlyRate || 'Base rate'}/hr</div>
+                              <div>Equipment: {room.equipment.length} items</div>
+                            </div>
+                            {room.equipment.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {room.equipment.map((item) => (
+                                  <span key={item} className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs">
+                                    {item}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
+
+                {/* Suggested Skills for non-studios */}
+                {role !== 'studio' && (
+                  <div>
+                    <Label className="text-body-sm font-medium text-slate-700">Popular {role === 'artist' ? 'Genres' : 'Skills'}</Label>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {(role === 'artist' 
+                        ? ['Hip Hop', 'Pop', 'R&B', 'Electronic', 'Jazz', 'Rock', 'Indie', 'Classical']
+                        : ['Mixing', 'Mastering', 'Beat Making', 'Recording', 'Vocal Production', 'Sound Design']
+                      ).map((suggestion) => (
+                        <button
+                          key={suggestion}
+                          type="button"
+                          onClick={() => {
+                            if (!skills.includes(suggestion) && skills.length < 10) {
+                              setSkills([...skills, suggestion])
+                            }
+                          }}
+                          disabled={skills.includes(suggestion) || skills.length >= 10}
+                          className="px-3 py-1.5 border border-purple-200 text-purple-600 rounded-full text-body-xs font-medium hover:bg-purple-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover-scale"
+                        >
+                          + {suggestion}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Upload Section */}
                 <div className="p-6 border-2 border-dashed border-purple-200 rounded-xl text-center bg-purple-50/50">
                   <div className="w-12 h-12 gradient-primary rounded-xl flex items-center justify-center mx-auto mb-4">
                     <Upload className="w-6 h-6 text-white" />
                   </div>
-                  <h4 className="text-body-md font-medium text-slate-800 mb-2">Upload Your Work</h4>
-                  <p className="text-body-sm text-slate-600 mb-4">Share your best tracks to showcase your talent</p>
+                  <h4 className="text-body-md font-medium text-slate-800 mb-2">
+                    {role === 'studio' ? 'Upload Studio Photos' : 'Upload Your Work'}
+                  </h4>
+                  <p className="text-body-sm text-slate-600 mb-4">
+                    {role === 'studio' 
+                      ? 'Show potential clients what your studio looks like'
+                      : 'Share your best tracks to showcase your talent'
+                    }
+                  </p>
                   <Button variant="outline" className="hover-lift">
                     Choose Files
                   </Button>
