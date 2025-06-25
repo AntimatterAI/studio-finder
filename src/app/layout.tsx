@@ -12,24 +12,25 @@ export const metadata: Metadata = {
   // Favicon and icons
   icons: {
     icon: [
-      { url: "/wavr_icon_192.png", type: "image/png" },
-      { url: "/wavr_icon_192.png", sizes: "192x192" },
-      { url: "/wavr_icon_192.png", sizes: "32x32" },
-      { url: "/wavr_icon_192.png", sizes: "16x16" }
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/wavr_favicon_32.svg", type: "image/svg+xml" },
+      { url: "/wavr_favicon_32.svg", sizes: "32x32" },
+      { url: "/wavr_favicon_32.svg", sizes: "16x16" },
+      { url: "/wavr_icon_192.svg", sizes: "192x192", type: "image/svg+xml" }
     ],
     apple: [
-      { url: "/wavr_icon_dark_512.png", sizes: "512x512", type: "image/png" },
-      { url: "/wavr_icon_dark_512.png", sizes: "180x180", type: "image/png" },
-      { url: "/wavr_icon_dark_512.png", sizes: "152x152", type: "image/png" },
-      { url: "/wavr_icon_dark_512.png", sizes: "120x120", type: "image/png" },
-      { url: "/wavr_icon_dark_512.png", sizes: "76x76", type: "image/png" }
+      { url: "/wavr_icon_dark_512.svg", sizes: "512x512", type: "image/svg+xml" },
+      { url: "/wavr_icon_dark_512.svg", sizes: "180x180", type: "image/svg+xml" },
+      { url: "/wavr_icon_dark_512.svg", sizes: "152x152", type: "image/svg+xml" },
+      { url: "/wavr_icon_dark_512.svg", sizes: "120x120", type: "image/svg+xml" },
+      { url: "/wavr_icon_dark_512.svg", sizes: "76x76", type: "image/svg+xml" }
     ],
-    shortcut: "/wavr_icon_192.png",
+    shortcut: "/wavr_favicon_32.svg",
     other: [
       {
-        url: "/wavr_icon_192.png",
+        url: "/wavr_icon_192.svg",
         sizes: "192x192",
-        type: "image/png",
+        type: "image/svg+xml",
       },
     ],
   },
@@ -38,24 +39,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://studio-finder-git-main-pauls-projects-a3e85521.vercel.app",
+    url: "https://wavr.club",
     title: "wavr - Connect with Music Creators",
     description: "Connect with music studios, artists, and producers worldwide. Find collaborators, book studios, and grow your music career.",
     siteName: "wavr",
     images: [
       {
-        url: "/wavr_logo_dark.png",
+        url: "/wavr_logo_dark.svg",
         width: 1200,
         height: 630,
         alt: "wavr - Music Collaboration Platform",
-        type: "image/png",
+        type: "image/svg+xml",
       },
       {
-        url: "/wavr_icon_dark_512.png",
+        url: "/wavr_icon_dark_512.svg",
         width: 512,
         height: 512, 
         alt: "wavr logo",
-        type: "image/png",
+        type: "image/svg+xml",
       },
     ],
   },
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "wavr - Connect with Music Creators",
     description: "Connect with music studios, artists, and producers worldwide. Find collaborators, book studios, and grow your music career.",
-    images: ["/wavr_logo_dark.png"],
+    images: ["/wavr_logo_dark.svg"],
     creator: "@wavr",
   },
   
@@ -91,27 +92,28 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="dark">
       <head>
-        <link rel="icon" href="/wavr_icon_192.png" type="image/png" />
-        <link rel="icon" href="/wavr_icon_192.png" sizes="192x192" />
-        <link rel="icon" href="/wavr_icon_192.png" sizes="32x32" />
-        <link rel="icon" href="/wavr_icon_192.png" sizes="16x16" />
-        <link rel="apple-touch-icon" href="/wavr_icon_dark_512.png" />
-        <link rel="apple-touch-icon" sizes="512x512" href="/wavr_icon_dark_512.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/wavr_icon_dark_512.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/wavr_icon_dark_512.png" />
-        <link rel="apple-touch-icon" sizes="120x120" href="/wavr_icon_dark_512.png" />
-        <link rel="apple-touch-icon" sizes="76x76" href="/wavr_icon_dark_512.png" />
-        <link rel="mask-icon" href="/wavr_icon_dark_512.png" color="#9333ea" />
-        <link rel="shortcut icon" href="/wavr_icon_192.png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/wavr_favicon_32.svg" type="image/svg+xml" />
+        <link rel="icon" href="/wavr_favicon_32.svg" sizes="32x32" />
+        <link rel="icon" href="/wavr_favicon_32.svg" sizes="16x16" />
+        <link rel="icon" href="/wavr_icon_192.svg" sizes="192x192" />
+        <link rel="apple-touch-icon" href="/wavr_icon_dark_512.svg" />
+        <link rel="apple-touch-icon" sizes="512x512" href="/wavr_icon_dark_512.svg" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/wavr_icon_dark_512.svg" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/wavr_icon_dark_512.svg" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/wavr_icon_dark_512.svg" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/wavr_icon_dark_512.svg" />
+        <link rel="mask-icon" href="/wavr_icon_dark_512.svg" color="#9333ea" />
+        <link rel="shortcut icon" href="/wavr_favicon_32.svg" />
         <meta name="apple-mobile-web-app-title" content="wavr" />
         <meta name="application-name" content="wavr" />
-        <meta name="apple-touch-icon" content="/wavr_icon_dark_512.png" />
-        <meta name="msapplication-TileImage" content="/wavr_icon_dark_512.png" />
+        <meta name="apple-touch-icon" content="/wavr_icon_dark_512.svg" />
+        <meta name="msapplication-TileImage" content="/wavr_icon_dark_512.svg" />
         <meta name="msapplication-TileColor" content="#9333ea" />
         <meta name="theme-color" content="#0f0f23" />
         <meta name="color-scheme" content="dark" />
-        <meta property="og:image" content="/wavr_logo_dark.png" />
-        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image" content="/wavr_logo_dark.svg" />
+        <meta property="og:image:type" content="image/svg+xml" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <style dangerouslySetInnerHTML={{__html: `

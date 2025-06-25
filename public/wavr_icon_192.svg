@@ -1,0 +1,16 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F7FFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9F7FFF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Circular icon background -->
+  <circle cx="96" cy="96" r="82" fill="white" stroke="url(#gradient)" stroke-width="9"/>
+  
+  <!-- Sound wave inside circle -->
+  <path d="M 45 96 Q 52 75 59 96 Q 66 117 73 96 Q 80 56 87 96 Q 94 136 101 96 Q 108 56 115 96 Q 122 117 129 96 Q 136 75 147 96" 
+        fill="none" stroke="url(#gradient)" stroke-width="6" stroke-linecap="round"/>
+</svg>
+
