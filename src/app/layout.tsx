@@ -12,22 +12,24 @@ export const metadata: Metadata = {
   // Favicon and icons
   icons: {
     icon: [
-      { url: "/wavr-icon-1750892236.svg", type: "image/svg+xml" },
-      { url: "/wavr-icon-1750892236.svg", sizes: "32x32" },
-      { url: "/wavr-icon-1750892236.svg", sizes: "16x16" }
+      { url: "/wavr_icon_192.png", type: "image/png" },
+      { url: "/wavr_icon_192.png", sizes: "192x192" },
+      { url: "/wavr_icon_192.png", sizes: "32x32" },
+      { url: "/wavr_icon_192.png", sizes: "16x16" }
     ],
     apple: [
-      { url: "/wavr-icon-1750892236.svg", sizes: "180x180", type: "image/svg+xml" },
-      { url: "/wavr-icon-1750892236.svg", sizes: "152x152", type: "image/svg+xml" },
-      { url: "/wavr-icon-1750892236.svg", sizes: "120x120", type: "image/svg+xml" },
-      { url: "/wavr-icon-1750892236.svg", sizes: "76x76", type: "image/svg+xml" }
+      { url: "/wavr_icon_dark_512.png", sizes: "512x512", type: "image/png" },
+      { url: "/wavr_icon_dark_512.png", sizes: "180x180", type: "image/png" },
+      { url: "/wavr_icon_dark_512.png", sizes: "152x152", type: "image/png" },
+      { url: "/wavr_icon_dark_512.png", sizes: "120x120", type: "image/png" },
+      { url: "/wavr_icon_dark_512.png", sizes: "76x76", type: "image/png" }
     ],
-    shortcut: "/wavr-icon-1750892236.svg",
+    shortcut: "/wavr_icon_192.png",
     other: [
       {
-        url: "/wavr-icon-1750892236.svg",
-        sizes: "any",
-        type: "image/svg+xml",
+        url: "/wavr_icon_192.png",
+        sizes: "192x192",
+        type: "image/png",
       },
     ],
   },
@@ -42,18 +44,18 @@ export const metadata: Metadata = {
     siteName: "wavr",
     images: [
       {
-        url: "/og-image.svg",
+        url: "/wavr_logo_dark.png",
         width: 1200,
         height: 630,
         alt: "wavr - Music Collaboration Platform",
-        type: "image/svg+xml",
+        type: "image/png",
       },
       {
-        url: "/wavr-icon-1750892236.svg",
+        url: "/wavr_icon_dark_512.png",
         width: 512,
         height: 512, 
         alt: "wavr logo",
-        type: "image/svg+xml",
+        type: "image/png",
       },
     ],
   },
@@ -63,7 +65,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "wavr - Connect with Music Creators",
     description: "Connect with music studios, artists, and producers worldwide. Find collaborators, book studios, and grow your music career.",
-    images: ["/og-image.svg"],
+    images: ["/wavr_logo_dark.png"],
     creator: "@wavr",
   },
   
@@ -89,27 +91,29 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="dark">
       <head>
-        <link rel="icon" href="/wavr-icon-1750892236.svg" type="image/svg+xml" />
-        <link rel="icon" href="/wavr-icon-1750892236.svg" sizes="32x32" />
-        <link rel="icon" href="/wavr-icon-1750892236.svg" sizes="16x16" />
-        <link rel="apple-touch-icon" href="/wavr-icon-1750892236.svg" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/wavr-icon-1750892236.svg" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/wavr-icon-1750892236.svg" />
-        <link rel="apple-touch-icon" sizes="120x120" href="/wavr-icon-1750892236.svg" />
-        <link rel="apple-touch-icon" sizes="76x76" href="/wavr-icon-1750892236.svg" />
-        <link rel="mask-icon" href="/wavr-icon-1750892236.svg" color="#9333ea" />
-        <link rel="shortcut icon" href="/wavr-icon-1750892236.svg" />
+        <link rel="icon" href="/wavr_icon_192.png" type="image/png" />
+        <link rel="icon" href="/wavr_icon_192.png" sizes="192x192" />
+        <link rel="icon" href="/wavr_icon_192.png" sizes="32x32" />
+        <link rel="icon" href="/wavr_icon_192.png" sizes="16x16" />
+        <link rel="apple-touch-icon" href="/wavr_icon_dark_512.png" />
+        <link rel="apple-touch-icon" sizes="512x512" href="/wavr_icon_dark_512.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/wavr_icon_dark_512.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/wavr_icon_dark_512.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/wavr_icon_dark_512.png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/wavr_icon_dark_512.png" />
+        <link rel="mask-icon" href="/wavr_icon_dark_512.png" color="#9333ea" />
+        <link rel="shortcut icon" href="/wavr_icon_192.png" />
         <meta name="apple-mobile-web-app-title" content="wavr" />
         <meta name="application-name" content="wavr" />
-        <meta name="apple-touch-icon" content="/wavr-icon-1750892236.svg" />
-        <meta name="msapplication-TileImage" content="/wavr-icon-1750892236.svg" />
+        <meta name="apple-touch-icon" content="/wavr_icon_dark_512.png" />
+        <meta name="msapplication-TileImage" content="/wavr_icon_dark_512.png" />
         <meta name="msapplication-TileColor" content="#9333ea" />
         <meta name="theme-color" content="#0f0f23" />
         <meta name="color-scheme" content="dark" />
-        <meta property="og:image" content="/wavr-icon-1750892236.svg" />
-        <meta property="og:image:type" content="image/svg+xml" />
-        <meta property="og:image:width" content="512" />
-        <meta property="og:image:height" content="512" />
+        <meta property="og:image" content="/wavr_logo_dark.png" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <style dangerouslySetInnerHTML={{__html: `
           /* Force dark mode immediately */
           html { 
@@ -137,13 +141,27 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // Force dark mode IMMEDIATELY
+                // ULTRA AGGRESSIVE DARK MODE FORCE
                 document.documentElement.style.backgroundColor = '#0f0f23';
                 document.documentElement.style.colorScheme = 'dark';
+                document.documentElement.style.color = '#ffffff';
+                document.body && (document.body.style.backgroundColor = '#0f0f23');
+                document.body && (document.body.style.color = '#ffffff');
                 
+                // Force dark class immediately
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+                
+                // Set localStorage default to dark if not set
                 try {
                   const theme = localStorage.getItem('theme');
                   console.log('Theme from localStorage:', theme);
+                  
+                  if (theme === null || theme === undefined) {
+                    // No theme set, default to dark
+                    localStorage.setItem('theme', 'dark');
+                    console.log('Set default theme to dark');
+                  }
                   
                   if (theme === 'light') {
                     // User explicitly wants light mode
@@ -152,6 +170,9 @@ export default function RootLayout({
                     document.documentElement.classList.add('light');
                     document.documentElement.style.backgroundColor = '#ffffff';
                     document.documentElement.style.colorScheme = 'light';
+                    document.documentElement.style.color = '#000000';
+                    document.body && (document.body.style.backgroundColor = '#ffffff');
+                    document.body && (document.body.style.color = '#000000');
                   } else {
                     // Stay in dark mode
                     console.log('Staying in dark mode');
@@ -163,6 +184,7 @@ export default function RootLayout({
                   // If localStorage fails, force dark mode
                   document.documentElement.classList.add('dark');
                   document.documentElement.classList.remove('light');
+                  localStorage.setItem('theme', 'dark');
                 }
               })();
             `,

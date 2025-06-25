@@ -4,9 +4,15 @@
   "description": "Find collaborators, book studio time, and grow your music network.",
   "icons": [
     {
-      "src": "/wavr-icon-1750892236.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/wavr_icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/wavr_icon_dark_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],

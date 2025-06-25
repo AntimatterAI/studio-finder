@@ -23,7 +23,7 @@ interface TierOneProfile {
 }
 
 export default function HomePage() {
-  const [isDark, setIsDark] = useState(false)
+  const [isDark, setIsDark] = useState(true)  // Default to dark mode
   const [tierOneProfiles, setTierOneProfiles] = useState<TierOneProfile[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
