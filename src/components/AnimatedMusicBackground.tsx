@@ -53,69 +53,121 @@ export default function AnimatedMusicBackground() {
         }`} style={{ animationDelay: '4s', animationDuration: '12s' }} />
       </div>
 
-      {/* Floating Elements */}
-      <div className="absolute inset-0">
-        {/* Musical note shapes */}
-        {Array.from({ length: 8 }).map((_, i) => (
+      {/* Musical Staff Lines */}
+      <div className="absolute inset-0 opacity-8">
+        {[...Array(5)].map((_, i) => (
           <div
-            key={i}
-            className={`absolute w-2 h-2 rounded-full animate-float opacity-20 ${
-              isDark ? 'bg-blue-400' : 'bg-blue-500'
+            key={`staff-${i}`}
+            className={`absolute w-full h-px ${
+              isDark ? 'bg-blue-300/10' : 'bg-gray-300/15'
             }`}
             style={{
-              left: `${10 + (i * 12)}%`,
-              top: `${20 + (i * 8)}%`,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: `${6 + (i % 3)}s`
+              top: `${20 + i * 4}%`,
+              transform: `translateY(${Math.sin(i) * 2}px)`,
             }}
           />
         ))}
-        
-        {/* Larger floating elements */}
-        {Array.from({ length: 5 }).map((_, i) => (
+        {[...Array(5)].map((_, i) => (
           <div
-            key={`large-${i}`}
-            className={`absolute w-1 h-1 rounded-full animate-float opacity-25 ${
-              isDark ? 'bg-purple-400' : 'bg-purple-500'
+            key={`staff-bottom-${i}`}
+            className={`absolute w-full h-px ${
+              isDark ? 'bg-purple-300/8' : 'bg-gray-300/12'
             }`}
             style={{
-              right: `${5 + (i * 15)}%`,
-              top: `${30 + (i * 10)}%`,
-              animationDelay: `${i * 0.8}s`,
-              animationDuration: `${8 + (i % 2)}s`
+              top: `${60 + i * 4}%`,
+              transform: `translateY(${Math.sin(i + 2) * 2}px)`,
             }}
           />
         ))}
       </div>
 
-      {/* Animated Music Waves */}
-      <div className="absolute inset-0 opacity-5">
-        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-          {/* Wave 1 - Low frequency */}
+      {/* Sound Wave Visualizer */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-10">
+        <div className="flex items-end space-x-1">
+          {[...Array(40)].map((_, i) => (
+            <div
+              key={`wave-bar-${i}`}
+              className={`w-2 ${
+                isDark ? 'bg-blue-400' : 'bg-blue-500'
+              } animate-sound-wave`}
+              style={{
+                height: `${20 + Math.sin(i * 0.5) * 15}px`,
+                animationDelay: `${i * 0.1}s`,
+                animationDuration: `${1.5 + (i % 3) * 0.5}s`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Floating Musical Notes */}
+      <div className="absolute inset-0">
+        {/* Musical Note Symbols */}
+        {[...Array(12)].map((_, i) => {
+          const notes = ['♪', '♫', '♬', '♩', '♯', '♭']
+          const note = notes[i % notes.length]
+          return (
+            <div
+              key={`note-${i}`}
+              className={`absolute text-2xl animate-float opacity-15 ${
+                isDark ? 'text-blue-300' : 'text-blue-600'
+              }`}
+              style={{
+                left: `${(i * 8) % 90 + 5}%`,
+                top: `${(i * 7) % 80 + 10}%`,
+                animationDelay: `${i * 0.8}s`,
+                animationDuration: `${8 + (i % 4)}s`,
+                fontSize: `${16 + (i % 3) * 4}px`,
+              }}
+            >
+              {note}
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Frequency Visualization */}
+      <div className="absolute inset-0 opacity-6">
+        <svg className="w-full h-full" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+          {/* Sound Wave 1 - Low Frequency */}
           <path
-            d="M0,400 Q150,300 300,400 T600,400 T900,400 T1200,400 V800 H0 Z"
-            fill={isDark ? 'rgba(96, 165, 250, 0.03)' : 'rgba(59, 130, 246, 0.03)'}
-            className="animate-wave-1"
+            d="M0,300 Q100,250 200,300 T400,300 T600,300 T800,300"
+            stroke={isDark ? 'rgba(96, 165, 250, 0.1)' : 'rgba(59, 130, 246, 0.1)'}
+            strokeWidth="2"
+            fill="none"
+            className="animate-wave-draw"
           />
-          {/* Wave 2 - Medium frequency */}
+          {/* Sound Wave 2 - High Frequency */}
           <path
-            d="M0,450 Q100,350 200,450 T400,450 T600,450 T800,450 T1000,450 T1200,450 V800 H0 Z"
-            fill={isDark ? 'rgba(139, 92, 246, 0.025)' : 'rgba(147, 51, 234, 0.025)'}
-            className="animate-wave-2"
+            d="M0,320 Q50,280 100,320 T200,320 T300,320 T400,320 T500,320 T600,320 T700,320 T800,320"
+            stroke={isDark ? 'rgba(139, 92, 246, 0.08)' : 'rgba(147, 51, 234, 0.08)'}
+            strokeWidth="1.5"
+            fill="none"
+            className="animate-wave-draw-2"
           />
-          {/* Wave 3 - High frequency */}
+          {/* Sound Wave 3 - Medium Frequency */}
           <path
-            d="M0,350 Q75,280 150,350 T300,350 T450,350 T600,350 T750,350 T900,350 T1050,350 T1200,350 V800 H0 Z"
-            fill={isDark ? 'rgba(168, 85, 247, 0.02)' : 'rgba(139, 92, 246, 0.02)'}
-            className="animate-wave-3"
-          />
-          {/* Wave 4 - Very high frequency (subtle) */}
-          <path
-            d="M0,380 Q50,340 100,380 T200,380 T300,380 T400,380 T500,380 T600,380 T700,380 T800,380 T900,380 T1000,380 T1100,380 T1200,380 V800 H0 Z"
-            fill={isDark ? 'rgba(59, 130, 246, 0.015)' : 'rgba(96, 165, 250, 0.015)'}
-            className="animate-wave-4"
+            d="M0,280 Q75,240 150,280 T300,280 T450,280 T600,280 T750,280 T800,280"
+            stroke={isDark ? 'rgba(168, 85, 247, 0.06)' : 'rgba(139, 92, 246, 0.06)'}
+            strokeWidth="1"
+            fill="none"
+            className="animate-wave-draw-3"
           />
         </svg>
+      </div>
+
+      {/* Treble Clef */}
+      <div className={`absolute top-1/4 right-1/4 text-6xl opacity-5 animate-float ${
+        isDark ? 'text-purple-300' : 'text-purple-500'
+      }`} style={{ animationDuration: '12s' }}>
+        𝄞
+      </div>
+
+      {/* Bass Clef */}
+      <div className={`absolute bottom-1/3 left-1/5 text-5xl opacity-4 animate-float ${
+        isDark ? 'text-blue-300' : 'text-blue-500'
+      }`} style={{ animationDuration: '15s', animationDelay: '3s' }}>
+        𝄢
       </div>
 
       {/* Theme-aware vignette */}

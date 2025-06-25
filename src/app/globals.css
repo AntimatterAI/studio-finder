@@ -462,42 +462,76 @@
   }
 }
 
-/* Wave Animations */
-@keyframes wave1 {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-200px); }
+/* Musical Animations */
+@keyframes soundWave {
+  0%, 100% { 
+    transform: scaleY(0.5);
+    opacity: 0.6;
+  }
+  50% { 
+    transform: scaleY(1.5);
+    opacity: 1;
+  }
 }
 
-@keyframes wave2 {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-150px); }
+@keyframes waveDrawing {
+  0% { 
+    stroke-dasharray: 0 1000;
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% { 
+    stroke-dasharray: 1000 0;
+    opacity: 0.3;
+  }
 }
 
-@keyframes wave3 {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100px); }
+@keyframes waveDrawing2 {
+  0% { 
+    stroke-dasharray: 0 800;
+    opacity: 0.2;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  100% { 
+    stroke-dasharray: 800 0;
+    opacity: 0.2;
+  }
 }
 
-@keyframes wave4 {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-75px); }
+@keyframes waveDrawing3 {
+  0% { 
+    stroke-dasharray: 0 600;
+    opacity: 0.1;
+  }
+  40% {
+    opacity: 0.4;
+  }
+  100% { 
+    stroke-dasharray: 600 0;
+    opacity: 0.1;
+  }
 }
 
-/* Wave Animation Classes */
-.animate-wave-1 {
-  animation: wave1 15s ease-in-out infinite;
+/* Musical Animation Classes */
+.animate-sound-wave {
+  animation: soundWave 2s ease-in-out infinite;
+  transform-origin: bottom;
 }
 
-.animate-wave-2 {
-  animation: wave2 12s ease-in-out infinite reverse;
+.animate-wave-draw {
+  animation: waveDrawing 8s ease-in-out infinite;
 }
 
-.animate-wave-3 {
-  animation: wave3 18s ease-in-out infinite;
+.animate-wave-draw-2 {
+  animation: waveDrawing2 6s ease-in-out infinite reverse;
 }
 
-.animate-wave-4 {
-  animation: wave4 20s ease-in-out infinite reverse;
+.animate-wave-draw-3 {
+  animation: waveDrawing3 10s ease-in-out infinite;
 }
 
 /* Responsive Design */
