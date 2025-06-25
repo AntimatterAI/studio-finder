@@ -12,20 +12,20 @@ export const metadata: Metadata = {
   // Favicon and icons
   icons: {
     icon: [
-      { url: "/wavr-icon.svg", type: "image/svg+xml" },
-      { url: "/wavr-icon.svg", sizes: "32x32" },
-      { url: "/wavr-icon.svg", sizes: "16x16" }
+      { url: "/wavr-icon-1750892236.svg", type: "image/svg+xml" },
+      { url: "/wavr-icon-1750892236.svg", sizes: "32x32" },
+      { url: "/wavr-icon-1750892236.svg", sizes: "16x16" }
     ],
     apple: [
-      { url: "/wavr-icon.svg", sizes: "180x180", type: "image/svg+xml" },
-      { url: "/wavr-icon.svg", sizes: "152x152", type: "image/svg+xml" },
-      { url: "/wavr-icon.svg", sizes: "120x120", type: "image/svg+xml" },
-      { url: "/wavr-icon.svg", sizes: "76x76", type: "image/svg+xml" }
+      { url: "/wavr-icon-1750892236.svg", sizes: "180x180", type: "image/svg+xml" },
+      { url: "/wavr-icon-1750892236.svg", sizes: "152x152", type: "image/svg+xml" },
+      { url: "/wavr-icon-1750892236.svg", sizes: "120x120", type: "image/svg+xml" },
+      { url: "/wavr-icon-1750892236.svg", sizes: "76x76", type: "image/svg+xml" }
     ],
-    shortcut: "/wavr-icon.svg",
+    shortcut: "/wavr-icon-1750892236.svg",
     other: [
       {
-        url: "/wavr-icon.svg",
+        url: "/wavr-icon-1750892236.svg",
         sizes: "any",
         type: "image/svg+xml",
       },
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
         type: "image/svg+xml",
       },
       {
-        url: "/wavr-icon.svg",
+        url: "/wavr-icon-1750892236.svg",
         width: 512,
         height: 512, 
         alt: "wavr logo",
@@ -87,16 +87,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <head>
-        <link rel="icon" href="/wavr-icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/wavr-icon.svg" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/wavr-icon.svg" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/wavr-icon.svg" />
-        <link rel="apple-touch-icon" sizes="120x120" href="/wavr-icon.svg" />
-        <link rel="apple-touch-icon" sizes="76x76" href="/wavr-icon.svg" />
+        <link rel="icon" href="/wavr-icon-1750892236.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/wavr-icon-1750892236.svg" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/wavr-icon-1750892236.svg" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/wavr-icon-1750892236.svg" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/wavr-icon-1750892236.svg" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/wavr-icon-1750892236.svg" />
         <meta name="apple-mobile-web-app-title" content="wavr" />
         <meta name="application-name" content="wavr" />
+        <meta name="apple-touch-icon" content="/wavr-icon-1750892236.svg" />
+        <meta name="msapplication-TileImage" content="/wavr-icon-1750892236.svg" />
+        <style dangerouslySetInnerHTML={{__html: `
+          html { color-scheme: dark; }
+          html.light { color-scheme: light; }
+        `}} />
       </head>
       <body className="font-sans antialiased">
         <script
@@ -105,20 +111,15 @@ export default function RootLayout({
               (function() {
                 try {
                   const theme = localStorage.getItem('theme');
-                  // Default to dark mode unless explicitly set to light
+                  // HTML starts with dark class by default
                   if (theme === 'light') {
-                    // User wants light mode - don't add dark class
+                    // User explicitly wants light mode
                     document.documentElement.classList.remove('dark');
-                    document.documentElement.style.setProperty('color-scheme', 'light');
-                  } else {
-                    // Default to dark mode (theme is null, undefined, 'dark', or anything else)
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.style.setProperty('color-scheme', 'dark');
+                    document.documentElement.classList.add('light');
                   }
+                  // Otherwise stay in dark mode (already set in HTML)
                 } catch (e) {
-                  // If localStorage fails, default to dark mode
-                  document.documentElement.classList.add('dark');
-                  document.documentElement.style.setProperty('color-scheme', 'dark');
+                  // If localStorage fails, stay in dark mode (already set in HTML)
                 }
               })();
             `,
