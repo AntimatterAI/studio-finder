@@ -2,18 +2,17 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Studio Finder",
+  title: "wavr",
   description: "Connect with music studios, artists, and producers worldwide. Find collaborators, book studios, and grow your music career.",
-  keywords: ["music", "studio", "producer", "artist", "collaboration", "recording"],
-  authors: [{ name: "Studio Finder" }],
-  creator: "Studio Finder",
-  publisher: "Studio Finder",
+  keywords: ["music", "studio", "producer", "artist", "collaboration", "recording", "wavr"],
+  authors: [{ name: "wavr" }],
+  creator: "wavr",
+  publisher: "wavr",
   
   // Favicon and icons
   icons: {
     icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" }
+      { url: "/icon.svg", type: "image/svg+xml" }
     ],
     apple: [
       { url: "/icon.svg", sizes: "180x180", type: "image/svg+xml" }
@@ -25,15 +24,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://studio-finder.vercel.app",
-    title: "Studio Finder - Connect with Music Creators",
+    title: "wavr - Connect with Music Creators",
     description: "Connect with music studios, artists, and producers worldwide. Find collaborators, book studios, and grow your music career.",
-    siteName: "Studio Finder",
+    siteName: "wavr",
     images: [
       {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "Studio Finder - Music Collaboration Platform",
+        alt: "wavr - Music Collaboration Platform",
       },
     ],
   },
@@ -41,10 +40,10 @@ export const metadata: Metadata = {
   // Twitter/X Card
   twitter: {
     card: "summary_large_image",
-    title: "Studio Finder - Connect with Music Creators",
+    title: "wavr - Connect with Music Creators",
     description: "Connect with music studios, artists, and producers worldwide. Find collaborators, book studios, and grow your music career.",
     images: ["/og-image.svg"],
-    creator: "@studiofinder",
+    creator: "@wavr",
   },
   
   // Web App Manifest
@@ -54,7 +53,7 @@ export const metadata: Metadata = {
   other: {
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "default",
-    "apple-mobile-web-app-title": "Studio Finder",
+    "apple-mobile-web-app-title": "wavr",
   },
 };
 

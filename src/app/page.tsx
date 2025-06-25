@@ -116,7 +116,7 @@ export default function HomePage() {
               <Music className="w-6 h-6 text-primary" />
             </div>
             <h1 className="text-display-2xl font-display text-foreground">
-              Studio Finder
+              wavr
             </h1>
           </div>
           
@@ -456,7 +456,7 @@ export default function HomePage() {
                 Ready to Create?
               </h3>
               <p className="text-body-lg text-muted-foreground mb-8">
-                Join Studio Finder today and start building your music network.
+                Join wavr today and start building your music network.
               </p>
               <Button size="lg" className="button-primary" asChild>
                 <Link href="/register">

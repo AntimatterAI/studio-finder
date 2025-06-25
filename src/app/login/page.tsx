@@ -78,7 +78,7 @@ export default function LoginPage() {
               Welcome Back
             </CardTitle>
             <CardDescription className="text-body-md text-white/70">
-              Sign in to your Studio Finder account and continue creating
+              Sign in to your wavr account and continue creating
             </CardDescription>
             
             {/* Welcome Badge */}

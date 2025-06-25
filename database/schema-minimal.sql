@@ -1,4 +1,4 @@
--- Studio Finder - Super Simple Schema for Testing
+-- wavr - Super Simple Schema for Testing
 -- Run this in your Supabase SQL Editor
 
 -- Drop everything first to start clean

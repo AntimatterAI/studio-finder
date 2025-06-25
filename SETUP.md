@@ -1,6 +1,6 @@
-# Studio Finder Setup Guide
+# wavr Setup Guide
 
-This guide will help you set up the Studio Finder application with Supabase authentication and database.
+This guide will help you set up the wavr application with Supabase authentication and database.
 
 ## Prerequisites
 

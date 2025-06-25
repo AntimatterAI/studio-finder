@@ -549,7 +549,7 @@ export function RegisterForm() {
                   <li>• Browse and connect with other Tier 1 members</li>
                   <li>• Book Tier 1 studios and producers</li>
                   <li>• Share your music and get discovered</li>
-                  <li>• Join the Studio Finder community</li>
+                  <li>• Join the wavr community</li>
                 </ul>
               </div>
             </div>

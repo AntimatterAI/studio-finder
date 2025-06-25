@@ -77,7 +77,7 @@ export default function FeaturesPage() {
               ← Back to Home
             </Link>
           </Button>
-          <h1 className="text-display-2xl font-display text-white mb-4">Studio Finder Features</h1>
+          <h1 className="text-display-2xl font-display text-white mb-4">wavr Features</h1>
           <p className="text-body-lg text-gray-400 max-w-2xl mx-auto">
             Explore our powerful suite of tools designed to revolutionize music collaboration and studio booking
           </p>

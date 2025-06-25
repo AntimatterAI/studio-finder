@@ -18,7 +18,7 @@ import { supabase } from '@/lib/supabase'
 
 // export const metadata: Metadata = {
 //   title: 'Dashboard',
-//   description: 'Your Studio Finder dashboard - manage your music collaborations, projects, and connections.',
+//   description: 'Your wavr dashboard - manage your music collaborations, projects, and connections.',
 // }
 
 interface UserProfile {
@@ -369,7 +369,7 @@ export default function DashboardPage() {
               <Music className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-display-lg font-display text-foreground">Studio Finder</h1>
+              <h1 className="text-display-lg font-display text-foreground">wavr</h1>
               <p className="text-muted-foreground">Welcome back, {profile.display_name}</p>
             </div>
           </div>

@@ -38,7 +38,7 @@ export default function RegisterPage() {
             </div>
             
             <CardTitle className="text-display-md font-display text-gradient-accent mb-2">
-              Join Studio Finder
+              Join wavr
             </CardTitle>
             <CardDescription className="text-body-md text-slate-600 leading-relaxed">
               Create your account to connect with artists and producers worldwide
@@ -108,7 +108,7 @@ export default function RegisterPage() {
 
         {/* Trust Indicators */}
         <div className="mt-8 text-center animate-fade-in" style={{ animationDelay: '1s' }}>
-          <p className="text-body-xs text-slate-500 mb-3">Join 10,000+ musicians who trust Studio Finder</p>
+          <p className="text-body-xs text-slate-500 mb-3">Join 10,000+ musicians who trust wavr</p>
           <div className="flex items-center justify-center gap-6 opacity-60">
             <div className="text-body-xs font-medium">Invite Only</div>
             <div className="w-1 h-1 bg-slate-400 rounded-full"></div>

@@ -37,7 +37,7 @@
   
   <!-- Title -->
   <text x="280" y="280" font-size="72" font-weight="bold" fill="white" font-family="Arial, sans-serif">
-    Studio Finder
+    wavr
   </text>
   
   <!-- Subtitle -->
@@ -58,6 +58,6 @@
   
   <!-- URL -->
   <text x="280" y="560" font-size="28" fill="rgba(255,255,255,0.7)" font-family="Arial">
-    studio-finder.vercel.app
+    wavr.club
   </text>
 </svg> 
