@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Header from "@/components/Header";
 
 export const metadata: Metadata = {
   title: "wavr",
@@ -165,9 +166,10 @@ export default function RootLayout({
                     console.log('Set default theme to dark');
                   }
                   
+                  // INVERTED LOGIC: Only switch to light if explicitly set to 'light'
                   if (theme === 'light') {
-                    // User explicitly wants light mode
-                    console.log('Switching to light mode');
+                    // User explicitly chose light mode
+                    console.log('User chose light mode - switching to light');
                     document.documentElement.classList.remove('dark');
                     document.documentElement.classList.add('light');
                     document.documentElement.style.backgroundColor = '#ffffff';
@@ -176,8 +178,8 @@ export default function RootLayout({
                     document.body && (document.body.style.backgroundColor = '#ffffff');
                     document.body && (document.body.style.color = '#000000');
                   } else {
-                    // Stay in dark mode
-                    console.log('Staying in dark mode');
+                    // Default to dark mode (everything else including 'dark', null, undefined)
+                    console.log('Using dark mode (default)');
                     document.documentElement.classList.add('dark');
                     document.documentElement.classList.remove('light');
                   }
@@ -192,7 +194,10 @@ export default function RootLayout({
             `,
           }}
         />
-        {children}
+        <Header />
+        <main className="pt-20">
+          {children}
+        </main>
       </body>
     </html>
   );

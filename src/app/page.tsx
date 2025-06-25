@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
-import { ArrowRight, Music, Users, Calendar, Star, Sun, Moon, Sparkles, Headphones, Mic, Radio, MapPin, CheckCircle } from 'lucide-react'
+import { ArrowRight, Music, Users, Calendar, Star, Sparkles, Headphones, Mic, Radio, MapPin, CheckCircle } from 'lucide-react'
 import AnimatedMusicBackground from '@/components/AnimatedMusicBackground'
 import { supabase } from '@/lib/supabase'
 
@@ -28,12 +28,14 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Default to dark mode unless explicitly set to light
+    // INVERTED LOGIC: Default to dark mode, only light if explicitly chosen
     const checkTheme = () => {
       const theme = localStorage.getItem('theme')
-      const isDarkMode = theme !== 'light'  // Default to dark, only light if explicitly set
+      const isLightMode = theme === 'light'  // Only light if explicitly set to 'light'
+      const isDarkMode = !isLightMode        // Dark mode is the default (inverted)
       setIsDark(isDarkMode)
       document.documentElement.classList.toggle('dark', isDarkMode)
+      document.documentElement.classList.toggle('light', isLightMode)
     }
     
     checkTheme()
@@ -68,9 +70,12 @@ export default function HomePage() {
 
   const toggleTheme = () => {
     const newIsDark = !isDark
+    const newIsLight = !newIsDark
     setIsDark(newIsDark)
-    localStorage.setItem('theme', newIsDark ? 'dark' : 'light')
+    // INVERTED: Save 'light' only when choosing light mode, default is dark
+    localStorage.setItem('theme', newIsLight ? 'light' : 'dark')
     document.documentElement.classList.toggle('dark', newIsDark)
+    document.documentElement.classList.toggle('light', newIsLight)
   }
 
   const getRoleIcon = (role: string) => {
@@ -96,28 +101,22 @@ export default function HomePage() {
       {/* Background Animation */}
       <AnimatedMusicBackground />
       
-      {/* Theme Toggle */}
-      <div className="fixed top-6 right-6 z-50">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={toggleTheme}
-          className="w-10 h-10 p-0 bg-background/80 backdrop-blur-sm border-border/50"
-        >
-          {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-        </Button>
-      </div>
+
       
       <div className="container mx-auto px-6 py-16 relative z-10">
         {/* Hero Section */}
         <div className="text-center mb-20 animate-fade-in">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-              <Music className="w-6 h-6 text-primary" />
-            </div>
-            <h1 className="text-display-2xl font-display text-foreground">
-              wavr
-            </h1>
+            <img 
+              src="/wavr_logo_dark.svg" 
+              alt="wavr" 
+              className="h-16 w-auto dark:block hidden"
+            />
+            <img 
+              src="/wavr_logo_light.svg" 
+              alt="wavr" 
+              className="h-16 w-auto dark:hidden block"
+            />
           </div>
           
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
