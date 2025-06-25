@@ -28,10 +28,10 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Default to light mode unless explicitly set to dark
+    // Default to dark mode unless explicitly set to light
     const checkTheme = () => {
       const theme = localStorage.getItem('theme')
-      const isDarkMode = theme === 'dark'
+      const isDarkMode = theme !== 'light'  // Default to dark, only light if explicitly set
       setIsDark(isDarkMode)
       document.documentElement.classList.toggle('dark', isDarkMode)
     }

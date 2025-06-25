@@ -90,17 +90,26 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className="dark">
       <head>
         <link rel="icon" href="/wavr-icon-1750892236.svg" type="image/svg+xml" />
+        <link rel="icon" href="/wavr-icon-1750892236.svg" sizes="32x32" />
+        <link rel="icon" href="/wavr-icon-1750892236.svg" sizes="16x16" />
         <link rel="apple-touch-icon" href="/wavr-icon-1750892236.svg" />
         <link rel="apple-touch-icon" sizes="180x180" href="/wavr-icon-1750892236.svg" />
         <link rel="apple-touch-icon" sizes="152x152" href="/wavr-icon-1750892236.svg" />
         <link rel="apple-touch-icon" sizes="120x120" href="/wavr-icon-1750892236.svg" />
         <link rel="apple-touch-icon" sizes="76x76" href="/wavr-icon-1750892236.svg" />
+        <link rel="mask-icon" href="/wavr-icon-1750892236.svg" color="#9333ea" />
+        <link rel="shortcut icon" href="/wavr-icon-1750892236.svg" />
         <meta name="apple-mobile-web-app-title" content="wavr" />
         <meta name="application-name" content="wavr" />
         <meta name="apple-touch-icon" content="/wavr-icon-1750892236.svg" />
         <meta name="msapplication-TileImage" content="/wavr-icon-1750892236.svg" />
+        <meta name="msapplication-TileColor" content="#9333ea" />
         <meta name="theme-color" content="#0f0f23" />
         <meta name="color-scheme" content="dark" />
+        <meta property="og:image" content="/wavr-icon-1750892236.svg" />
+        <meta property="og:image:type" content="image/svg+xml" />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
         <style dangerouslySetInnerHTML={{__html: `
           /* Force dark mode immediately */
           html { 
