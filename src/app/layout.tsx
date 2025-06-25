@@ -12,10 +12,10 @@ export const metadata: Metadata = {
   // Favicon and icons
   icons: {
     icon: [
-      { url: "/icon.svg", type: "image/svg+xml" }
+      { url: "/icon.svg?v=2", type: "image/svg+xml" }
     ],
     apple: [
-      { url: "/icon.svg", sizes: "180x180", type: "image/svg+xml" }
+      { url: "/icon.svg?v=2", sizes: "180x180", type: "image/svg+xml" }
     ],
   },
   
@@ -23,16 +23,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://studio-finder.vercel.app",
+    url: "https://wavr.club",
     title: "wavr - Connect with Music Creators",
     description: "Connect with music studios, artists, and producers worldwide. Find collaborators, book studios, and grow your music career.",
     siteName: "wavr",
     images: [
       {
-        url: "/og-image.svg",
+        url: "/og-image.svg?v=2",
         width: 1200,
         height: 630,
         alt: "wavr - Music Collaboration Platform",
+        type: "image/svg+xml",
+      },
+      {
+        url: "/icon.svg?v=2",
+        width: 512,
+        height: 512, 
+        alt: "wavr logo",
+        type: "image/svg+xml",
       },
     ],
   },
@@ -42,18 +50,22 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "wavr - Connect with Music Creators",
     description: "Connect with music studios, artists, and producers worldwide. Find collaborators, book studios, and grow your music career.",
-    images: ["/og-image.svg"],
+    images: ["/og-image.svg?v=2"],
     creator: "@wavr",
   },
   
   // Web App Manifest
-  manifest: "/site.webmanifest",
+  manifest: "/site.webmanifest?v=2",
   
   // Additional meta tags
   other: {
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "default",
     "apple-mobile-web-app-title": "wavr",
+    "apple-touch-icon": "/icon.svg?v=2",
+    "theme-color": "#1a1a2e",
+    "msapplication-navbutton-color": "#1a1a2e",
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
   },
 };
 
@@ -71,10 +83,13 @@ export default function RootLayout({
               (function() {
                 try {
                   const theme = localStorage.getItem('theme');
-                  // Default to light mode unless explicitly set to dark
-                  const isDark = theme === 'dark';
+                  // Default to dark mode unless explicitly set to light
+                  const isDark = theme !== 'light';
                   document.documentElement.classList.toggle('dark', isDark);
-                } catch (e) {}
+                } catch (e) {
+                  // If localStorage fails, default to dark mode
+                  document.documentElement.classList.add('dark');
+                }
               })();
             `,
           }}
