@@ -12,10 +12,13 @@ export const metadata: Metadata = {
   // Favicon and icons
   icons: {
     icon: [
-      { url: "/icon.svg?v=2", type: "image/svg+xml" }
+      { url: "/icon.svg?v=3", type: "image/svg+xml" }
     ],
     apple: [
-      { url: "/icon.svg?v=2", sizes: "180x180", type: "image/svg+xml" }
+      { url: "/icon.svg?v=3", sizes: "180x180", type: "image/svg+xml" },
+      { url: "/icon.svg?v=3", sizes: "152x152", type: "image/svg+xml" },
+      { url: "/icon.svg?v=3", sizes: "120x120", type: "image/svg+xml" },
+      { url: "/icon.svg?v=3", sizes: "76x76", type: "image/svg+xml" }
     ],
   },
   
@@ -23,20 +26,20 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://wavr.club",
+    url: "https://studio-finder-git-main-pauls-projects-a3e85521.vercel.app",
     title: "wavr - Connect with Music Creators",
     description: "Connect with music studios, artists, and producers worldwide. Find collaborators, book studios, and grow your music career.",
     siteName: "wavr",
     images: [
       {
-        url: "/og-image.svg?v=2",
+        url: "/og-image.svg?v=3",
         width: 1200,
         height: 630,
         alt: "wavr - Music Collaboration Platform",
         type: "image/svg+xml",
       },
       {
-        url: "/icon.svg?v=2",
+        url: "/icon.svg?v=3",
         width: 512,
         height: 512, 
         alt: "wavr logo",
@@ -50,21 +53,25 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "wavr - Connect with Music Creators",
     description: "Connect with music studios, artists, and producers worldwide. Find collaborators, book studios, and grow your music career.",
-    images: ["/og-image.svg?v=2"],
+    images: ["/og-image.svg?v=3"],
     creator: "@wavr",
   },
   
   // Web App Manifest
-  manifest: "/site.webmanifest?v=2",
+  manifest: "/site.webmanifest?v=3",
   
   // Additional meta tags
   other: {
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "black-translucent",
     "apple-mobile-web-app-title": "wavr",
-    "apple-touch-icon": "/icon.svg?v=2",
+    "apple-touch-icon": "/icon.svg?v=3",
+    "apple-touch-icon-precomposed": "/icon.svg?v=3",
     "theme-color": "#1a1a2e",
     "msapplication-navbutton-color": "#1a1a2e",
+    "mobile-web-app-capable": "yes",
+    "apple-touch-fullscreen": "yes",
+    "format-detection": "telephone=no",
   },
 };
 
@@ -80,14 +87,17 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
+                // Force dark mode immediately to prevent flash
+                document.documentElement.classList.add('dark');
+                
                 try {
                   const theme = localStorage.getItem('theme');
-                  // Default to dark mode unless explicitly set to light
-                  const isDark = theme !== 'light';
-                  document.documentElement.classList.toggle('dark', isDark);
+                  // Only switch to light if explicitly set to light
+                  if (theme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                  }
                 } catch (e) {
-                  // If localStorage fails, default to dark mode
-                  document.documentElement.classList.add('dark');
+                  // If localStorage fails, stay in dark mode (already set above)
                 }
               })();
             `,
