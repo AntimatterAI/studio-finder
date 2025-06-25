@@ -534,6 +534,10 @@
   animation: waveDrawing3 10s ease-in-out infinite;
 }
 
+.animate-wave-draw-4 {
+  animation: waveDrawing 7s ease-in-out infinite reverse;
+}
+
 /* Responsive Design */
 @media (max-width: 640px) {
   .text-display-2xl { @apply text-4xl; }

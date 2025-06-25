@@ -52,6 +52,10 @@ export default function HomePage() {
 
       if (error) {
         console.error('Error fetching tier 1 profiles:', error)
+        // If the error is due to missing table, show a friendly message
+        if (error.message?.includes('relation "public.profiles" does not exist')) {
+          console.log('Database not set up yet - this is normal for new installations')
+        }
       } else {
         setTierOneProfiles(data || [])
       }
