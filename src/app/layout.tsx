@@ -66,7 +66,6 @@ export const metadata: Metadata = {
     "apple-mobile-web-app-status-bar-style": "black-translucent",
     "apple-mobile-web-app-title": "wavr",
     "apple-touch-icon": "/icon.svg?v=3",
-    "apple-touch-icon-precomposed": "/icon.svg?v=3",
     "theme-color": "#1a1a2e",
     "msapplication-navbutton-color": "#1a1a2e",
     "mobile-web-app-capable": "yes",
