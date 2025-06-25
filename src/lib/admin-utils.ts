@@ -89,13 +89,56 @@ export function makeUserAdmin(userEmail: string) {
       console.log('The user is now an admin and can access /admin')
     } else {
       console.error(`❌ ${result.message}`)
+      console.log('💡 Tip: Make sure the user has registered an account first at /register')
     }
   }).catch(error => {
     console.error('❌ Failed to promote user:', error)
   })
 }
 
-// Make the function available globally for console use
+/**
+ * Console command to create and setup first admin account
+ * Usage: Run this in browser console
+ */
+export function setupFirstAdmin(userEmail: string, password: string) {
+  console.log(`🚀 Setting up first admin account for ${userEmail}...`)
+  
+  supabase.auth.signUp({
+    email: userEmail,
+    password: password,
+    options: {
+      data: {
+        role: 'admin',
+        tier_level: 3,
+        registration_mode: 'admin_setup'
+      }
+    }
+  }).then(({ data, error }) => {
+    if (error) {
+      console.error('❌ Failed to create account:', error.message)
+      if (error.message.includes('already registered')) {
+        console.log('💡 Account already exists. Try logging in instead.')
+      }
+      return
+    }
+    
+    if (data.user) {
+      console.log('✅ Account created successfully!')
+      console.log('📧 Check your email for confirmation (if required)')
+      console.log('🔑 You can now login at /admin/login')
+      
+      // The admin promotion will happen automatically due to database setup
+      setTimeout(() => {
+        console.log('✅ Admin setup complete! You can now access /admin')
+      }, 1000)
+    }
+  }).catch(error => {
+    console.error('❌ Setup failed:', error)
+  })
+}
+
+// Make the functions available globally for console use
 if (typeof window !== 'undefined') {
-  (window as unknown as Record<string, unknown>).makeUserAdmin = makeUserAdmin
+  (window as unknown as Record<string, unknown>).makeUserAdmin = makeUserAdmin;
+  (window as unknown as Record<string, unknown>).setupFirstAdmin = setupFirstAdmin
 } 

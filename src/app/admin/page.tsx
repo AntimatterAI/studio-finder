@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { supabase } from '@/lib/supabase'
-import { makeUserAdmin } from '@/lib/admin-utils'
+import { makeUserAdmin, setupFirstAdmin } from '@/lib/admin-utils'
 import { 
   Copy, Trash2, Users, Key, CheckCircle, LogOut, User, 
   Activity, Sun, Moon, Shield, Star, MapPin, Radio, Headphones,
@@ -93,8 +93,11 @@ export default function AdminPage() {
     
     // Make admin utilities available in console for initial setup
     if (typeof window !== 'undefined') {
-      (window as unknown as Record<string, unknown>).makeUserAdmin = makeUserAdmin
-      console.log('🛠️ Admin utilities loaded. Use makeUserAdmin("email@example.com") in console to promote users.')
+      (window as unknown as Record<string, unknown>).makeUserAdmin = makeUserAdmin;
+      (window as unknown as Record<string, unknown>).setupFirstAdmin = setupFirstAdmin
+      console.log('🛠️ Admin utilities loaded:')
+      console.log('• makeUserAdmin("email@example.com") - Promote existing user to admin')
+      console.log('• setupFirstAdmin("email@example.com", "password") - Create and setup first admin account')
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
