@@ -24,7 +24,6 @@ interface TierOneProfile {
 }
 
 export default function HomePage() {
-  const [isDark, setIsDark] = useState(true)  // Default to dark mode
   const [tierOneProfiles, setTierOneProfiles] = useState<TierOneProfile[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -34,7 +33,6 @@ export default function HomePage() {
       const theme = localStorage.getItem('theme')
       const isLightMode = theme === 'light'  // Only light if explicitly set to 'light'
       const isDarkMode = !isLightMode        // Dark mode is the default (inverted)
-      setIsDark(isDarkMode)
       document.documentElement.classList.toggle('dark', isDarkMode)
       document.documentElement.classList.toggle('light', isLightMode)
     }
