@@ -4,7 +4,14 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Music, Users, MessageSquare, Settings, Search, TrendingUp, Calendar, Star, Bell, Plus, Play, Headphones, Mic2 } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { 
+  Music, Users, Camera, MapPin, DollarSign, 
+  Plus, Copy, Sun, Moon, LogOut, Crown, User, Heart, MessageSquare,
+  Instagram, Twitter, Youtube, Upload, Star, Calendar,
+  Radio, Headphones, Edit3, Save, X, CheckCircle
+} from 'lucide-react'
 import Link from 'next/link'
 // import type { Metadata } from 'next'
 
@@ -13,405 +20,618 @@ import Link from 'next/link'
 //   description: 'Your Studio Finder dashboard - manage your music collaborations, projects, and connections.',
 // }
 
+interface UserProfile {
+  id: string
+  role: 'artist' | 'producer' | 'studio' | null
+  display_name: string | null
+  bio: string | null
+  location: string | null
+  hourly_rate: number | null
+  skills: string[] | null
+  influences: string[] | null
+  media_urls: string[] | null
+  socials: Record<string, string> | null
+  profile_complete: boolean
+  availability: string | null
+  equipment: string[] | null
+}
+
 export default function DashboardPage() {
   const router = useRouter()
-  const [userEmail, setUserEmail] = useState('')
-  const [userName, setUserName] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [isDark, setIsDark] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [profile, setProfile] = useState<UserProfile | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedProfile, setEditedProfile] = useState<Partial<UserProfile>>({})
 
-  useEffect(() => {
-    // Check authentication
+  // Admin states
+  const [inviteCode, setInviteCode] = useState('')
+  const [codeType, setCodeType] = useState<'artist' | 'producer' | 'studio' | 'admin'>('artist')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [copiedCode, setCopiedCode] = useState<string | null>(null)
+
+  const checkAuth = async () => {
+    // Check if user is authenticated
     const userSession = localStorage.getItem('user_session')
-    const email = localStorage.getItem('user_email')
     
     if (!userSession || userSession !== 'authenticated') {
       router.push('/login')
       return
     }
     
-    if (email) {
-      setUserEmail(email)
-      // Extract name from email (simple approach)
-      const name = email.split('@')[0].split('.').map(part => 
-        part.charAt(0).toUpperCase() + part.slice(1)
-      ).join(' ')
-      setUserName(name)
+    // Check if admin
+    const adminEmail = localStorage.getItem('admin_email')
+    const adminSession = localStorage.getItem('admin_session')
+    const isUserAdmin = adminSession === 'authenticated' && adminEmail === 'paul@antimatterai.com'
+    setIsAdmin(isUserAdmin)
+
+    if (!isUserAdmin) {
+      // Load user profile for regular users
+      await loadUserProfile()
     }
+    
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    checkAuth()
   }, [router])
+
+  const loadUserProfile = async () => {
+    try {
+      // For demo purposes, we'll create a mock profile
+      // In real app, this would fetch from Supabase based on user ID
+      const mockProfile: UserProfile = {
+        id: '1',
+        role: 'artist',
+        display_name: 'Alex Thompson',
+        bio: 'Independent artist specializing in indie rock and alternative music. Always looking for new collaborators!',
+        location: 'Los Angeles, CA',
+        hourly_rate: 50,
+        skills: ['Vocals', 'Guitar', 'Songwriting'],
+        influences: ['Radiohead', 'Arctic Monkeys', 'Tame Impala'],
+        media_urls: [],
+        socials: {
+          instagram: '@alexthompsonmusic',
+          twitter: '@alexmusic',
+          youtube: 'Alex Thompson Music'
+        },
+        profile_complete: true,
+        availability: 'Available weekends',
+        equipment: ['Fender Stratocaster', 'Marshall Amp', 'Pro Tools']
+      }
+      setProfile(mockProfile)
+      setEditedProfile(mockProfile)
+    } catch (error) {
+      console.error('Error loading profile:', error)
+    }
+  }
+
+  const toggleTheme = () => {
+    const newIsDark = !isDark
+    setIsDark(newIsDark)
+    localStorage.setItem('theme', newIsDark ? 'dark' : 'light')
+    document.documentElement.classList.toggle('dark', newIsDark)
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('user_session')
     localStorage.removeItem('user_email')
     localStorage.removeItem('user_login_time')
+    if (isAdmin) {
+      localStorage.removeItem('admin_session')
+      localStorage.removeItem('admin_email')
+      localStorage.removeItem('admin_login_time')
+    }
     router.push('/')
   }
 
-  if (!userEmail) {
+  const generateInviteCode = async () => {
+    setIsGenerating(true)
+    try {
+      const prefixes = {
+        artist: ['ART', 'MUSIC', 'CREATE', 'TALENT'],
+        producer: ['PROD', 'BEAT', 'MIX', 'STUDIO'],
+        studio: ['SPACE', 'ROOM', 'REC', 'VENUE'],
+        admin: ['ADMIN', 'SUPER', 'CTRL', 'MGMT']
+      }
+      const prefix = prefixes[codeType][Math.floor(Math.random() * 4)]
+      const suffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+      const code = `${prefix}${suffix}`
+      
+      setInviteCode(code)
+      await copyToClipboard(code)
+    } catch (error) {
+      console.error('Error generating code:', error)
+    } finally {
+      setIsGenerating(false)
+    }
+  }
+
+  const copyToClipboard = async (code: string) => {
+    try {
+      await navigator.clipboard.writeText(code)
+      setCopiedCode(code)
+      setTimeout(() => setCopiedCode(null), 2000)
+    } catch (error) {
+      console.error('Failed to copy:', error)
+    }
+  }
+
+  const saveProfile = async () => {
+    try {
+      // In real app, this would update Supabase
+      setProfile(prev => ({ ...prev, ...editedProfile } as UserProfile))
+      setIsEditing(false)
+    } catch (error) {
+      console.error('Error saving profile:', error)
+    }
+  }
+
+  const updateField = (field: keyof UserProfile, value: string | number | string[] | Record<string, string> | boolean | null) => {
+    setEditedProfile(prev => ({ ...prev, [field]: value }))
+  }
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen gradient-hero flex items-center justify-center">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-foreground font-medium">Loading dashboard...</p>
+        </div>
       </div>
     )
   }
 
-  return (
-    <div className="min-h-screen gradient-hero">
-      {/* Header */}
-      <header className="glass fixed top-0 left-0 right-0 z-50 border-b border-blue-400/20">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 animate-slide-up">
-              <div className="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center animate-pulse-glow">
-                <Music className="w-6 h-6 text-white" />
+  // Admin Dashboard
+  if (isAdmin) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-6 py-8">
+          {/* Admin Header */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Crown className="w-6 h-6 text-primary" />
               </div>
-              <h1 className="text-heading-md font-display text-gradient-primary">Studio Finder</h1>
+              <div>
+                <h1 className="text-display-lg font-display text-foreground">Admin Dashboard</h1>
+                <p className="text-muted-foreground">Welcome back, Paul</p>
+              </div>
             </div>
-            <div className="flex items-center gap-3 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-              <Button variant="outline" size="sm" className="hover-glow-blue focus-ring relative border-blue-400/30 text-blue-300" asChild>
-                <Link href="/notifications">
-                  <Bell className="w-4 h-4" />
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">2</span>
-                </Link>
+            <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" onClick={toggleTheme} className="p-2">
+                {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </Button>
-              <Button variant="outline" size="sm" className="hover-glow-blue focus-ring border-blue-400/30 text-blue-300" asChild>
-                <Link href="/profile/setup">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Profile
-                </Link>
-              </Button>
-              <Button 
-                onClick={handleLogout}
-                variant="outline" 
-                size="sm" 
-                className="hover-glow-blue focus-ring border-blue-400/30 text-blue-300"
-              >
-                Sign Out
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
               </Button>
             </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="pt-24 pb-8 px-4">
-        <div className="max-w-7xl mx-auto">
-          {/* Welcome Section */}
-          <div className="mb-8 animate-fade-in">
-            <h2 className="text-display-lg font-display mb-2 text-white">Welcome back, {userName}! 👋</h2>
-            <p className="text-body-lg text-white/80">Ready to create some amazing music today?</p>
           </div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <Button 
-              className="h-20 button-primary hover-lift focus-ring shadow-lg group animate-slide-up" 
-              style={{ animationDelay: '0.1s' }} 
-              asChild
-            >
-              <Link href="/search">
-                <div className="text-center">
-                  <Search className="w-6 h-6 mx-auto mb-1 group-hover:scale-110 transition-transform" />
-                  <span className="text-body-sm font-medium">Find Artists</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <Card className="card-modern">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  Generate Invite Code
+                </CardTitle>
+                <CardDescription>Create invite codes for new users</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Code Type</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { value: 'artist', label: 'Artist', icon: User },
+                      { value: 'producer', label: 'Producer', icon: Headphones },
+                      { value: 'studio', label: 'Studio', icon: Radio },
+                      { value: 'admin', label: 'Admin', icon: Crown }
+                    ].map(({ value, label, icon: Icon }) => (
+                      <button
+                        key={value}
+                        onClick={() => setCodeType(value as typeof codeType)}
+                        className={`p-3 rounded-lg border text-sm font-medium transition-all flex items-center gap-2 ${
+                          codeType === value
+                            ? 'border-primary bg-primary/5 text-primary'
+                            : 'border-border hover:border-primary/50'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                        {label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </Link>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="h-20 hover-glow-blue focus-ring group glass-card border-blue-400/20 text-white animate-slide-up" 
-              style={{ animationDelay: '0.2s' }} 
-              asChild
-            >
-              <Link href="/studios">
-                <div className="text-center">
-                  <Mic2 className="w-6 h-6 mx-auto mb-1 group-hover:scale-110 transition-transform" />
-                  <span className="text-body-sm font-medium">Book Studio</span>
+                
+                <Button onClick={generateInviteCode} disabled={isGenerating} className="w-full">
+                  {isGenerating ? (
+                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                  ) : (
+                    <Plus className="w-4 h-4 mr-2" />
+                  )}
+                  Generate {codeType.charAt(0).toUpperCase() + codeType.slice(1)} Code
+                </Button>
+
+                {inviteCode && (
+                  <div className="p-4 border rounded-lg bg-muted/50">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-mono font-bold text-lg">{inviteCode}</p>
+                        <p className="text-sm text-muted-foreground">Share this code with new {codeType}s</p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyToClipboard(inviteCode)}
+                      >
+                        {copiedCode === inviteCode ? (
+                          <CheckCircle className="w-4 h-4" />
+                        ) : (
+                          <Copy className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="card-modern">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Quick Stats
+                </CardTitle>
+                <CardDescription>Platform overview</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="text-2xl font-bold text-primary">127</div>
+                    <div className="text-sm text-muted-foreground">Total Users</div>
+                  </div>
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="text-2xl font-bold text-green-500">45</div>
+                    <div className="text-sm text-muted-foreground">Active Codes</div>
+                  </div>
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="text-2xl font-bold text-blue-500">23</div>
+                    <div className="text-sm text-muted-foreground">New This Week</div>
+                  </div>
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="text-2xl font-bold text-purple-500">89%</div>
+                    <div className="text-sm text-muted-foreground">Completion Rate</div>
+                  </div>
                 </div>
-              </Link>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="h-20 hover-glow-purple focus-ring group glass-card border-purple-400/20 text-white animate-slide-up" 
-              style={{ animationDelay: '0.3s' }} 
-              asChild
-            >
-              <Link href="/projects">
-                <div className="text-center">
-                  <Plus className="w-6 h-6 mx-auto mb-1 group-hover:scale-110 transition-transform" />
-                  <span className="text-body-sm font-medium">New Project</span>
-                </div>
-              </Link>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="h-20 hover-glow-blue focus-ring group glass-card border-cyan-400/20 text-white animate-slide-up" 
-              style={{ animationDelay: '0.4s' }} 
-              asChild
-            >
-              <Link href="/events">
-                <div className="text-center">
-                  <Calendar className="w-6 h-6 mx-auto mb-1 group-hover:scale-110 transition-transform" />
-                  <span className="text-body-sm font-medium">Events</span>
-                </div>
-              </Link>
-            </Button>
+              </CardContent>
+            </Card>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content Area */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Activity Overview */}
-              <Card className="card-modern hover-lift animate-slide-up" style={{ animationDelay: '0.5s' }}>
-                <CardHeader>
-                  <CardTitle className="text-heading-md font-display flex items-center gap-2 text-white">
-                    <TrendingUp className="w-5 h-5 text-blue-400" />
-                    Your Activity
-                  </CardTitle>
-                  <CardDescription className="text-white/70">Your music journey this month</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-3 gap-6">
-                    <div className="text-center">
-                      <div className="w-16 h-16 gradient-electric rounded-xl flex items-center justify-center mx-auto mb-2 animate-pulse-glow">
-                        <Users className="w-8 h-8 text-white" />
-                      </div>
-                      <div className="text-heading-sm font-display text-gradient-primary">12</div>
-                      <div className="text-body-xs text-white/60">New Connections</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-16 h-16 gradient-primary rounded-xl flex items-center justify-center mx-auto mb-2 animate-pulse-glow" style={{ animationDelay: '1s' }}>
-                        <MessageSquare className="w-8 h-8 text-white" />
-                      </div>
-                      <div className="text-heading-sm font-display text-gradient-electric">24</div>
-                      <div className="text-body-xs text-white/60">Messages Sent</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-16 h-16 gradient-accent rounded-xl flex items-center justify-center mx-auto mb-2 animate-pulse-glow" style={{ animationDelay: '2s' }}>
-                        <Play className="w-8 h-8 text-white" />
-                      </div>
-                      <div className="text-heading-sm font-display text-gradient-accent">3</div>
-                      <div className="text-body-xs text-white/60">Active Projects</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Messages */}
-              <Card className="card-modern hover-lift animate-slide-up" style={{ animationDelay: '0.6s' }}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-heading-md font-display flex items-center gap-2 text-white">
-                      <MessageSquare className="w-5 h-5 text-blue-400" />
-                      Recent Messages
-                    </CardTitle>
-                    <Button variant="outline" size="sm" className="hover-glow-blue border-blue-400/30 text-blue-300">
-                      View All
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center gap-4 p-4 glass border border-blue-400/20 rounded-xl hover-glow-blue cursor-pointer group">
-                    <div className="w-12 h-12 gradient-primary rounded-xl flex items-center justify-center text-white text-body-sm font-bold group-hover:scale-110 transition-transform">
-                      JS
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-body-md font-medium text-white">John Smith</p>
-                      <p className="text-body-sm text-white/70">Hey, interested in collaborating on that track?</p>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-body-xs text-white/50">2h ago</span>
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-1 ml-auto"></div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-4 p-4 glass border border-purple-400/20 rounded-xl hover-glow-purple cursor-pointer group">
-                    <div className="w-12 h-12 gradient-accent rounded-xl flex items-center justify-center text-white text-body-sm font-bold group-hover:scale-110 transition-transform">
-                      MJ
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-body-md font-medium text-white">Mary Johnson</p>
-                      <p className="text-body-sm text-white/70">Studio is available next Tuesday if you&apos;re free!</p>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-body-xs text-white/50">5h ago</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-4 p-4 glass border border-cyan-400/20 rounded-xl hover-glow-blue cursor-pointer group">
-                    <div className="w-12 h-12 gradient-electric rounded-xl flex items-center justify-center text-white text-body-sm font-bold group-hover:scale-110 transition-transform">
-                      AB
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-body-md font-medium text-white">Alex Brown</p>
-                      <p className="text-body-sm text-white/70">Love your latest track! Want to discuss a remix?</p>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-body-xs text-white/50">1d ago</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Projects */}
-              <Card className="card-modern hover-lift animate-slide-up" style={{ animationDelay: '0.7s' }}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-heading-md font-display flex items-center gap-2 text-white">
-                      <Headphones className="w-5 h-5 text-blue-400" />
-                      Active Projects
-                    </CardTitle>
-                    <Button variant="outline" size="sm" className="hover-glow-blue border-blue-400/30 text-blue-300">
-                      <Plus className="w-4 h-4 mr-2" />
-                      New Project
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="p-4 glass border border-blue-400/20 rounded-xl hover-glow-blue cursor-pointer group">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-body-md font-medium text-white">Summer Vibes EP</h4>
-                      <span className="badge-modern bg-green-500/20 text-green-300 border-green-400/30">Active</span>
-                    </div>
-                    <p className="text-body-sm text-white/70 mb-3">Collaborating with John Smith and Sarah Davis</p>
-                    <div className="flex items-center gap-4">
-                      <div className="flex-1 bg-white/20 rounded-full h-2">
-                        <div className="gradient-primary h-2 rounded-full" style={{ width: '75%' }}></div>
-                      </div>
-                      <span className="text-body-xs font-medium text-white/80">75%</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 glass border border-purple-400/20 rounded-xl hover-glow-purple cursor-pointer group">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-body-md font-medium text-white">Midnight Sessions</h4>
-                      <span className="badge-modern bg-yellow-500/20 text-yellow-300 border-yellow-400/30">In Review</span>
-                    </div>
-                    <p className="text-body-sm text-white/70 mb-3">Solo project with featured vocalist</p>
-                    <div className="flex items-center gap-4">
-                      <div className="flex-1 bg-white/20 rounded-full h-2">
-                        <div className="gradient-electric h-2 rounded-full" style={{ width: '90%' }}></div>
-                      </div>
-                      <span className="text-body-xs font-medium text-white/80">90%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Quick Stats */}
-              <Card className="card-modern hover-lift animate-slide-up" style={{ animationDelay: '0.8s' }}>
-                <CardHeader>
-                  <CardTitle className="text-heading-sm font-display text-white">Profile Stats</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-body-sm text-white/70">Profile Views</span>
-                    <span className="text-body-md font-semibold text-blue-400">156</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-body-sm text-white/70">Track Plays</span>
-                    <span className="text-body-md font-semibold text-purple-400">1.2K</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-body-sm text-white/70">Followers</span>
-                    <span className="text-body-md font-semibold text-cyan-400">89</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-body-sm text-white/70">Collaborations</span>
-                    <span className="text-body-md font-semibold text-green-400">12</span>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recommended Connections */}
-              <Card className="card-modern hover-lift animate-slide-up" style={{ animationDelay: '0.9s' }}>
-                <CardHeader>
-                  <CardTitle className="text-heading-sm font-display flex items-center gap-2 text-white">
-                    <Star className="w-4 h-4 text-blue-400" />
-                    Recommended
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="p-3 glass border border-blue-400/20 rounded-xl hover-glow-blue cursor-pointer group">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center text-white text-body-xs font-bold">
-                        AP
-                      </div>
-                      <div>
-                        <p className="text-body-sm font-medium text-white">Alex Producer</p>
-                        <p className="text-body-xs text-white/60">Hip-hop • 2.1k followers</p>
-                      </div>
-                    </div>
-                    <Button size="sm" className="w-full button-primary">
-                      Connect
-                    </Button>
-                  </div>
-                  
-                  <div className="p-3 glass border border-purple-400/20 rounded-xl hover-glow-purple cursor-pointer group">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 gradient-accent rounded-lg flex items-center justify-center text-white text-body-xs font-bold">
-                        SL
-                      </div>
-                      <div>
-                        <p className="text-body-sm font-medium text-white">Sound Studio LA</p>
-                        <p className="text-body-xs text-white/60">Professional space • $80/hr</p>
-                      </div>
-                    </div>
-                    <Button size="sm" variant="outline" className="w-full hover-glow-purple border-purple-400/30 text-purple-300">
-                      View Details
-                    </Button>
-                  </div>
-                  
-                  <div className="p-3 glass border border-cyan-400/20 rounded-xl hover-glow-blue cursor-pointer group">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 gradient-electric rounded-lg flex items-center justify-center text-white text-body-xs font-bold">
-                        MV
-                      </div>
-                      <div>
-                        <p className="text-body-sm font-medium text-white">Maya Vocalist</p>
-                        <p className="text-body-xs text-white/60">R&B • Available now</p>
-                      </div>
-                    </div>
-                    <Button size="sm" className="w-full button-secondary">
-                      Message
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Upcoming Sessions */}
-              <Card className="card-modern hover-lift animate-slide-up" style={{ animationDelay: '1s' }}>
-                <CardHeader>
-                  <CardTitle className="text-heading-sm font-display flex items-center gap-2 text-white">
-                    <Calendar className="w-4 h-4 text-blue-400" />
-                    Upcoming
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="p-3 glass border border-blue-400/20 rounded-xl">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="text-body-sm font-medium text-white">Studio Session</p>
-                      <span className="text-body-xs text-blue-400 font-medium">Tomorrow</span>
-                    </div>
-                    <p className="text-body-xs text-white/60">Sound Studio LA • 2:00 PM</p>
-                  </div>
-                  
-                  <div className="p-3 glass border border-purple-400/20 rounded-xl">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="text-body-sm font-medium text-white">Collab Meeting</p>
-                      <span className="text-body-xs text-purple-400 font-medium">Friday</span>
-                    </div>
-                    <p className="text-body-xs text-white/60">With John Smith • Virtual</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+          <div className="flex justify-center">
+            <Button asChild variant="outline" size="lg">
+              <Link href="/admin">
+                <Crown className="w-4 h-4 mr-2" />
+                Open Full Admin Console
+              </Link>
+            </Button>
           </div>
         </div>
-      </main>
+      </div>
+    )
+  }
+
+  // Regular User Dashboard
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Complete Your Profile</CardTitle>
+            <CardDescription>Set up your profile to start collaborating</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild className="w-full">
+              <Link href="/profile/setup">
+                <User className="w-4 h-4 mr-2" />
+                Set Up Profile
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const getRoleIcon = () => {
+    switch (profile.role) {
+      case 'artist': return <User className="w-6 h-6" />
+      case 'producer': return <Headphones className="w-6 h-6" />
+      case 'studio': return <Radio className="w-6 h-6" />
+      default: return <Music className="w-6 h-6" />
+    }
+  }
+
+  const getRoleColor = () => {
+    switch (profile.role) {
+      case 'artist': return 'text-blue-500'
+      case 'producer': return 'text-purple-500'
+      case 'studio': return 'text-green-500'
+      default: return 'text-primary'
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-6 py-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Music className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-display-lg font-display text-foreground">Studio Finder</h1>
+              <p className="text-muted-foreground">Welcome back, {profile.display_name}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" onClick={toggleTheme} className="p-2">
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </Button>
+            <Button variant="outline" onClick={handleLogout}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Profile Section */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card className="card-modern">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <div className={`w-6 h-6 ${getRoleColor()}`}>
+                      {getRoleIcon()}
+                    </div>
+                    My Profile
+                  </CardTitle>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsEditing(!isEditing)}
+                  >
+                    {isEditing ? (
+                      <>
+                        <X className="w-4 h-4 mr-2" />
+                        Cancel
+                      </>
+                    ) : (
+                      <>
+                        <Edit3 className="w-4 h-4 mr-2" />
+                        Edit
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Basic Info */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Display Name</Label>
+                    {isEditing ? (
+                      <Input
+                        value={editedProfile.display_name || ''}
+                        onChange={(e) => updateField('display_name', e.target.value)}
+                        placeholder="Your display name"
+                      />
+                    ) : (
+                      <p className="text-foreground font-medium">{profile.display_name}</p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Role</Label>
+                    <p className={`font-medium capitalize ${getRoleColor()}`}>{profile.role}</p>
+                  </div>
+                </div>
+
+                {/* Bio */}
+                <div className="space-y-2">
+                  <Label>Bio</Label>
+                  {isEditing ? (
+                    <textarea
+                      className="w-full p-3 border rounded-lg bg-background"
+                      rows={3}
+                      value={editedProfile.bio || ''}
+                      onChange={(e) => updateField('bio', e.target.value)}
+                      placeholder="Tell us about yourself..."
+                    />
+                  ) : (
+                    <p className="text-muted-foreground">{profile.bio}</p>
+                  )}
+                </div>
+
+                {/* Location & Rate */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      Location
+                    </Label>
+                    {isEditing ? (
+                      <Input
+                        value={editedProfile.location || ''}
+                        onChange={(e) => updateField('location', e.target.value)}
+                        placeholder="Your location"
+                      />
+                    ) : (
+                      <p className="text-foreground">{profile.location}</p>
+                    )}
+                  </div>
+                  {profile.role !== 'artist' && (
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2">
+                        <DollarSign className="w-4 h-4" />
+                        Hourly Rate
+                      </Label>
+                      {isEditing ? (
+                        <Input
+                          type="number"
+                          value={editedProfile.hourly_rate || ''}
+                          onChange={(e) => updateField('hourly_rate', Number(e.target.value))}
+                          placeholder="0"
+                        />
+                      ) : (
+                        <p className="text-foreground">${profile.hourly_rate}/hour</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Skills */}
+                <div className="space-y-2">
+                  <Label>Skills</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {profile.skills?.map((skill, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Influences */}
+                <div className="space-y-2">
+                  <Label>Influences</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {profile.influences?.map((influence, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm"
+                      >
+                        {influence}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Social Links */}
+                <div className="space-y-2">
+                  <Label>Social Links</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {profile.socials && Object.entries(profile.socials).map(([platform, handle]) => (
+                      <div key={platform} className="flex items-center gap-2">
+                        {platform === 'instagram' && <Instagram className="w-4 h-4" />}
+                        {platform === 'twitter' && <Twitter className="w-4 h-4" />}
+                        {platform === 'youtube' && <Youtube className="w-4 h-4" />}
+                        <span className="text-sm">{handle}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {isEditing && (
+                  <div className="flex gap-3">
+                    <Button onClick={saveProfile}>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </Button>
+                    <Button variant="outline" onClick={() => setIsEditing(false)}>
+                      Cancel
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Quick Actions */}
+            <Card className="card-modern">
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button className="w-full justify-start" variant="outline">
+                  <Camera className="w-4 h-4 mr-2" />
+                  Upload Photos
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <Upload className="w-4 h-4 mr-2" />
+                  Add Music
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <Users className="w-4 h-4 mr-2" />
+                  Find Collaborators
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Schedule Session
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Stats */}
+            <Card className="card-modern">
+              <CardHeader>
+                <CardTitle>Your Stats</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Profile Views</span>
+                  <span className="font-semibold">24</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Connections</span>
+                  <span className="font-semibold">12</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Projects</span>
+                  <span className="font-semibold">3</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Rating</span>
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                    <span className="font-semibold">4.8</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recent Activity */}
+            <Card className="card-modern">
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-3 text-sm">
+                  <Heart className="w-4 h-4 text-red-500" />
+                  <span>2 new followers</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <MessageSquare className="w-4 h-4 text-blue-500" />
+                  <span>3 new messages</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <Music className="w-4 h-4 text-purple-500" />
+                  <span>Tagged in &quot;Summer Vibes&quot;</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
     </div>
   )
 } 
