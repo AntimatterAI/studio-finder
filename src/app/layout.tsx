@@ -60,12 +60,11 @@ export const metadata: Metadata = {
   // Additional meta tags
   other: {
     "apple-mobile-web-app-capable": "yes",
-    "apple-mobile-web-app-status-bar-style": "default",
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
     "apple-mobile-web-app-title": "wavr",
     "apple-touch-icon": "/icon.svg?v=2",
     "theme-color": "#1a1a2e",
     "msapplication-navbutton-color": "#1a1a2e",
-    "apple-mobile-web-app-status-bar-style": "black-translucent",
   },
 };
 
