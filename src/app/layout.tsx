@@ -99,9 +99,28 @@ export default function RootLayout({
         <meta name="application-name" content="wavr" />
         <meta name="apple-touch-icon" content="/wavr-icon-1750892236.svg" />
         <meta name="msapplication-TileImage" content="/wavr-icon-1750892236.svg" />
+        <meta name="theme-color" content="#0f0f23" />
+        <meta name="color-scheme" content="dark" />
         <style dangerouslySetInnerHTML={{__html: `
-          html { color-scheme: dark; }
-          html.light { color-scheme: light; }
+          /* Force dark mode immediately */
+          html { 
+            color-scheme: dark !important; 
+            background-color: #0f0f23 !important;
+          }
+          body { 
+            background-color: #0f0f23 !important; 
+            color: #ffffff !important;
+          }
+          
+          /* Light mode override when explicitly chosen */
+          html.light { 
+            color-scheme: light !important; 
+            background-color: #ffffff !important;
+          }
+          html.light body { 
+            background-color: #ffffff !important; 
+            color: #000000 !important;
+          }
         `}} />
       </head>
       <body className="font-sans antialiased">
@@ -109,17 +128,32 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
+                // Force dark mode IMMEDIATELY
+                document.documentElement.style.backgroundColor = '#0f0f23';
+                document.documentElement.style.colorScheme = 'dark';
+                
                 try {
                   const theme = localStorage.getItem('theme');
-                  // HTML starts with dark class by default
+                  console.log('Theme from localStorage:', theme);
+                  
                   if (theme === 'light') {
                     // User explicitly wants light mode
+                    console.log('Switching to light mode');
                     document.documentElement.classList.remove('dark');
                     document.documentElement.classList.add('light');
+                    document.documentElement.style.backgroundColor = '#ffffff';
+                    document.documentElement.style.colorScheme = 'light';
+                  } else {
+                    // Stay in dark mode
+                    console.log('Staying in dark mode');
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
                   }
-                  // Otherwise stay in dark mode (already set in HTML)
                 } catch (e) {
-                  // If localStorage fails, stay in dark mode (already set in HTML)
+                  console.log('LocalStorage error, forcing dark mode:', e);
+                  // If localStorage fails, force dark mode
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.classList.remove('light');
                 }
               })();
             `,
