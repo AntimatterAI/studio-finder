@@ -178,6 +178,56 @@ ALTER TABLE public.post_comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admin_actions ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist, then create new ones
+DO $$ 
+BEGIN
+    -- Drop existing policies for invites
+    DROP POLICY IF EXISTS "Anyone can read available invites" ON public.invites;
+    DROP POLICY IF EXISTS "Authenticated users can update invite status" ON public.invites;
+    
+    -- Drop existing policies for admin_users
+    DROP POLICY IF EXISTS "Admins can view admin_users" ON public.admin_users;
+    DROP POLICY IF EXISTS "Admins can insert admin_users" ON public.admin_users;
+    
+    -- Drop existing policies for profiles
+    DROP POLICY IF EXISTS "Public access to tier 1 profiles" ON public.profiles;
+    DROP POLICY IF EXISTS "Tier-based profile visibility" ON public.profiles;
+    DROP POLICY IF EXISTS "Users can insert their own profile" ON public.profiles;
+    DROP POLICY IF EXISTS "Users can update their own profile" ON public.profiles;
+    
+    -- Drop existing policies for posts
+    DROP POLICY IF EXISTS "Public access to tier 1 posts" ON public.posts;
+    DROP POLICY IF EXISTS "Posts visible based on tier and visibility" ON public.posts;
+    DROP POLICY IF EXISTS "Users can insert their own posts" ON public.posts;
+    DROP POLICY IF EXISTS "Users can update their own posts" ON public.posts;
+    DROP POLICY IF EXISTS "Users can delete their own posts" ON public.posts;
+    
+    -- Drop existing policies for bookings
+    DROP POLICY IF EXISTS "Users can view their own bookings" ON public.bookings;
+    DROP POLICY IF EXISTS "Anyone can book tier 1 providers" ON public.bookings;
+    DROP POLICY IF EXISTS "Authenticated users can create bookings" ON public.bookings;
+    DROP POLICY IF EXISTS "Providers can update booking status" ON public.bookings;
+    
+    -- Drop existing policies for other tables
+    DROP POLICY IF EXISTS "Users can view connections" ON public.connections;
+    DROP POLICY IF EXISTS "Users can create connections" ON public.connections;
+    DROP POLICY IF EXISTS "Users can delete their own connections" ON public.connections;
+    DROP POLICY IF EXISTS "Users can view post likes" ON public.post_likes;
+    DROP POLICY IF EXISTS "Users can like posts" ON public.post_likes;
+    DROP POLICY IF EXISTS "Users can unlike posts" ON public.post_likes;
+    DROP POLICY IF EXISTS "Users can view comments" ON public.post_comments;
+    DROP POLICY IF EXISTS "Users can comment" ON public.post_comments;
+    DROP POLICY IF EXISTS "Users can update their comments" ON public.post_comments;
+    DROP POLICY IF EXISTS "Users can view reviews" ON public.reviews;
+    DROP POLICY IF EXISTS "Users can create reviews for completed bookings" ON public.reviews;
+    DROP POLICY IF EXISTS "Admins can view admin actions" ON public.admin_actions;
+    DROP POLICY IF EXISTS "Admins can create admin actions" ON public.admin_actions;
+EXCEPTION
+    WHEN OTHERS THEN
+        -- Ignore errors if policies don't exist
+        NULL;
+END $$;
+
 -- Policies for invites
 CREATE POLICY "Anyone can read available invites" ON public.invites
     FOR SELECT USING (status = 'available');
@@ -494,31 +544,37 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create triggers
+DROP TRIGGER IF EXISTS handle_invites_updated_at ON public.invites;
 CREATE TRIGGER handle_invites_updated_at
     BEFORE UPDATE ON public.invites
     FOR EACH ROW
     EXECUTE FUNCTION public.handle_updated_at();
 
+DROP TRIGGER IF EXISTS handle_profiles_updated_at ON public.profiles;
 CREATE TRIGGER handle_profiles_updated_at
     BEFORE UPDATE ON public.profiles
     FOR EACH ROW
     EXECUTE FUNCTION public.handle_updated_at();
 
+DROP TRIGGER IF EXISTS handle_posts_updated_at ON public.posts;
 CREATE TRIGGER handle_posts_updated_at
     BEFORE UPDATE ON public.posts
     FOR EACH ROW
     EXECUTE FUNCTION public.handle_updated_at();
 
+DROP TRIGGER IF EXISTS handle_bookings_updated_at ON public.bookings;
 CREATE TRIGGER handle_bookings_updated_at
     BEFORE UPDATE ON public.bookings
     FOR EACH ROW
     EXECUTE FUNCTION public.handle_updated_at();
 
+DROP TRIGGER IF EXISTS handle_post_counts ON public.posts;
 CREATE TRIGGER handle_post_counts
     AFTER INSERT OR DELETE ON public.posts
     FOR EACH ROW
     EXECUTE FUNCTION public.update_post_counts();
 
+DROP TRIGGER IF EXISTS handle_follower_counts ON public.connections;
 CREATE TRIGGER handle_follower_counts
     AFTER INSERT OR DELETE ON public.connections
     FOR EACH ROW
