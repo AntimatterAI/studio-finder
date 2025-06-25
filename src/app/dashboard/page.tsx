@@ -13,6 +13,7 @@ import {
   Radio, Headphones, Edit3, Save, X, CheckCircle
 } from 'lucide-react'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 // import type { Metadata } from 'next'
 
 // export const metadata: Metadata = {
@@ -52,61 +53,56 @@ export default function DashboardPage() {
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
 
   const checkAuth = async () => {
-    // Check if user is authenticated
-    const userSession = localStorage.getItem('user_session')
-    
-    if (!userSession || userSession !== 'authenticated') {
-      router.push('/login')
-      return
-    }
-    
-    // Check if admin
-    const adminEmail = localStorage.getItem('admin_email')
-    const adminSession = localStorage.getItem('admin_session')
-    const isUserAdmin = adminSession === 'authenticated' && adminEmail === 'paul@antimatterai.com'
-    setIsAdmin(isUserAdmin)
+    try {
+      // Check Supabase auth session
+      const { data: { session }, error } = await supabase.auth.getSession()
+      
+      if (error || !session) {
+        router.push('/login')
+        return
+      }
 
-    if (!isUserAdmin) {
-      // Load user profile for regular users
-      await loadUserProfile()
+      // Check if user is admin
+      const { data: adminCheck } = await supabase
+        .from('admin_users')
+        .select('*')
+        .eq('id', session.user.id)
+        .single()
+
+      const isUserAdmin = !!adminCheck
+      setIsAdmin(isUserAdmin)
+
+      if (!isUserAdmin) {
+        // Check if user has completed profile setup
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single()
+
+        if (!profileData || !profileData.profile_complete) {
+          // Redirect to profile setup if profile is incomplete
+          router.push('/profile/setup')
+          return
+        }
+
+                 // Load user profile for regular users
+         setProfile(profileData)
+         setEditedProfile(profileData)
+      }
+      
+      setIsLoading(false)
+    } catch (error) {
+      console.error('Auth check error:', error)
+      router.push('/login')
     }
-    
-    setIsLoading(false)
   }
 
   useEffect(() => {
     checkAuth()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const loadUserProfile = async () => {
-    try {
-      // For demo purposes, we'll create a mock profile
-      // In real app, this would fetch from Supabase based on user ID
-      const mockProfile: UserProfile = {
-        id: '1',
-        role: 'artist',
-        display_name: 'Alex Thompson',
-        bio: 'Independent artist specializing in indie rock and alternative music. Always looking for new collaborators!',
-        location: 'Los Angeles, CA',
-        hourly_rate: 50,
-        skills: ['Vocals', 'Guitar', 'Songwriting'],
-        influences: ['Radiohead', 'Arctic Monkeys', 'Tame Impala'],
-        media_urls: [],
-        socials: {
-          instagram: '@alexthompsonmusic',
-          twitter: '@alexmusic',
-          youtube: 'Alex Thompson Music'
-        },
-        profile_complete: true,
-        availability: 'Available weekends',
-        equipment: ['Fender Stratocaster', 'Marshall Amp', 'Pro Tools']
-      }
-      setProfile(mockProfile)
-      setEditedProfile(mockProfile)
-    } catch (error) {
-      console.error('Error loading profile:', error)
-    }
-  }
+
 
   const toggleTheme = () => {
     const newIsDark = !isDark
@@ -115,16 +111,15 @@ export default function DashboardPage() {
     document.documentElement.classList.toggle('dark', newIsDark)
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('user_session')
-    localStorage.removeItem('user_email')
-    localStorage.removeItem('user_login_time')
-    if (isAdmin) {
-      localStorage.removeItem('admin_session')
-      localStorage.removeItem('admin_email')
-      localStorage.removeItem('admin_login_time')
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut()
+      localStorage.clear() // Clear any remaining local storage
+      router.push('/')
+    } catch (error) {
+      console.error('Logout error:', error)
+      router.push('/')
     }
-    router.push('/')
   }
 
   const generateInviteCode = async () => {
