@@ -182,6 +182,12 @@ export default function RootLayout({
                     console.log('Using dark mode (default)');
                     document.documentElement.classList.add('dark');
                     document.documentElement.classList.remove('light');
+                    // Ensure dark styles are applied
+                    document.documentElement.style.backgroundColor = '#0f0f23';
+                    document.documentElement.style.colorScheme = 'dark';
+                    document.documentElement.style.color = '#ffffff';
+                    document.body && (document.body.style.backgroundColor = '#0f0f23');
+                    document.body && (document.body.style.color = '#ffffff');
                   }
                 } catch (e) {
                   console.log('LocalStorage error, forcing dark mode:', e);

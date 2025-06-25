@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { User, LogOut } from 'lucide-react'
+import { User, LogOut, Sun, Moon } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 export default function Header() {
   const [user, setUser] = useState<SupabaseUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isDark, setIsDark] = useState(true)
 
   useEffect(() => {
     // Check for current user session
@@ -25,7 +26,16 @@ export default function Header() {
       }
     }
 
+    // Check current theme
+    const checkTheme = () => {
+      const theme = localStorage.getItem('theme')
+      const isLightMode = theme === 'light'
+      const isDarkMode = !isLightMode // Default to dark
+      setIsDark(isDarkMode)
+    }
+
     checkUser()
+    checkTheme()
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -42,6 +52,16 @@ export default function Header() {
     } catch (error) {
       console.error('Error logging out:', error)
     }
+  }
+
+  const toggleTheme = () => {
+    const newIsDark = !isDark
+    const newIsLight = !newIsDark
+    setIsDark(newIsDark)
+    // Save 'light' only when choosing light mode, 'dark' is default
+    localStorage.setItem('theme', newIsLight ? 'light' : 'dark')
+    document.documentElement.classList.toggle('dark', newIsDark)
+    document.documentElement.classList.toggle('light', newIsLight)
   }
 
   return (
@@ -67,6 +87,16 @@ export default function Header() {
 
         {/* Navigation */}
         <div className="flex items-center gap-4">
+          {/* Theme Toggle */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleTheme}
+            className="w-10 h-10 p-0 bg-background/80 backdrop-blur-sm border-border/50"
+          >
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </Button>
+
           {isLoading ? (
             <div className="w-8 h-8 animate-pulse bg-muted rounded-full"></div>
           ) : user ? (
