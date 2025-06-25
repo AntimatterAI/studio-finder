@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, Music, Users, Calendar, Star, Sparkles, Headphones, Mic, Radio, MapPin, CheckCircle } from 'lucide-react'
 import AnimatedMusicBackground from '@/components/AnimatedMusicBackground'
 import { supabase } from '@/lib/supabase'
@@ -68,15 +69,7 @@ export default function HomePage() {
     }
   }
 
-  const toggleTheme = () => {
-    const newIsDark = !isDark
-    const newIsLight = !newIsDark
-    setIsDark(newIsDark)
-    // INVERTED: Save 'light' only when choosing light mode, default is dark
-    localStorage.setItem('theme', newIsLight ? 'light' : 'dark')
-    document.documentElement.classList.toggle('dark', newIsDark)
-    document.documentElement.classList.toggle('light', newIsLight)
-  }
+
 
   const getRoleIcon = (role: string) => {
     switch (role) {
@@ -107,14 +100,18 @@ export default function HomePage() {
         {/* Hero Section */}
         <div className="text-center mb-20 animate-fade-in">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <img 
+            <Image 
               src="/wavr_logo_dark.svg" 
               alt="wavr" 
+              width={240}
+              height={64}
               className="h-16 w-auto dark:block hidden"
             />
-            <img 
+            <Image 
               src="/wavr_logo_light.svg" 
               alt="wavr" 
+              width={240}
+              height={64}
               className="h-16 w-auto dark:hidden block"
             />
           </div>

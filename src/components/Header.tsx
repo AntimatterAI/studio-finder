@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { User, LogOut } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 export default function Header() {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<SupabaseUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -47,14 +49,18 @@ export default function Header() {
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
-          <img 
+          <Image 
             src="/wavr_logo_dark.svg" 
             alt="wavr" 
+            width={120}
+            height={32}
             className="h-8 w-auto dark:block hidden"
           />
-          <img 
+          <Image 
             src="/wavr_logo_light.svg" 
             alt="wavr" 
+            width={120}
+            height={32}
             className="h-8 w-auto dark:hidden block"
           />
         </Link>
