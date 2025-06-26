@@ -244,7 +244,7 @@ export default function ProfileSetupPage() {
         updated_at: new Date().toISOString()
       }
 
-      // Update profile data (don't upsert since it should already exist from registration)
+      // Update profile data (don&apos;t upsert since it should already exist from registration)
       const { error } = await supabase
         .from('profiles')
         .update(profileData)
