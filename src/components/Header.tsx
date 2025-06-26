@@ -25,11 +25,11 @@ export default function Header() {
       }
     }
 
-    // Check current theme
+    // Check current theme - default to dark mode
     const checkTheme = () => {
       const theme = localStorage.getItem('theme')
-      const isLightMode = theme === 'light'
-      const isDarkMode = !isLightMode // Default to dark
+      // Only light mode if explicitly set to 'light', everything else is dark
+      const isDarkMode = theme !== 'light'
       setIsDark(isDarkMode)
     }
 
