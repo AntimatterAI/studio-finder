@@ -146,6 +146,51 @@ export default function ProfileSetupPage() {
     }
   }
 
+  const skipProfile = async () => {
+    if (!role) {
+      alert('Please select your role first')
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      
+      if (userError || !user) {
+        alert('Authentication error. Please log in again.')
+        router.push('/login')
+        return
+      }
+
+      // Set minimal profile data
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          display_name: formData.displayName || 'User',
+          profile_complete: false, // Mark as incomplete for later
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id)
+
+      if (error) {
+        console.error('Error skipping profile:', error)
+        alert('Failed to skip profile. Please try again.')
+        return
+      }
+
+      // Clear registration data
+      localStorage.removeItem('registration_data')
+      
+      // Redirect to dashboard
+      router.push('/dashboard')
+    } catch (error) {
+      console.error('Error skipping profile:', error)
+      alert('An unexpected error occurred. Please try again.')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   const saveProfile = async () => {
     if (!role || !formData.displayName.trim()) {
       alert('Please complete required fields (role and display name)')
@@ -163,23 +208,30 @@ export default function ProfileSetupPage() {
         return
       }
 
-      // Prepare profile data
+      // Prepare profile data using new schema
       const profileData = {
-        id: user.id,
-        role,
-        tier_level: tierLevel, // Preserve tier level from registration
         display_name: formData.displayName,
         bio: formData.bio || null,
         location: formData.location || null,
         hourly_rate: formData.hourlyRate ? parseFloat(formData.hourlyRate) : null,
-        skills: role !== 'studio' && skills.length > 0 ? skills : null,
-        equipment: skills.length > 0 ? skills : null, // For all roles, equipment/skills stored in same field
-        rooms: role === 'studio' && rooms.length > 0 ? rooms.map(room => ({
+        
+        // New schema fields for artist/producer
+        offers_production_services: role === 'artist_producer' ? (formData.offersProduction === 'true') : false,
+        musical_styles: role === 'artist_producer' && skills.length > 0 ? skills : null,
+        production_skills: role === 'artist_producer' && formData.offersProduction === 'true' && skills.length > 0 ? skills : null,
+        instruments: null, // Can be added later
+        influences: null, // Can be added later
+        
+        // Studio-specific fields
+        studio_equipment: role === 'studio' && skills.length > 0 ? skills : null,
+        studio_rooms: role === 'studio' && rooms.length > 0 ? rooms.map(room => ({
           name: room.name,
           capacity: room.capacity,
           hourly_rate: room.hourlyRate ? parseFloat(room.hourlyRate) : null,
           equipment: room.equipment
         })) : null,
+        
+        // Social and other data
         socials: {
           experience: formData.experience || null,
           instagram: socialLinks.instagram || null,
@@ -187,6 +239,7 @@ export default function ProfileSetupPage() {
           spotify: socialLinks.spotify || null,
           youtube: socialLinks.youtube || null
         },
+        
         profile_complete: true,
         updated_at: new Date().toISOString()
       }
@@ -217,9 +270,9 @@ export default function ProfileSetupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-indigo-50/30 p-4 relative overflow-hidden">
+    <div className="min-h-screen gradient-hero p-4 relative overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-40"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-40"></div>
       
       {/* Floating Elements */}
       <div className="absolute top-20 left-20 w-24 h-24 gradient-primary rounded-full opacity-10 animate-float"></div>
@@ -231,7 +284,7 @@ export default function ProfileSetupPage() {
           <Button 
             variant="outline" 
             size="sm" 
-            className="mb-6 glass border-white/20 hover-lift focus-visible" 
+            className="mb-6 glass-card border-primary/20 hover-lift focus-visible" 
             asChild
           >
             <Link href="/dashboard">
@@ -241,12 +294,12 @@ export default function ProfileSetupPage() {
           </Button>
           
           <div className="flex flex-col sm:flex-row gap-3 items-center justify-center mb-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-body-sm font-medium">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-body-sm font-medium">
               <Sparkles className="w-4 h-4" />
               Complete your profile to get better matches
             </div>
             {role && tierLevel && (
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-body-sm font-medium">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 text-green-400 rounded-full text-body-sm font-medium">
                 <Check className="w-4 h-4" />
                 {role.charAt(0).toUpperCase() + role.slice(1)} • Tier {tierLevel}
               </div>
@@ -254,25 +307,25 @@ export default function ProfileSetupPage() {
           </div>
           
           <h1 className="text-display-xl font-display text-gradient-primary mb-2">Complete Your Profile</h1>
-          <p className="text-body-lg text-slate-600">Tell us about yourself to get better connections</p>
+          <p className="text-body-lg text-muted-foreground">Tell us about yourself to get better connections</p>
         </div>
 
         {/* Progress Bar */}
         <div className="mb-8 animate-slide-up">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-body-sm font-medium text-slate-700">Step {currentStep} of {totalSteps}</span>
-            <span className="text-body-sm text-slate-500">{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
+            <span className="text-body-sm font-medium text-foreground">Step {currentStep} of {totalSteps}</span>
+            <span className="text-body-sm text-muted-foreground">{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
           </div>
-          <div className="w-full bg-slate-200 rounded-full h-3">
+          <div className="w-full bg-muted rounded-full h-3">
             <div 
-              className="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500 ease-out"
+              className="gradient-primary h-3 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
             ></div>
           </div>
         </div>
 
         {/* Main Card */}
-        <Card className="glass border-white/20 shadow-2xl animate-scale-in">
+        <Card className="glass-card border-primary/20 shadow-2xl animate-scale-in">
           <CardHeader className="text-center pb-6">
             <CardTitle className="text-heading-lg font-display">{getStepTitle(currentStep)}</CardTitle>
             <CardDescription className="text-body-md">{getStepDescription(currentStep)}</CardDescription>
@@ -283,12 +336,12 @@ export default function ProfileSetupPage() {
             {currentStep === 1 && (
               <div className="space-y-6 animate-fade-in">
                 {role ? (
-                  <div className="p-6 bg-green-50 border border-green-200 rounded-xl">
+                  <div className="p-6 bg-green-500/10 border border-green-500/20 rounded-xl">
                     <div className="flex items-center gap-3">
-                      <Check className="w-6 h-6 text-green-500" />
+                      <Check className="w-6 h-6 text-green-400" />
                       <div>
-                        <h3 className="text-body-lg font-semibold text-green-700">Role Set from Invite Code</h3>
-                        <p className="text-body-sm text-green-600">
+                        <h3 className="text-body-lg font-semibold text-green-400">Role Set from Invite Code</h3>
+                        <p className="text-body-sm text-green-300">
                           Your role was automatically set to <span className="font-medium capitalize">{role}</span> based on your invite code.
                           You can continue with this setup or contact admin to change your role.
                         </p>
@@ -302,19 +355,19 @@ export default function ProfileSetupPage() {
                       onClick={() => setRole('artist_producer')}
                       className={`p-6 border-2 rounded-2xl text-left transition-all duration-200 hover-lift group ${
                         role === 'artist_producer'
-                          ? 'border-purple-400 bg-purple-50 shadow-lg'
-                          : 'border-slate-200 hover:border-purple-300 bg-white/60'
+                          ? 'border-primary bg-primary/10 shadow-lg'
+                          : 'border-border hover:border-primary/50 glass-card'
                       }`}
                     >
                       <div className="flex flex-col items-center text-center gap-4">
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 ${
-                          role === 'artist_producer' ? 'gradient-primary' : 'bg-slate-100'
+                          role === 'artist_producer' ? 'gradient-primary' : 'bg-muted'
                         }`}>
-                          <Music className={`w-6 h-6 ${role === 'artist_producer' ? 'text-white' : 'text-slate-600'}`} />
+                          <Music className={`w-6 h-6 ${role === 'artist_producer' ? 'text-white' : 'text-muted-foreground'}`} />
                         </div>
                         <div>
-                          <h3 className="text-body-lg font-semibold text-slate-800">Artist/Producer</h3>
-                          <p className="text-body-sm text-slate-600">Musician, songwriter, beat maker, engineer</p>
+                          <h3 className="text-body-lg font-semibold text-foreground">Artist/Producer</h3>
+                          <p className="text-body-sm text-muted-foreground">Musician, songwriter, beat maker, engineer</p>
                         </div>
                       </div>
                       {role === 'artist_producer' && (
@@ -330,19 +383,19 @@ export default function ProfileSetupPage() {
                       onClick={() => setRole('studio')}
                       className={`p-6 border-2 rounded-2xl text-left transition-all duration-200 hover-lift group ${
                         role === 'studio'
-                          ? 'border-purple-400 bg-purple-50 shadow-lg'
-                          : 'border-slate-200 hover:border-purple-300 bg-white/60'
+                          ? 'border-primary bg-primary/10 shadow-lg'
+                          : 'border-border hover:border-primary/50 glass-card'
                       }`}
                     >
                       <div className="flex flex-col items-center text-center gap-4">
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 ${
-                          role === 'studio' ? 'gradient-primary' : 'bg-slate-100'
+                          role === 'studio' ? 'gradient-primary' : 'bg-muted'
                         }`}>
-                          <Star className={`w-6 h-6 ${role === 'studio' ? 'text-white' : 'text-slate-600'}`} />
+                          <Star className={`w-6 h-6 ${role === 'studio' ? 'text-white' : 'text-muted-foreground'}`} />
                         </div>
                         <div>
-                          <h3 className="text-body-lg font-semibold text-slate-800">Studio</h3>
-                          <p className="text-body-sm text-slate-600">Recording space, venue, facility</p>
+                          <h3 className="text-body-lg font-semibold text-foreground">Studio</h3>
+                          <p className="text-body-sm text-muted-foreground">Recording space, venue, facility</p>
                         </div>
                       </div>
                       {role === 'studio' && (
@@ -356,8 +409,8 @@ export default function ProfileSetupPage() {
                 )}
                 
                 {role && (
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-xl animate-slide-up">
-                    <div className="flex items-center gap-2 text-green-700">
+                  <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-xl animate-slide-up">
+                    <div className="flex items-center gap-2 text-green-400">
                       <Check className="w-5 h-5" />
                       <span className="text-body-sm font-medium">
                         Great choice! This helps us match you with the right collaborators.
@@ -373,7 +426,7 @@ export default function ProfileSetupPage() {
               <div className="space-y-6 animate-fade-in">
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="displayName" className="text-body-sm font-medium text-slate-700">
+                    <Label htmlFor="displayName" className="text-body-sm font-medium text-foreground">
                       Display Name *
                     </Label>
                     <Input
@@ -386,7 +439,7 @@ export default function ProfileSetupPage() {
                   </div>
                   
                   <div>
-                    <Label htmlFor="location" className="text-body-sm font-medium text-slate-700">
+                    <Label htmlFor="location" className="text-body-sm font-medium text-foreground">
                       Location *
                     </Label>
                     <Input
@@ -397,7 +450,7 @@ export default function ProfileSetupPage() {
                       className="mt-2 h-12 focus:border-purple-400 transition-colors"
                     />
                     {role === 'studio' && (
-                      <p className="text-body-xs text-slate-500 mt-1">
+                      <p className="text-body-xs text-muted-foreground mt-1">
                         Provide your full studio address as clients will need to visit
                       </p>
                     )}
@@ -892,7 +945,7 @@ export default function ProfileSetupPage() {
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-slate-200">
+            <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-border">
               {currentStep > 1 && (
                 <Button
                   type="button"
@@ -918,33 +971,45 @@ export default function ProfileSetupPage() {
                   <Check className="w-4 h-4 ml-2" />
                 </Button>
               ) : (
-                <Button
-                  type="button"
-                  onClick={saveProfile}
-                  disabled={isSaving || !formData.displayName.trim()}
-                  className="gradient-accent hover-lift focus-visible shadow-lg"
-                >
-                  {isSaving ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Saving Profile...
-                    </>
-                  ) : (
-                    <>
-                      Complete Profile
-                      <Star className="w-4 h-4 ml-2" />
-                    </>
-                  )}
-                </Button>
+                <div className="flex gap-4">
+                  <Button
+                    type="button"
+                    onClick={saveProfile}
+                    disabled={isSaving || !formData.displayName.trim()}
+                    className="gradient-accent hover-lift focus-visible shadow-lg"
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Saving Profile...
+                      </>
+                    ) : (
+                      <>
+                        Complete Profile
+                        <Star className="w-4 h-4 ml-2" />
+                      </>
+                    )}
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    className="hover-lift focus-visible"
+                    onClick={skipProfile}
+                    disabled={isSaving || !role}
+                  >
+                    Skip for Now
+                  </Button>
+                </div>
               )}
               
               {currentStep < totalSteps && (
                 <Button
                   variant="outline"
                   className="hover-lift focus-visible"
-                  asChild
+                  onClick={skipProfile}
+                  disabled={isSaving || !role}
                 >
-                  <Link href="/dashboard">Skip for Now</Link>
+                  Skip for Now
                 </Button>
               )}
             </div>

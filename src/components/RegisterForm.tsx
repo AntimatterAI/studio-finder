@@ -168,7 +168,7 @@ export function RegisterForm() {
         email: formData.email,
         password: formData.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/login?confirmed=true`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/login`,
           data: {
             invite_code: registrationMode === 'invite' ? formData.inviteCode : null,
             role: role,
@@ -254,6 +254,37 @@ export function RegisterForm() {
       case 'studio': return <Radio className="w-4 h-4" />
       default: return <User className="w-4 h-4" />
     }
+  }
+
+  // If registration was successful, only show the email confirmation message
+  if (success) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 p-6 bg-green-50 border border-green-200 rounded-xl text-green-700 animate-slide-up text-center">
+          <CheckCircle className="w-6 h-6 flex-shrink-0 text-green-500" />
+          <div className="flex-1">
+            <div className="font-medium text-green-800 mb-1">Check Your Email!</div>
+            <div className="text-green-600 text-sm leading-relaxed">
+              We've sent a confirmation link to <strong>{formData.email}</strong>. 
+              Click the link to verify your account, then return here to sign in.
+            </div>
+          </div>
+        </div>
+        
+        <div className="text-center">
+          <Button
+            onClick={() => {
+              // Reset form and go to login
+              setSuccess('')
+              window.location.href = '/login'
+            }}
+            className="gradient-accent hover-lift"
+          >
+            Go to Sign In
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   return (
