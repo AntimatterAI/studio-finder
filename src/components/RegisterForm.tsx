@@ -265,7 +265,7 @@ export function RegisterForm() {
           <div className="flex-1">
             <div className="font-medium text-green-800 mb-1">Check Your Email!</div>
             <div className="text-green-600 text-sm leading-relaxed">
-              We've sent a confirmation link to <strong>{formData.email}</strong>. 
+              We&apos;ve sent a confirmation link to <strong>{formData.email}</strong>. 
               Click the link to verify your account, then return here to sign in.
             </div>
           </div>
