@@ -46,18 +46,18 @@ export const metadata: Metadata = {
     siteName: "wavr",
     images: [
       {
-        url: "/wavr_logo_dark.svg",
+        url: "/wavr-social-share.png",
         width: 1200,
         height: 630,
         alt: "wavr - Music Collaboration Platform",
-        type: "image/svg+xml",
+        type: "image/png",
       },
       {
-        url: "/wavr_icon_dark_512.svg",
+        url: "/wavr_icon_dark_512.png",
         width: 512,
         height: 512, 
         alt: "wavr logo",
-        type: "image/svg+xml",
+        type: "image/png",
       },
     ],
   },
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "wavr - Connect with Music Creators",
     description: "Connect with music studios, artists, and producers worldwide. Find collaborators, book studios, and grow your music career.",
-    images: ["/wavr_logo_dark.svg"],
+    images: ["/wavr-social-share.png"],
     creator: "@wavr",
   },
   
@@ -113,18 +113,26 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#9333ea" />
         <meta name="theme-color" content="#0f0f23" />
         <meta name="color-scheme" content="dark" />
-        <meta property="og:image" content="/wavr_logo_dark.svg" />
-        <meta property="og:image:type" content="image/svg+xml" />
+        <meta property="og:image" content="/wavr-social-share.png" />
+        <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="wavr - Music Collaboration Platform" />
+        <meta name="twitter:image" content="/wavr-social-share.png" />
+        <meta name="twitter:image:alt" content="wavr - Music Collaboration Platform" />
         <style dangerouslySetInnerHTML={{__html: `
-          /* Force dark mode immediately */
+          /* AGGRESSIVE dark mode enforcement for all platforms */
+          :root { 
+            color-scheme: dark !important; 
+          }
           html { 
             color-scheme: dark !important; 
             background-color: #0f0f23 !important;
+            background: #0f0f23 !important;
           }
           body { 
             background-color: #0f0f23 !important; 
+            background: #0f0f23 !important;
             color: #ffffff !important;
           }
           
@@ -132,9 +140,11 @@ export default function RootLayout({
           html.light { 
             color-scheme: light !important; 
             background-color: #ffffff !important;
+            background: #ffffff !important;
           }
           html.light body { 
             background-color: #ffffff !important; 
+            background: #ffffff !important;
             color: #000000 !important;
           }
         `}} />

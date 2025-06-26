@@ -104,6 +104,7 @@ export default function HomePage() {
               width={240}
               height={64}
               className="h-16 w-auto dark:block hidden"
+              style={{ background: 'transparent' }}
             />
             <Image 
               src="/wavr_logo_light.svg" 
@@ -111,6 +112,7 @@ export default function HomePage() {
               width={240}
               height={64}
               className="h-16 w-auto dark:hidden block"
+              style={{ background: 'transparent' }}
             />
           </div>
           
