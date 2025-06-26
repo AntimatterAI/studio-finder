@@ -10,7 +10,7 @@ import {
   Music, Users, Camera, MapPin, DollarSign, 
   Plus, Copy, Sun, Moon, LogOut, Crown, User, Heart, MessageSquare,
   Instagram, Twitter, Youtube, Upload, Star, Calendar,
-  Radio, Headphones, Edit3, Save, X, CheckCircle
+  Radio, Headphones, Edit3, Save, X, CheckCircle, Zap
 } from 'lucide-react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
@@ -23,18 +23,22 @@ import { supabase } from '@/lib/supabase'
 
 interface UserProfile {
   id: string
-  role: 'artist' | 'producer' | 'studio' | null
+  role: 'artist_producer' | 'studio' | null
+  tier_level: number
   display_name: string | null
   bio: string | null
   location: string | null
   hourly_rate: number | null
-  skills: string[] | null
+  offers_production_services: boolean
+  musical_styles: string[] | null
   influences: string[] | null
+  instruments: string[] | null
+  equipment: string[] | null
   media_urls: string[] | null
   socials: Record<string, string> | null
   profile_complete: boolean
   availability: string | null
-  equipment: string[] | null
+  created_at: string
 }
 
 export default function DashboardPage() {
@@ -343,8 +347,7 @@ export default function DashboardPage() {
 
   const getRoleIcon = () => {
     switch (profile.role) {
-      case 'artist': return <User className="w-6 h-6" />
-      case 'producer': return <Headphones className="w-6 h-6" />
+      case 'artist_producer': return <Headphones className="w-6 h-6" />
       case 'studio': return <Radio className="w-6 h-6" />
       default: return <Music className="w-6 h-6" />
     }
@@ -352,8 +355,7 @@ export default function DashboardPage() {
 
   const getRoleColor = () => {
     switch (profile.role) {
-      case 'artist': return 'text-blue-500'
-      case 'producer': return 'text-purple-500'
+      case 'artist_producer': return 'text-purple-500'
       case 'studio': return 'text-green-500'
       default: return 'text-primary'
     }
@@ -432,7 +434,12 @@ export default function DashboardPage() {
                   </div>
                   <div className="space-y-2">
                     <Label>Role</Label>
-                    <p className={`font-medium capitalize ${getRoleColor()}`}>{profile.role}</p>
+                    <p className={`font-medium ${getRoleColor()}`}>
+                      {profile.role === 'artist_producer' ? 'Artist/Producer' : 'Studio'}
+                      <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full ml-2">
+                        Tier {profile.tier_level}
+                      </span>
+                    </p>
                   </div>
                 </div>
 
@@ -469,7 +476,7 @@ export default function DashboardPage() {
                       <p className="text-foreground">{profile.location}</p>
                     )}
                   </div>
-                  {profile.role !== 'artist' && (
+                  {(profile.role === 'studio' || (profile.role === 'artist_producer' && profile.offers_production_services)) && (
                     <div className="space-y-2">
                       <Label className="flex items-center gap-2">
                         <DollarSign className="w-4 h-4" />
@@ -489,35 +496,101 @@ export default function DashboardPage() {
                   )}
                 </div>
 
-                {/* Skills */}
-                <div className="space-y-2">
-                  <Label>Skills</Label>
-                  <div className="flex flex-wrap gap-2">
-                    {profile.skills?.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                {/* Production Services */}
+                {profile.role === 'artist_producer' && (
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      <Zap className="w-4 h-4" />
+                      Production Services
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <div className={`px-3 py-1 rounded-full text-sm ${
+                        profile.offers_production_services 
+                          ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400' 
+                          : 'bg-muted text-muted-foreground'
+                      }`}>
+                        {profile.offers_production_services ? 'Available' : 'Not Available'}
+                      </div>
+                      {isEditing && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => updateField('offers_production_services', !editedProfile.offers_production_services)}
+                        >
+                          Toggle
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Musical Styles */}
+                {profile.musical_styles && profile.musical_styles.length > 0 && (
+                  <div className="space-y-2">
+                    <Label>Musical Styles</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {profile.musical_styles.map((style, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                        >
+                          {style}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Instruments */}
+                {profile.instruments && profile.instruments.length > 0 && (
+                  <div className="space-y-2">
+                    <Label>Instruments</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {profile.instruments.map((instrument, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 rounded-full text-sm"
+                        >
+                          {instrument}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Influences */}
-                <div className="space-y-2">
-                  <Label>Influences</Label>
-                  <div className="flex flex-wrap gap-2">
-                    {profile.influences?.map((influence, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm"
-                      >
-                        {influence}
-                      </span>
-                    ))}
+                {profile.influences && profile.influences.length > 0 && (
+                  <div className="space-y-2">
+                    <Label>Influences</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {profile.influences.map((influence, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400 rounded-full text-sm"
+                        >
+                          {influence}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Equipment */}
+                {profile.equipment && profile.equipment.length > 0 && (
+                  <div className="space-y-2">
+                    <Label>Equipment</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {profile.equipment.map((item, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-orange-100 text-orange-700 dark:bg-orange-900/20 dark:text-orange-400 rounded-full text-sm"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Social Links */}
                 <div className="space-y-2">
@@ -557,21 +630,29 @@ export default function DashboardPage() {
                 <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button className="w-full justify-start" variant="outline">
-                  <Camera className="w-4 h-4 mr-2" />
-                  Upload Photos
+                <Button className="w-full justify-start" variant="outline" asChild>
+                  <Link href="/upload/photos">
+                    <Camera className="w-4 h-4 mr-2" />
+                    Upload Photos
+                  </Link>
                 </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Add Music
+                <Button className="w-full justify-start" variant="outline" asChild>
+                  <Link href="/upload/music">
+                    <Upload className="w-4 h-4 mr-2" />
+                    Add Music
+                  </Link>
                 </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <Users className="w-4 h-4 mr-2" />
-                  Find Collaborators
+                <Button className="w-full justify-start" variant="outline" asChild>
+                  <Link href="/discover">
+                    <Users className="w-4 h-4 mr-2" />
+                    Find Collaborators
+                  </Link>
                 </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Schedule Session
+                <Button className="w-full justify-start" variant="outline" asChild>
+                  <Link href="/schedule">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Schedule Session
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
