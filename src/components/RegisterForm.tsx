@@ -21,6 +21,7 @@ export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [success, setSuccess] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isValidatingCode, setIsValidatingCode] = useState(false)
   const [codeValidated, setCodeValidated] = useState(false)
@@ -34,9 +35,12 @@ export function RegisterForm() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
-    // Clear error when user starts typing
+    // Clear error and success messages when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }))
+    }
+    if (success) {
+      setSuccess('')
     }
     
     // Real-time validation for invite code
@@ -159,11 +163,12 @@ export function RegisterForm() {
       const role = registrationMode === 'public' ? formData.role : inviteCodeData?.code_type
       const tierLevel = registrationMode === 'public' ? 1 : inviteCodeData?.tier_level
 
-      // Sign up the user
+      // Sign up the user with email confirmation
       const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
         options: {
+          emailRedirectTo: `${window.location.origin}/login?confirmed=true`,
           data: {
             invite_code: registrationMode === 'invite' ? formData.inviteCode : null,
             role: role,
@@ -179,40 +184,61 @@ export function RegisterForm() {
         return
       }
 
-      if (data.user && role && tierLevel) {
-        // Mark invite code as used if in invite mode
-        if (registrationMode === 'invite' && inviteCodeData) {
-          await supabase
-            .from('invites')
-            .update({ 
-              status: 'used', 
-              used_by: data.user.id,
-              used_at: new Date().toISOString()
-            })
-            .eq('code', formData.inviteCode)
-        }
-
-        // Create initial profile
-        await supabase
-          .from('profiles')
-          .insert({
-            id: data.user.id,
+      if (data.user) {
+        // Check if user needs email confirmation
+        if (!data.session) {
+          // Store registration data for when they confirm email
+          localStorage.setItem('pending_registration', JSON.stringify({
             role: role,
             tier_level: tierLevel,
-            display_name: null,
-            profile_complete: false
-          })
+            email: formData.email,
+            registration_mode: registrationMode,
+            invite_code: registrationMode === 'invite' ? formData.inviteCode : null,
+            invite_data: inviteCodeData
+          }))
 
-        // Store registration data in localStorage for profile setup
-        localStorage.setItem('registration_data', JSON.stringify({
-          role: role,
-          tier_level: tierLevel,
-          email: formData.email,
-          registration_mode: registrationMode
-        }))
+          // Show success message about email confirmation (styled as success, not error)
+          setSuccess(`✅ Account created! Please check your email (${formData.email}) and click the confirmation link to complete your registration. Then return to sign in.`)
+          setIsLoading(false)
+          return
+        }
 
-        // Redirect to profile setup
-        router.push('/profile/setup')
+        // If session exists (should not happen with email confirmation enabled)
+        if (role && tierLevel) {
+          // Mark invite code as used if in invite mode
+          if (registrationMode === 'invite' && inviteCodeData) {
+            await supabase
+              .from('invites')
+              .update({ 
+                status: 'used', 
+                used_by: data.user.id,
+                used_at: new Date().toISOString()
+              })
+              .eq('code', formData.inviteCode)
+          }
+
+          // Create initial profile
+          await supabase
+            .from('profiles')
+            .insert({
+              id: data.user.id,
+              role: role,
+              tier_level: tierLevel,
+              display_name: null,
+              profile_complete: false
+            })
+
+          // Store registration data in localStorage for profile setup
+          localStorage.setItem('registration_data', JSON.stringify({
+            role: role,
+            tier_level: tierLevel,
+            email: formData.email,
+            registration_mode: registrationMode
+          }))
+
+          // Redirect to profile setup
+          router.push('/profile/setup')
+        }
       }
     } catch (error) {
       console.error('Registration error:', error)
@@ -290,6 +316,13 @@ export function RegisterForm() {
           <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 animate-slide-up">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <span className="text-body-sm">{errors.general}</span>
+          </div>
+        )}
+
+        {success && (
+          <div className="flex items-center gap-3 p-4 bg-primary/10 border border-primary/20 rounded-xl text-primary animate-slide-up">
+            <CheckCircle className="w-5 h-5 flex-shrink-0" />
+            <span className="text-body-sm">{success}</span>
           </div>
         )}
 

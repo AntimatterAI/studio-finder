@@ -1,46 +1,119 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Music, ArrowLeft, Mail, Lock, Eye, EyeOff, Sparkles, AlertCircle } from 'lucide-react'
+import { Music, ArrowLeft, Mail, Lock, Eye, EyeOff, Sparkles, AlertCircle, CheckCircle } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
 
+  // Check for email confirmation on page load
+  useEffect(() => {
+    const confirmed = searchParams.get('confirmed')
+    if (confirmed === 'true') {
+      setSuccess('✅ Email confirmed! Please sign in to complete your account setup.')
+    }
+  }, [searchParams])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError('')
+    setSuccess('')
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    try {
+      // Sign in with Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      })
 
-    // Simple validation - in a real app this would be a proper API call
-    if (formData.email && formData.password) {
-      // Set user session
-      localStorage.setItem('user_session', 'authenticated')
-      localStorage.setItem('user_email', formData.email)
-      localStorage.setItem('user_login_time', Date.now().toString())
-      
-      // Redirect to dashboard
-      router.push('/dashboard')
-    } else {
-      setError('Please fill in all fields')
+      if (error) {
+        setError(error.message)
+        setIsLoading(false)
+        return
+      }
+
+      if (data.user && data.session) {
+        // Check if user has pending registration data
+        const pendingRegistration = localStorage.getItem('pending_registration')
+        
+        if (pendingRegistration) {
+          // Complete the registration process
+          const regData = JSON.parse(pendingRegistration)
+          
+          // Mark invite code as used if applicable
+          if (regData.registration_mode === 'invite' && regData.invite_data) {
+            await supabase
+              .from('invites')
+              .update({ 
+                status: 'used', 
+                used_by: data.user.id,
+                used_at: new Date().toISOString()
+              })
+              .eq('code', regData.invite_code)
+          }
+
+          // Create initial profile
+          await supabase
+            .from('profiles')
+            .insert({
+              id: data.user.id,
+              role: regData.role,
+              tier_level: regData.tier_level,
+              display_name: null,
+              profile_complete: false
+            })
+
+          // Store registration data for profile setup
+          localStorage.setItem('registration_data', JSON.stringify({
+            role: regData.role,
+            tier_level: regData.tier_level,
+            email: regData.email,
+            registration_mode: regData.registration_mode
+          }))
+
+          // Clear pending registration
+          localStorage.removeItem('pending_registration')
+
+          // Redirect to profile setup
+          router.push('/profile/setup')
+        } else {
+          // Check if user has a complete profile
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('profile_complete')
+            .eq('id', data.user.id)
+            .single()
+
+          if (profile && !profile.profile_complete) {
+            router.push('/profile/setup')
+          } else {
+            router.push('/dashboard')
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      setError('An unexpected error occurred. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
-    
-    setIsLoading(false)
   }
 
   return (
@@ -95,6 +168,14 @@ export default function LoginPage() {
                 <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-300 animate-slide-up">
                   <AlertCircle className="w-5 h-5 flex-shrink-0" />
                   <span className="text-body-sm">{error}</span>
+                </div>
+              )}
+
+              {/* Success Message */}
+              {success && (
+                <div className="flex items-center gap-3 p-4 bg-primary/10 border border-primary/20 rounded-xl text-primary animate-slide-up">
+                  <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-body-sm">{success}</span>
                 </div>
               )}
 
@@ -202,5 +283,20 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 } 
