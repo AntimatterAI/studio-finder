@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
-import Image from 'next/image'
+
 import { ArrowRight, Music, Users, Calendar, Star, Sparkles, Headphones, Mic, Radio, MapPin, CheckCircle } from 'lucide-react'
 import AnimatedMusicBackground from '@/components/AnimatedMusicBackground'
 import { supabase } from '@/lib/supabase'
@@ -98,22 +98,34 @@ export default function HomePage() {
         {/* Hero Section */}
         <div className="text-center mb-20 animate-fade-in">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <Image 
-              src="/wavr_logo_dark.svg" 
-              alt="wavr" 
-              width={240}
-              height={64}
-              className="h-16 w-auto dark:block hidden"
-              style={{ background: 'transparent' }}
-            />
-            <Image 
-              src="/wavr_logo_light.svg" 
-              alt="wavr" 
-              width={240}
-              height={64}
-              className="h-16 w-auto dark:hidden block"
-              style={{ background: 'transparent' }}
-            />
+            <div className="h-16 w-64 dark:block hidden">
+              <svg viewBox="0 0 400 120" className="h-full w-full" style={{background: 'transparent'}}>
+                <defs>
+                  <linearGradient id="hero-gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{stopColor:'#4F7FFF', stopOpacity:1}} />
+                    <stop offset="100%" style={{stopColor:'#9F7FFF', stopOpacity:1}} />
+                  </linearGradient>
+                </defs>
+                <circle cx="105" cy="60" r="50" fill="transparent" stroke="url(#hero-gradient-dark)" strokeWidth="6"/>
+                <path d="M 70 60 Q 75 45 80 60 Q 85 75 90 60 Q 95 30 100 60 Q 105 90 110 60 Q 115 30 120 60 Q 125 75 130 60 Q 135 45 140 60" 
+                      fill="none" stroke="url(#hero-gradient-dark)" strokeWidth="4" strokeLinecap="round"/>
+                <text x="185" y="80" fontFamily="Arial, sans-serif" fontSize="48" fontWeight="600" fill="white">wavr</text>
+              </svg>
+            </div>
+            <div className="h-16 w-64 dark:hidden block">
+              <svg viewBox="0 0 400 120" className="h-full w-full" style={{background: 'transparent'}}>
+                <defs>
+                  <linearGradient id="hero-gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{stopColor:'#4F7FFF', stopOpacity:1}} />
+                    <stop offset="100%" style={{stopColor:'#9F7FFF', stopOpacity:1}} />
+                  </linearGradient>
+                </defs>
+                <circle cx="105" cy="60" r="50" fill="transparent" stroke="url(#hero-gradient-light)" strokeWidth="6"/>
+                <path d="M 70 60 Q 75 45 80 60 Q 85 75 90 60 Q 95 30 100 60 Q 105 90 110 60 Q 115 30 120 60 Q 125 75 130 60 Q 135 45 140 60" 
+                      fill="none" stroke="url(#hero-gradient-light)" strokeWidth="4" strokeLinecap="round"/>
+                <text x="185" y="80" fontFamily="Arial, sans-serif" fontSize="48" fontWeight="600" fill="#1a1a2e">wavr</text>
+              </svg>
+            </div>
           </div>
           
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">

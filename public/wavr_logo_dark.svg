@@ -6,9 +6,6 @@
     </linearGradient>
   </defs>
   
-  <!-- Dark background -->
-  <rect width="400" height="120" fill="#1a1a2e"/>
-  
   <!-- Circular icon background -->
   <circle cx="60" cy="60" r="50" fill="transparent" stroke="url(#gradient)" stroke-width="6"/>
   

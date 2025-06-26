@@ -91,7 +91,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className="dark">
+    <html lang="en" suppressHydrationWarning className="dark" style={{backgroundColor: '#0f0f23', colorScheme: 'dark'}}>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/wavr_favicon_32.svg" type="image/svg+xml" />
@@ -121,31 +121,48 @@ export default function RootLayout({
         <meta name="twitter:image" content="/wavr-social-share.png" />
         <meta name="twitter:image:alt" content="wavr - Music Collaboration Platform" />
         <style dangerouslySetInnerHTML={{__html: `
-          /* AGGRESSIVE dark mode enforcement for all platforms */
-          :root { 
+          /* NUCLEAR dark mode enforcement - force dark mode everywhere */
+          * { 
             color-scheme: dark !important; 
           }
-          html { 
+          :root { 
+            color-scheme: dark !important; 
+            --background: #0f0f23 !important;
+            --foreground: #ffffff !important;
+          }
+          html, html.dark { 
             color-scheme: dark !important; 
             background-color: #0f0f23 !important;
             background: #0f0f23 !important;
+            color: #ffffff !important;
           }
-          body { 
+          body, body.dark { 
             background-color: #0f0f23 !important; 
             background: #0f0f23 !important;
             color: #ffffff !important;
           }
           
-          /* Light mode override when explicitly chosen */
+          /* Only allow light mode when explicitly set */
           html.light { 
             color-scheme: light !important; 
             background-color: #ffffff !important;
             background: #ffffff !important;
+            color: #000000 !important;
+            --background: #ffffff !important;
+            --foreground: #000000 !important;
           }
           html.light body { 
             background-color: #ffffff !important; 
             background: #ffffff !important;
             color: #000000 !important;
+          }
+          
+          /* Force dark mode on desktop browsers */
+          @media (prefers-color-scheme: dark), (prefers-color-scheme: no-preference) {
+            html:not(.light) { 
+              color-scheme: dark !important;
+              background-color: #0f0f23 !important;
+            }
           }
         `}} />
       </head>
@@ -154,58 +171,69 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // ULTRA AGGRESSIVE DARK MODE FORCE
-                document.documentElement.style.backgroundColor = '#0f0f23';
-                document.documentElement.style.colorScheme = 'dark';
-                document.documentElement.style.color = '#ffffff';
-                document.body && (document.body.style.backgroundColor = '#0f0f23');
-                document.body && (document.body.style.color = '#ffffff');
+                console.log('🌙 NUCLEAR DARK MODE INITIALIZATION');
                 
-                // Force dark class immediately
-                document.documentElement.classList.add('dark');
+                // STEP 1: IMMEDIATE VISUAL FORCE - before any other code runs
+                document.documentElement.style.setProperty('background-color', '#0f0f23', 'important');
+                document.documentElement.style.setProperty('color-scheme', 'dark', 'important');
+                document.documentElement.style.setProperty('color', '#ffffff', 'important');
+                
+                // STEP 2: Force HTML classes immediately
                 document.documentElement.classList.remove('light');
+                document.documentElement.classList.add('dark');
+                document.documentElement.setAttribute('data-theme', 'dark');
                 
-                // Set localStorage default to dark if not set
-                try {
-                  const theme = localStorage.getItem('theme');
-                  console.log('Theme from localStorage:', theme);
-                  
-                  if (theme === null || theme === undefined) {
-                    // No theme set, default to dark
-                    localStorage.setItem('theme', 'dark');
-                    console.log('Set default theme to dark');
+                // STEP 3: Body styling when available
+                function forceBodyDark() {
+                  if (document.body) {
+                    document.body.style.setProperty('background-color', '#0f0f23', 'important');
+                    document.body.style.setProperty('color', '#ffffff', 'important');
+                    document.body.classList.add('dark');
+                    document.body.classList.remove('light');
                   }
+                }
+                
+                // Apply immediately if body exists, otherwise wait
+                if (document.body) {
+                  forceBodyDark();
+                } else {
+                  document.addEventListener('DOMContentLoaded', forceBodyDark);
+                }
+                
+                // STEP 4: localStorage logic with aggressive fallback
+                try {
+                  const savedTheme = localStorage.getItem('theme');
+                  console.log('💾 Saved theme:', savedTheme);
                   
-                  // INVERTED LOGIC: Only switch to light if explicitly set to 'light'
-                  if (theme === 'light') {
-                    // User explicitly chose light mode
-                    console.log('User chose light mode - switching to light');
+                  // ULTRA DEFENSIVE: Only allow light mode if EXPLICITLY saved as 'light'
+                  if (savedTheme === 'light') {
+                    console.log('☀️ User explicitly chose light mode');
                     document.documentElement.classList.remove('dark');
                     document.documentElement.classList.add('light');
-                    document.documentElement.style.backgroundColor = '#ffffff';
-                    document.documentElement.style.colorScheme = 'light';
-                    document.documentElement.style.color = '#000000';
-                    document.body && (document.body.style.backgroundColor = '#ffffff');
-                    document.body && (document.body.style.color = '#000000');
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    document.documentElement.style.setProperty('background-color', '#ffffff', 'important');
+                    document.documentElement.style.setProperty('color-scheme', 'light', 'important');
+                    document.documentElement.style.setProperty('color', '#000000', 'important');
+                    
+                    if (document.body) {
+                      document.body.style.setProperty('background-color', '#ffffff', 'important');
+                      document.body.style.setProperty('color', '#000000', 'important');
+                      document.body.classList.remove('dark');
+                      document.body.classList.add('light');
+                    }
                   } else {
-                    // Default to dark mode (everything else including 'dark', null, undefined)
-                    console.log('Using dark mode (default)');
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.classList.remove('light');
-                    // Ensure dark styles are applied
-                    document.documentElement.style.backgroundColor = '#0f0f23';
-                    document.documentElement.style.colorScheme = 'dark';
-                    document.documentElement.style.color = '#ffffff';
-                    document.body && (document.body.style.backgroundColor = '#0f0f23');
-                    document.body && (document.body.style.color = '#ffffff');
+                    // EVERYTHING ELSE = DARK MODE (null, undefined, 'dark', invalid values)
+                    console.log('🌙 Enforcing dark mode (default)');
+                    localStorage.setItem('theme', 'dark');
+                    // Dark mode styles already applied above
                   }
-                } catch (e) {
-                  console.log('LocalStorage error, forcing dark mode:', e);
-                  // If localStorage fails, force dark mode
-                  document.documentElement.classList.add('dark');
-                  document.documentElement.classList.remove('light');
+                } catch (error) {
+                  console.error('❌ localStorage error, forcing dark mode:', error);
                   localStorage.setItem('theme', 'dark');
+                  // Dark mode styles already applied above
                 }
+                
+                console.log('✅ DARK MODE INITIALIZATION COMPLETE');
               })();
             `,
           }}

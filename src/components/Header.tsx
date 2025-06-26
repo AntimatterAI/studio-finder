@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { User, LogOut, Sun, Moon } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
@@ -69,20 +68,34 @@ export default function Header() {
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
-          <Image 
-            src="/wavr_logo_dark.svg" 
-            alt="wavr" 
-            width={120}
-            height={32}
-            className="h-8 w-auto dark:block hidden"
-          />
-          <Image 
-            src="/wavr_logo_light.svg" 
-            alt="wavr" 
-            width={120}
-            height={32}
-            className="h-8 w-auto dark:hidden block"
-          />
+          <div className="h-8 w-32 dark:block hidden">
+            <svg viewBox="0 0 400 120" className="h-full w-full" style={{background: 'transparent'}}>
+              <defs>
+                <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{stopColor:'#4F7FFF', stopOpacity:1}} />
+                  <stop offset="100%" style={{stopColor:'#9F7FFF', stopOpacity:1}} />
+                </linearGradient>
+              </defs>
+              <circle cx="105" cy="60" r="50" fill="transparent" stroke="url(#gradient-dark)" strokeWidth="6"/>
+              <path d="M 70 60 Q 75 45 80 60 Q 85 75 90 60 Q 95 30 100 60 Q 105 90 110 60 Q 115 30 120 60 Q 125 75 130 60 Q 135 45 140 60" 
+                    fill="none" stroke="url(#gradient-dark)" strokeWidth="4" strokeLinecap="round"/>
+              <text x="185" y="80" fontFamily="Arial, sans-serif" fontSize="48" fontWeight="600" fill="white">wavr</text>
+            </svg>
+          </div>
+          <div className="h-8 w-32 dark:hidden block">
+            <svg viewBox="0 0 400 120" className="h-full w-full" style={{background: 'transparent'}}>
+              <defs>
+                <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{stopColor:'#4F7FFF', stopOpacity:1}} />
+                  <stop offset="100%" style={{stopColor:'#9F7FFF', stopOpacity:1}} />
+                </linearGradient>
+              </defs>
+              <circle cx="105" cy="60" r="50" fill="transparent" stroke="url(#gradient-light)" strokeWidth="6"/>
+              <path d="M 70 60 Q 75 45 80 60 Q 85 75 90 60 Q 95 30 100 60 Q 105 90 110 60 Q 115 30 120 60 Q 125 75 130 60 Q 135 45 140 60" 
+                    fill="none" stroke="url(#gradient-light)" strokeWidth="4" strokeLinecap="round"/>
+              <text x="185" y="80" fontFamily="Arial, sans-serif" fontSize="48" fontWeight="600" fill="#1a1a2e">wavr</text>
+            </svg>
+          </div>
         </Link>
 
         {/* Navigation */}
