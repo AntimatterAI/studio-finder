@@ -23,9 +23,23 @@ interface TierOneProfile {
   skills: string[]
 }
 
+interface AuthUser {
+  id: string
+  email?: string
+}
+
+interface UserProfile {
+  id: string
+  display_name: string
+  role: string
+  profile_complete: boolean
+}
+
 export default function HomePage() {
   const [tierOneProfiles, setTierOneProfiles] = useState<TierOneProfile[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<AuthUser | null>(null)
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
 
   useEffect(() => {
     // INVERTED LOGIC: Default to dark mode, only light if explicitly chosen
@@ -38,8 +52,29 @@ export default function HomePage() {
     }
     
     checkTheme()
+    checkAuth()
     fetchTierOneProfiles()
   }, [])
+
+  const checkAuth = async () => {
+    try {
+      const { data: { user }, error } = await supabase.auth.getUser()
+      if (user && !error) {
+        setUser(user)
+        
+        // Get user profile
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single()
+        
+        setUserProfile(profile)
+      }
+    } catch (error) {
+      console.error('Auth check error:', error)
+    }
+  }
 
   const fetchTierOneProfiles = async () => {
     try {
@@ -134,21 +169,41 @@ export default function HomePage() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="button-primary" asChild>
-              <Link href="/register">
-                Join as Tier 1 - Free
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" className="button-secondary" asChild>
-              <Link href="/login">
-                Sign In
-              </Link>
-            </Button>
+            {user && userProfile ? (
+              // Signed in users see different buttons based on their role
+              <>
+                <Button size="lg" className="button-primary" asChild>
+                  <Link href="/discover?filter=artist_producer">
+                    Find {userProfile.role === 'studio' ? 'Artists & Producers' : 'Collaborators'}
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="button-secondary" asChild>
+                  <Link href="/discover?filter=studio">
+                    Find Studios
+                  </Link>
+                </Button>
+              </>
+            ) : (
+              // Not signed in users see the original buttons
+              <>
+                <Button size="lg" className="button-primary" asChild>
+                  <Link href="/register">
+                    Join as Tier 1 - Free
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="button-secondary" asChild>
+                  <Link href="/login">
+                    Sign In
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
           
           <p className="text-sm text-muted-foreground mt-4">
-            Browse our community below • No sign up required
+            {user ? 'Start discovering and connecting with creators' : 'Browse our community below • No sign up required'}
           </p>
         </div>
 

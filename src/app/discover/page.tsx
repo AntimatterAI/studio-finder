@@ -33,14 +33,21 @@ export default function DiscoverPage() {
   const [swiping, setSwiping] = useState(false)
   const [filter, setFilter] = useState<'all' | 'artist_producer' | 'studio'>('all')
 
-  const loadProfiles = useCallback(async (currentUserId: string) => {
+  const loadProfiles = useCallback(async (currentUserId: string | null) => {
     try {
       let query = supabase
         .from('profiles')
         .select('*')
-        .neq('id', currentUserId) // Exclude current user
         .eq('profile_complete', true)
         .order('created_at', { ascending: false })
+
+      // Exclude current user if authenticated
+      if (currentUserId) {
+        query = query.neq('id', currentUserId)
+      } else {
+        // Public users only see Tier 1 profiles
+        query = query.eq('tier_level', 1)
+      }
 
       if (filter !== 'all') {
         query = query.eq('role', filter)
@@ -65,26 +72,33 @@ export default function DiscoverPage() {
       try {
         // Check auth
         const { data: { user }, error: userError } = await supabase.auth.getUser()
-        if (userError || !user) {
-          router.push('/login')
-          return
-        }
+        
+        if (user && !userError) {
+          // User is authenticated - get their profile
+          const { data: userProfile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single()
 
-        // Get current user profile
-        const { data: userProfile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single()
-
-        setCurrentUser(userProfile)
-
-        // Load profiles to discover
-        if (userProfile?.id) {
-          await loadProfiles(userProfile.id)
+          if (userProfile && userProfile.profile_complete) {
+            setCurrentUser(userProfile)
+            await loadProfiles(userProfile.id)
+          } else {
+            // Redirect to profile setup if incomplete
+            router.push('/profile/setup')
+            return
+          }
+        } else {
+          // Public user - load Tier 1 profiles only
+          setCurrentUser(null)
+          await loadProfiles(null)
         }
       } catch (error) {
         console.error('Error initializing discover page:', error)
+        // For public users, still load profiles
+        setCurrentUser(null)
+        await loadProfiles(null)
       } finally {
         setLoading(false)
       }
@@ -149,13 +163,18 @@ export default function DiscoverPage() {
             className="glass-card border-primary/20 hover-lift" 
             asChild
           >
-            <Link href="/dashboard">
+            <Link href={currentUser ? "/dashboard" : "/"}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Dashboard
+              {currentUser ? "Dashboard" : "Home"}
             </Link>
           </Button>
           
-          <h1 className="text-heading-lg font-display text-gradient-primary">Discover</h1>
+          <div className="text-center">
+            <h1 className="text-heading-lg font-display text-gradient-primary">Discover</h1>
+            {!currentUser && (
+              <p className="text-xs text-muted-foreground">Tier 1 Creators</p>
+            )}
+          </div>
           
           <Button
             variant="outline"
@@ -304,30 +323,57 @@ export default function DiscoverPage() {
         {/* Action Buttons */}
         {currentIndex < profiles.length && (
           <div className="flex justify-center gap-6">
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-16 h-16 rounded-full border-red-500/20 hover:border-red-500/50 hover:bg-red-500/10"
-              onClick={() => handleSwipe('pass')}
-              disabled={swiping}
-            >
-              <X className="w-6 h-6 text-red-400" />
-            </Button>
-            <Button
-              size="lg"
-              className="w-16 h-16 rounded-full gradient-primary"
-              onClick={() => handleSwipe('like')}
-              disabled={swiping}
-            >
-              <Heart className="w-6 h-6 text-white" />
-            </Button>
+            {currentUser ? (
+              // Authenticated user - show swipe buttons
+              <>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-16 h-16 rounded-full border-red-500/20 hover:border-red-500/50 hover:bg-red-500/10"
+                  onClick={() => handleSwipe('pass')}
+                  disabled={swiping}
+                >
+                  <X className="w-6 h-6 text-red-400" />
+                </Button>
+                <Button
+                  size="lg"
+                  className="w-16 h-16 rounded-full gradient-primary"
+                  onClick={() => handleSwipe('like')}
+                  disabled={swiping}
+                >
+                  <Heart className="w-6 h-6 text-white" />
+                </Button>
+              </>
+            ) : (
+              // Public user - show sign up buttons
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex gap-4">
+                  <Button asChild className="gradient-primary">
+                    <Link href="/register">
+                      Sign Up to Connect
+                    </Link>
+                  </Button>
+                  <Button variant="outline" asChild>
+                    <Link href="/login">
+                      Sign In
+                    </Link>
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground text-center">
+                  Join wavr to connect with creators and book sessions
+                </p>
+              </div>
+            )}
           </div>
         )}
 
         {/* Tips */}
         <div className="mt-8 text-center">
           <p className="text-muted-foreground text-sm">
-            Swipe right to connect • Swipe left to pass
+            {currentUser 
+              ? "Swipe right to connect • Swipe left to pass"
+              : "Sign up to connect with creators and access all features"
+            }
           </p>
         </div>
       </div>

@@ -685,6 +685,34 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
+            {/* Connections */}
+            <Card className="card-modern">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  My Network
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button variant="outline" className="w-full justify-start" size="lg" asChild>
+                  <Link href="/connections">
+                    <Users className="w-4 h-4 mr-3" />
+                    View Connections
+                  </Link>
+                </Button>
+                <div className="text-sm text-muted-foreground">
+                  <div className="flex justify-between">
+                    <span>Total Connections:</span>
+                    <span className="font-medium">12</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>New This Week:</span>
+                    <span className="font-medium">3</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Recent Activity */}
             <Card className="card-modern">
               <CardHeader>
@@ -693,7 +721,7 @@ export default function DashboardPage() {
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-3 text-sm">
                   <Heart className="w-4 h-4 text-red-500" />
-                  <span>2 new followers</span>
+                  <span>2 new connections</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <MessageSquare className="w-4 h-4 text-blue-500" />

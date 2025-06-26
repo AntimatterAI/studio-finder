@@ -100,6 +100,28 @@ export default function Header() {
 
         {/* Navigation */}
         <div className="flex items-center gap-4">
+          {/* Public Navigation Links */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Link 
+              href="/browse/artists" 
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Browse Artists
+            </Link>
+            <Link 
+              href="/browse/producers" 
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Browse Producers
+            </Link>
+            <Link 
+              href="/browse/studios" 
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Browse Studios
+            </Link>
+          </nav>
+
           {/* Theme Toggle */}
           <Button
             variant="outline"
