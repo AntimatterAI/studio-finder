@@ -147,35 +147,62 @@ export default function ProfileSetupPage() {
   }
 
   const skipProfile = async () => {
-    if (!role) {
-      alert('Please select your role first')
-      return
-    }
-
     setIsSaving(true)
     try {
       const { data: { user }, error: userError } = await supabase.auth.getUser()
       
       if (userError || !user) {
+        console.error('Auth error:', userError)
         alert('Authentication error. Please log in again.')
         router.push('/login')
         return
       }
 
-      // Set minimal profile data
-      const { error } = await supabase
+      // Check if profile exists first
+      const { data: existingProfile, error: checkError } = await supabase
         .from('profiles')
-        .update({
-          display_name: formData.displayName || 'User',
-          profile_complete: false, // Mark as incomplete for later
-          updated_at: new Date().toISOString()
-        })
+        .select('id')
         .eq('id', user.id)
+        .single()
 
-      if (error) {
-        console.error('Error skipping profile:', error)
-        alert('Failed to skip profile. Please try again.')
+      if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows returned
+        console.error('Error checking profile:', checkError)
+        alert('Failed to check profile status. Please try again.')
         return
+      }
+
+      if (!existingProfile) {
+        // Profile doesn't exist, create minimal one
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            role: role || 'artist_producer',
+            tier_level: tierLevel || 1,
+            display_name: formData.displayName || 'User',
+            profile_complete: false
+          })
+
+        if (insertError) {
+          console.error('Error creating profile:', insertError)
+          alert(`Failed to create profile: ${insertError.message}`)
+          return
+        }
+      } else {
+        // Profile exists, update it
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({
+            display_name: formData.displayName || 'User',
+            profile_complete: false
+          })
+          .eq('id', user.id)
+
+        if (updateError) {
+          console.error('Error updating profile:', updateError)
+          alert(`Failed to update profile: ${updateError.message}`)
+          return
+        }
       }
 
       // Clear registration data
@@ -203,8 +230,22 @@ export default function ProfileSetupPage() {
       const { data: { user }, error: userError } = await supabase.auth.getUser()
       
       if (userError || !user) {
+        console.error('Auth error:', userError)
         alert('Authentication error. Please log in again.')
         router.push('/login')
+        return
+      }
+
+      // Check if profile exists first
+      const { data: existingProfile, error: checkError } = await supabase
+        .from('profiles')
+        .select('id, role, tier_level')
+        .eq('id', user.id)
+        .single()
+
+      if (checkError && checkError.code !== 'PGRST116') {
+        console.error('Error checking profile:', checkError)
+        alert('Failed to check profile status. Please try again.')
         return
       }
 
@@ -240,20 +281,39 @@ export default function ProfileSetupPage() {
           youtube: socialLinks.youtube || null
         },
         
-        profile_complete: true,
-        updated_at: new Date().toISOString()
+        profile_complete: true
       }
 
-      // Update profile data (don&apos;t upsert since it should already exist from registration)
-      const { error } = await supabase
-        .from('profiles')
-        .update(profileData)
-        .eq('id', user.id)
+      if (!existingProfile) {
+        // Profile doesn't exist, create it with complete data
+        const insertData = {
+          id: user.id,
+          role: role,
+          tier_level: tierLevel || 1,
+          ...profileData
+        }
 
-      if (error) {
-        console.error('Error saving profile:', error)
-        alert('Failed to save profile. Please try again.')
-        return
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert(insertData)
+
+        if (insertError) {
+          console.error('Error creating profile:', insertError)
+          alert(`Failed to create profile: ${insertError.message}`)
+          return
+        }
+      } else {
+        // Profile exists, update it
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update(profileData)
+          .eq('id', user.id)
+
+        if (updateError) {
+          console.error('Error saving profile:', updateError)
+          alert(`Failed to save profile: ${updateError.message}`)
+          return
+        }
       }
 
       // Clear registration data from localStorage
@@ -995,7 +1055,7 @@ export default function ProfileSetupPage() {
                     variant="outline"
                     className="hover-lift focus-visible"
                     onClick={skipProfile}
-                    disabled={isSaving || !role}
+                    disabled={isSaving}
                   >
                     Skip for Now
                   </Button>
@@ -1007,7 +1067,7 @@ export default function ProfileSetupPage() {
                   variant="outline"
                   className="hover-lift focus-visible"
                   onClick={skipProfile}
-                  disabled={isSaving || !role}
+                  disabled={isSaving}
                 >
                   Skip for Now
                 </Button>
