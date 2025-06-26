@@ -249,39 +249,41 @@ export default function ProfileSetupPage() {
         return
       }
 
-      // Prepare profile data using new schema
-      const profileData = {
+      // Prepare profile data - start with basic fields that definitely exist
+      const profileData: any = {
         display_name: formData.displayName,
         bio: formData.bio || null,
         location: formData.location || null,
         hourly_rate: formData.hourlyRate ? parseFloat(formData.hourlyRate) : null,
-        
-        // New schema fields for artist/producer
-        offers_production_services: role === 'artist_producer' ? (formData.offersProduction === 'true') : false,
-        musical_styles: role === 'artist_producer' && skills.length > 0 ? skills : null,
-        production_skills: role === 'artist_producer' && formData.offersProduction === 'true' && skills.length > 0 ? skills : null,
-        instruments: null, // Can be added later
-        influences: null, // Can be added later
-        
-        // Studio-specific fields
-        studio_equipment: role === 'studio' && skills.length > 0 ? skills : null,
-        studio_rooms: role === 'studio' && rooms.length > 0 ? rooms.map(room => ({
-          name: room.name,
-          capacity: room.capacity,
-          hourly_rate: room.hourlyRate ? parseFloat(room.hourlyRate) : null,
-          equipment: room.equipment
-        })) : null,
-        
-        // Social and other data
-        socials: {
-          experience: formData.experience || null,
-          instagram: socialLinks.instagram || null,
-          soundcloud: socialLinks.soundcloud || null,
-          spotify: socialLinks.spotify || null,
-          youtube: socialLinks.youtube || null
-        },
-        
         profile_complete: true
+      }
+
+      // Try to add new schema fields if they exist (from migration)
+      try {
+        if (role === 'artist_producer') {
+          profileData.offers_production_services = formData.offersProduction === 'true'
+          if (skills.length > 0) {
+            profileData.musical_styles = skills
+            if (formData.offersProduction === 'true') {
+              profileData.production_skills = skills
+            }
+          }
+        }
+        
+        if (role === 'studio' && skills.length > 0) {
+          profileData.studio_equipment = skills
+        }
+        
+        if (role === 'studio' && rooms.length > 0) {
+          profileData.studio_rooms = rooms.map(room => ({
+            name: room.name,
+            capacity: room.capacity,
+            hourly_rate: room.hourlyRate ? parseFloat(room.hourlyRate) : null,
+            equipment: room.equipment
+          }))
+        }
+      } catch (error) {
+        console.log('Some advanced fields may not be available yet:', error)
       }
 
       if (!existingProfile) {
