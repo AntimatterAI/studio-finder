@@ -250,7 +250,7 @@ export default function ProfileSetupPage() {
       }
 
       // Prepare profile data - start with basic fields that definitely exist
-      const profileData: any = {
+      const baseProfileData = {
         display_name: formData.displayName,
         bio: formData.bio || null,
         location: formData.location || null,
@@ -259,28 +259,40 @@ export default function ProfileSetupPage() {
       }
 
       // Try to add new schema fields if they exist (from migration)
+      const profileData = { ...baseProfileData }
+      
       try {
         if (role === 'artist_producer') {
-          profileData.offers_production_services = formData.offersProduction === 'true'
+          Object.assign(profileData, {
+            offers_production_services: formData.offersProduction === 'true'
+          })
           if (skills.length > 0) {
-            profileData.musical_styles = skills
+            Object.assign(profileData, {
+              musical_styles: skills
+            })
             if (formData.offersProduction === 'true') {
-              profileData.production_skills = skills
+              Object.assign(profileData, {
+                production_skills: skills
+              })
             }
           }
         }
         
         if (role === 'studio' && skills.length > 0) {
-          profileData.studio_equipment = skills
+          Object.assign(profileData, {
+            studio_equipment: skills
+          })
         }
         
         if (role === 'studio' && rooms.length > 0) {
-          profileData.studio_rooms = rooms.map(room => ({
-            name: room.name,
-            capacity: room.capacity,
-            hourly_rate: room.hourlyRate ? parseFloat(room.hourlyRate) : null,
-            equipment: room.equipment
-          }))
+          Object.assign(profileData, {
+            studio_rooms: rooms.map(room => ({
+              name: room.name,
+              capacity: room.capacity,
+              hourly_rate: room.hourlyRate ? parseFloat(room.hourlyRate) : null,
+              equipment: room.equipment
+            }))
+          })
         }
       } catch (error) {
         console.log('Some advanced fields may not be available yet:', error)
