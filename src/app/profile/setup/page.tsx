@@ -7,13 +7,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabase'
-import { Music, Mic, Plus, X, Instagram, Youtube, ArrowLeft, Check, Upload, Star, Sparkles, Loader2, Trash2 } from 'lucide-react'
+import { Music, Plus, X, Instagram, Youtube, ArrowLeft, Check, Upload, Star, Sparkles, Loader2, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 
 export default function ProfileSetupPage() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
-  const [role, setRole] = useState<'artist' | 'producer' | 'studio' | null>(null)
+  const [role, setRole] = useState<'artist_producer' | 'studio' | null>(null)
   const [tierLevel, setTierLevel] = useState<1 | 2 | 3>(1)
   const [skills, setSkills] = useState<string[]>([])
   const [newSkill, setNewSkill] = useState('')
@@ -23,7 +23,8 @@ export default function ProfileSetupPage() {
     bio: '',
     location: '',
     experience: '',
-    hourlyRate: ''
+    hourlyRate: '',
+    offersProduction: ''
   })
   const [socialLinks, setSocialLinks] = useState({
     instagram: '',
@@ -295,56 +296,28 @@ export default function ProfileSetupPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <button
                       type="button"
-                      onClick={() => setRole('artist')}
+                      onClick={() => setRole('artist_producer')}
                       className={`p-6 border-2 rounded-2xl text-left transition-all duration-200 hover-lift group ${
-                        role === 'artist'
+                        role === 'artist_producer'
                           ? 'border-purple-400 bg-purple-50 shadow-lg'
                           : 'border-slate-200 hover:border-purple-300 bg-white/60'
                       }`}
                     >
                       <div className="flex flex-col items-center text-center gap-4">
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 ${
-                          role === 'artist' ? 'gradient-primary' : 'bg-slate-100'
+                          role === 'artist_producer' ? 'gradient-primary' : 'bg-slate-100'
                         }`}>
-                          <Mic className={`w-6 h-6 ${role === 'artist' ? 'text-white' : 'text-slate-600'}`} />
+                          <Music className={`w-6 h-6 ${role === 'artist_producer' ? 'text-white' : 'text-slate-600'}`} />
                         </div>
                         <div>
-                          <h3 className="text-body-lg font-semibold text-slate-800">Artist</h3>
-                          <p className="text-body-sm text-slate-600">Vocalist, songwriter, performer</p>
+                          <h3 className="text-body-lg font-semibold text-slate-800">Artist/Producer</h3>
+                          <p className="text-body-sm text-slate-600">Musician, songwriter, beat maker, engineer</p>
                         </div>
                       </div>
-                      {role === 'artist' && (
-                        <div className="mt-4 flex items-center justify-center gap-2 text-purple-600">
-                          <Check className="w-4 h-4" />
-                          <span className="text-body-sm font-medium">Selected</span>
-                        </div>
-                      )}
-                    </button>
-                    
-                    <button
-                      type="button"
-                      onClick={() => setRole('producer')}
-                      className={`p-6 border-2 rounded-2xl text-left transition-all duration-200 hover-lift group ${
-                        role === 'producer'
-                          ? 'border-purple-400 bg-purple-50 shadow-lg'
-                          : 'border-slate-200 hover:border-purple-300 bg-white/60'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center text-center gap-4">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 ${
-                          role === 'producer' ? 'gradient-primary' : 'bg-slate-100'
-                        }`}>
-                          <Music className={`w-6 h-6 ${role === 'producer' ? 'text-white' : 'text-slate-600'}`} />
-                        </div>
-                        <div>
-                          <h3 className="text-body-lg font-semibold text-slate-800">Producer</h3>
-                          <p className="text-body-sm text-slate-600">Beat maker, mixer, engineer</p>
-                        </div>
-                      </div>
-                      {role === 'producer' && (
+                      {role === 'artist_producer' && (
                         <div className="mt-4 flex items-center justify-center gap-2 text-purple-600">
                           <Check className="w-4 h-4" />
                           <span className="text-body-sm font-medium">Selected</span>
@@ -469,26 +442,79 @@ export default function ProfileSetupPage() {
                     </select>
                   </div>
                   
-                  {(role === 'producer' || role === 'studio') && (
+                  {role === 'artist_producer' && (
+                    <div>
+                      <div className="space-y-4">
+                        <div>
+                          <Label className="text-body-sm font-medium text-slate-700">Do you offer production services?</Label>
+                          <p className="text-body-xs text-slate-500 mt-1">This includes mixing, mastering, beat making, recording, etc.</p>
+                          <div className="flex gap-4 mt-2">
+                            <button
+                              type="button"
+                              onClick={() => handleInputChange('offersProduction', 'true')}
+                              className={`px-4 py-2 rounded-lg border-2 transition-all ${
+                                formData.offersProduction === 'true'
+                                  ? 'border-purple-400 bg-purple-50 text-purple-700'
+                                  : 'border-slate-200 hover:border-purple-300'
+                              }`}
+                            >
+                              Yes, I offer services
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleInputChange('offersProduction', 'false')}
+                              className={`px-4 py-2 rounded-lg border-2 transition-all ${
+                                formData.offersProduction === 'false'
+                                  ? 'border-purple-400 bg-purple-50 text-purple-700'
+                                  : 'border-slate-200 hover:border-purple-300'
+                              }`}
+                            >
+                              No, I just create music
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {formData.offersProduction === 'true' && (
+                          <div>
+                            <Label htmlFor="hourlyRate" className="text-body-sm font-medium text-slate-700">
+                              Hourly Rate (USD)
+                            </Label>
+                            <Input
+                              id="hourlyRate"
+                              type="number"
+                              min="0"
+                              step="5"
+                              placeholder="e.g., 75"
+                              value={formData.hourlyRate}
+                              onChange={(e) => handleInputChange('hourlyRate', e.target.value)}
+                              className="mt-2 h-12 focus:border-purple-400 transition-colors"
+                            />
+                            <p className="text-body-xs text-slate-500 mt-1">
+                              Your rate for production services. This helps clients understand your pricing.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {role === 'studio' && (
                     <div>
                       <Label htmlFor="hourlyRate" className="text-body-sm font-medium text-slate-700">
-                        {role === 'studio' ? 'Base Hourly Rate (USD)' : 'Hourly Rate (USD)'} {role === 'studio' ? '(Optional)' : ''}
+                        Base Hourly Rate (USD) (Optional)
                       </Label>
                       <Input
                         id="hourlyRate"
                         type="number"
                         min="0"
                         step="5"
-                        placeholder={role === 'studio' ? 'e.g., 150' : 'e.g., 75'}
+                        placeholder="e.g., 150"
                         value={formData.hourlyRate}
                         onChange={(e) => handleInputChange('hourlyRate', e.target.value)}
                         className="mt-2 h-12 focus:border-purple-400 transition-colors"
                       />
                       <p className="text-body-xs text-slate-500 mt-1">
-                        {role === 'studio' 
-                          ? 'Base rate for your studio. Individual rooms can have different rates.'
-                          : 'Your rate for production services. This helps clients understand your pricing.'
-                        }
+                        Base rate for your studio. Individual rooms can have different rates.
                       </p>
                     </div>
                   )}
@@ -499,8 +525,8 @@ export default function ProfileSetupPage() {
             {/* Step 3: Skills & Experience */}
             {currentStep === 3 && (
               <div className="space-y-6 animate-fade-in">
-                {/* Skills for Artists & Producers */}
-                {role !== 'studio' && (
+                {/* Skills for Artist/Producers */}
+                {role === 'artist_producer' && (
                   <div>
                     <Label className="text-body-md font-medium text-slate-700">Skills & Genres</Label>
                     <p className="text-body-sm text-slate-500 mt-1 mb-4">Add up to 10 skills or genres you work with</p>
@@ -554,12 +580,12 @@ export default function ProfileSetupPage() {
                 {/* Equipment for all roles */}
                 <div>
                   <Label className="text-body-md font-medium text-slate-700">
-                    {role === 'studio' ? 'General Equipment' : role === 'producer' ? 'Production Equipment' : 'Equipment'}
+                    {role === 'studio' ? 'General Equipment' : 'Equipment'}
                   </Label>
                   <p className="text-body-sm text-slate-500 mt-1 mb-4">
                     {role === 'studio' 
                       ? 'List general studio equipment available to all rooms'
-                      : 'Equipment you own or have access to'
+                      : 'Equipment you own or have access to (instruments, software, hardware)'
                     }
                   </p>
                   
@@ -569,8 +595,7 @@ export default function ProfileSetupPage() {
                       onChange={(e) => setNewSkill(e.target.value)}
                       placeholder={
                         role === 'studio' ? 'e.g., Pro Tools, SSL Console' :
-                        role === 'producer' ? 'e.g., Logic Pro, Yamaha HS8' :
-                        'e.g., Guitar, Microphone'
+                        'e.g., Logic Pro, Yamaha HS8, Guitar, Microphone'
                       }
                       onKeyPress={(e) => e.key === 'Enter' && addSkill()}
                       className="flex-1 h-12 focus:border-purple-400 transition-colors"
@@ -748,15 +773,12 @@ export default function ProfileSetupPage() {
                   </div>
                 )}
 
-                {/* Suggested Skills for non-studios */}
-                {role !== 'studio' && (
+                {/* Suggested Skills for Artist/Producers */}
+                {role === 'artist_producer' && (
                   <div>
-                    <Label className="text-body-sm font-medium text-slate-700">Popular {role === 'artist' ? 'Genres' : 'Skills'}</Label>
+                    <Label className="text-body-sm font-medium text-slate-700">Popular Genres & Skills</Label>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {(role === 'artist' 
-                        ? ['Hip Hop', 'Pop', 'R&B', 'Electronic', 'Jazz', 'Rock', 'Indie', 'Classical']
-                        : ['Mixing', 'Mastering', 'Beat Making', 'Recording', 'Vocal Production', 'Sound Design']
-                      ).map((suggestion) => (
+                      {['Hip Hop', 'Pop', 'R&B', 'Electronic', 'Jazz', 'Rock', 'Indie', 'Classical', 'Mixing', 'Mastering', 'Beat Making', 'Recording', 'Vocal Production', 'Sound Design'].map((suggestion) => (
                         <button
                           key={suggestion}
                           type="button"

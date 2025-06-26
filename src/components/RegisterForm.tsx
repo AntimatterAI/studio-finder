@@ -16,7 +16,7 @@ export function RegisterForm() {
     password: '',
     confirmPassword: '',
     inviteCode: '',
-    role: 'artist' as 'artist' | 'producer' | 'studio'
+    role: 'artist_producer' as 'artist_producer' | 'studio'
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -28,7 +28,7 @@ export function RegisterForm() {
   const [inviteCodeData, setInviteCodeData] = useState<{
     id: string
     code: string
-    code_type: 'artist' | 'producer' | 'studio' | 'admin'
+    code_type: 'artist_producer' | 'studio' | 'admin'
     tier_level: 1 | 2 | 3
     status: 'available' | 'used'
   } | null>(null)
@@ -125,7 +125,7 @@ export function RegisterForm() {
     data: {
       id: string
       code: string
-      code_type: 'artist' | 'producer' | 'studio' | 'admin'
+      code_type: 'artist_producer' | 'studio' | 'admin'
       tier_level: 1 | 2 | 3
       status: 'available' | 'used'
     } | null 
@@ -250,8 +250,7 @@ export function RegisterForm() {
 
   const getRoleIcon = (role: string) => {
     switch (role) {
-      case 'artist': return <User className="w-4 h-4" />
-      case 'producer': return <Headphones className="w-4 h-4" />
+      case 'artist_producer': return <Headphones className="w-4 h-4" />
       case 'studio': return <Radio className="w-4 h-4" />
       default: return <User className="w-4 h-4" />
     }
@@ -291,7 +290,7 @@ export function RegisterForm() {
             type="button"
             onClick={() => {
               setRegistrationMode('invite')
-              setFormData(prev => ({ ...prev, role: 'artist' }))
+              setFormData(prev => ({ ...prev, role: 'artist_producer' }))
               setErrors({})
             }}
             className={`p-4 rounded-xl border-2 text-left transition-all ${
@@ -330,10 +329,9 @@ export function RegisterForm() {
         {registrationMode === 'public' && (
           <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.1s' }}>
             <Label className="text-body-sm font-medium text-foreground">Your Role</Label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               {[
-                { value: 'artist', label: 'Artist', description: 'Vocalist, songwriter, musician' },
-                { value: 'producer', label: 'Producer', description: 'Beat maker, mixing engineer' },
+                { value: 'artist_producer', label: 'Artist/Producer', description: 'Musician, songwriter, beat maker, engineer' },
                 { value: 'studio', label: 'Studio', description: 'Recording facility, rehearsal space' }
               ].map(({ value, label, description }) => (
                 <button
