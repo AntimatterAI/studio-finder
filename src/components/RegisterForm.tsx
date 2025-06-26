@@ -235,7 +235,7 @@ export function RegisterForm() {
     <div className="space-y-6">
       {/* Registration Mode Selector */}
       <div className="space-y-3">
-        <Label className="text-body-sm font-medium text-slate-700">Registration Type</Label>
+        <Label className="text-body-sm font-medium text-foreground">Registration Type</Label>
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
@@ -296,7 +296,7 @@ export function RegisterForm() {
         {/* Role Selection for Public Registration */}
         {registrationMode === 'public' && (
           <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            <Label className="text-body-sm font-medium text-slate-700">Your Role</Label>
+            <Label className="text-body-sm font-medium text-foreground">Your Role</Label>
             <div className="grid grid-cols-3 gap-3">
               {[
                 { value: 'artist', label: 'Artist', description: 'Vocalist, songwriter, musician' },
@@ -337,7 +337,7 @@ export function RegisterForm() {
         {/* Invite Code Field (Only for invite mode) */}
         {registrationMode === 'invite' && (
           <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            <Label htmlFor="inviteCode" className="text-body-sm font-medium text-slate-700 flex items-center gap-2">
+            <Label htmlFor="inviteCode" className="text-body-sm font-medium text-foreground flex items-center gap-2">
               <Key className="w-4 h-4" />
               Invite Code
             </Label>
@@ -390,7 +390,7 @@ export function RegisterForm() {
 
         {/* Email Field */}
         <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <Label htmlFor="email" className="text-body-sm font-medium text-slate-700 flex items-center gap-2">
+          <Label htmlFor="email" className="text-body-sm font-medium text-foreground flex items-center gap-2">
             <Mail className="w-4 h-4" />
             Email Address
           </Label>
@@ -415,7 +415,7 @@ export function RegisterForm() {
 
         {/* Password Field */}
         <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.3s' }}>
-          <Label htmlFor="password" className="text-body-sm font-medium text-slate-700 flex items-center gap-2">
+          <Label htmlFor="password" className="text-body-sm font-medium text-foreground flex items-center gap-2">
             <Lock className="w-4 h-4" />
             Password
           </Label>
@@ -434,7 +434,7 @@ export function RegisterForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors focus-visible"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus-visible"
             >
               {showPassword ? (
                 <EyeOff className="w-5 h-5" />
@@ -448,7 +448,7 @@ export function RegisterForm() {
           {formData.password && (
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                   <div 
                     className={`h-full ${passwordStrength.color} transition-all duration-300`}
                     style={{ width: `${(passwordStrength.strength === 'weak' ? 33 : passwordStrength.strength === 'medium' ? 66 : 100)}%` }}
@@ -474,7 +474,7 @@ export function RegisterForm() {
 
         {/* Confirm Password Field */}
         <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.4s' }}>
-          <Label htmlFor="confirmPassword" className="text-body-sm font-medium text-slate-700 flex items-center gap-2">
+          <Label htmlFor="confirmPassword" className="text-body-sm font-medium text-foreground flex items-center gap-2">
             <Check className="w-4 h-4" />
             Confirm Password
           </Label>
@@ -495,7 +495,7 @@ export function RegisterForm() {
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors focus-visible"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus-visible"
             >
               {showConfirmPassword ? (
                 <EyeOff className="w-5 h-5" />
@@ -557,11 +557,11 @@ export function RegisterForm() {
         )}
 
         {/* Terms */}
-        <p className="text-body-xs text-slate-500 text-center leading-relaxed animate-slide-up" style={{ animationDelay: '0.6s' }}>
+        <p className="text-body-xs text-muted-foreground text-center leading-relaxed animate-slide-up" style={{ animationDelay: '0.6s' }}>
           By creating an account, you agree to our{' '}
-          <a href="/terms" className="text-purple-600 hover:text-purple-700 underline">Terms of Service</a>
+          <a href="/terms" className="text-primary hover:text-primary/80 underline">Terms of Service</a>
           {' '}and{' '}
-          <a href="/privacy" className="text-purple-600 hover:text-purple-700 underline">Privacy Policy</a>
+          <a href="/privacy" className="text-primary hover:text-primary/80 underline">Privacy Policy</a>
         </p>
       </form>
     </div>
